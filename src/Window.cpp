@@ -57,6 +57,8 @@ Window::Window() {
 }
 
 Window::~Window() {
+	delete circleShader;
+
 	glfwSetWindowShouldClose(glfwwindow, true);
 
 	glfwTerminate();
@@ -94,6 +96,10 @@ void Window::drawCircle(glm::vec2 pos) {
 	circleShader->setUniformVec2(cameraScale, "uCameraScale");
 
 	GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+}
+
+bool Window::shouldClose() {
+	return glfwWindowShouldClose(glfwwindow);
 }
 
 GLFWwindow* Window::getglfwwindow() {

@@ -24,6 +24,7 @@ public:
 	~Window();
 	void drawFrame(std::vector<Ball>* balls);
 	GLFWwindow* getglfwwindow();
+	bool shouldClose();
 private:
 	void drawCircle(glm::vec2 pos);
 	void GLClearErrors();

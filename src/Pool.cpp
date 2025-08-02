@@ -14,7 +14,7 @@ int main() {
 	balls.push_back({ { 0.0f, 0.0f } });
 	balls.push_back({ { 2.0f, 2.0f } });
 
-	while (!input.escKeyPressed()) {
+	while (!(input.escKeyPressed() || window.shouldClose())) {
 		window.drawFrame(&balls);
 	}
 }
