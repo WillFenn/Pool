@@ -1,6 +1,6 @@
 #include <Window.h>
 
-Window::Window() {
+Window::Window(glm::vec4 backgroundColor) {
 	std::cout << "window created" << std::endl;	// delete
 
 	if (!glfwInit()) {
@@ -52,33 +52,37 @@ Window::Window() {
 	GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(rectIndices), rectIndices, GL_STREAM_DRAW));
 
 	circleShader = new Shader("res/Vertex.glsl", "res/CircleFragment.glsl");
+	rectangleShader = new Shader("res/Vertex.glsl", "res/RectangleFragment.glsl");
 
-	GLCALL(glClearColor(1.0f, 1.0f, 1.0f, 1.0f));
+	GLCALL(glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a));
 }
 
 Window::~Window() {
 	delete circleShader;
+	delete rectangleShader;
 
 	glfwSetWindowShouldClose(glfwwindow, true);
 
 	glfwTerminate();
 }
 
-void Window::drawFrame(std::vector<Ball>* balls) {
+void Window::drawFrame(std::vector<Ball>* balls, Cue cue) {
 	std::cout << "balls->size(): " << balls->size() << std::endl;	//delete
 	
 	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
 
 	for (int i = 0; i < balls->size(); i++) {
-		drawCircle(balls->at(i).pos);
+		drawCircle(balls->at(i).pos, balls->at(i).color);
 	}
+
+	drawRectangle(cue.pos, cue.scale, cue.rotation, cue.color);
 
 	glfwSwapBuffers(glfwwindow);
 	
 	glfwPollEvents();
 }
 
-void Window::drawCircle(glm::vec2 pos) {
+void Window::drawCircle(glm::vec2 pos, glm::vec4 color) {
 	std::cout << "drawing circle" << std::endl;	//delete
 
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectvbo));
@@ -94,6 +98,27 @@ void Window::drawCircle(glm::vec2 pos) {
 	circleShader->setUniformIVec2(resolution, "uResolution");
 	circleShader->setUniformVec2(pos, "uPosition");
 	circleShader->setUniformVec2(cameraScale, "uCameraScale");
+
+	GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+}
+
+void Window::drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::vec4 color) {
+	std::cout << "drawing square" << std::endl;	//delete
+
+	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectvbo));
+	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
+	rectangleShader->bind();
+
+	glm::mat4 projection = glm::ortho(-8.0f, 8.0f, -4.5f, 4.5f, -1.0f, 1.0f);
+	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos, 0.0f));
+	model = glm::rotate(model, rotation, glm::vec3(0, 0, 1));
+	model = glm::scale(model, glm::vec3(scale.x, scale.y, 1.0f));
+
+	glm::mat4 mvp = projection * view * model;
+	rectangleShader->setUniformMat4(mvp, "uMVP");
+
+	rectangleShader->setUniformVec4(color, "uColor");
 
 	GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 }

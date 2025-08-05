@@ -17,16 +17,18 @@
 #include <ext/matrix_transform.hpp>
 #include <Shader.h>
 #include <Ball.h>
+#include <Cue.h>
 
 class Window {
 public:
-	Window();
+	Window(glm::vec4 backgroundColor);
 	~Window();
-	void drawFrame(std::vector<Ball>* balls);
+	void drawFrame(std::vector<Ball>* balls, Cue cue);
 	GLFWwindow* getglfwwindow();
 	bool shouldClose();
 private:
-	void drawCircle(glm::vec2 pos);
+	void drawCircle(glm::vec2 pos, glm::vec4 color);
+	void drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::vec4 color);
 	void GLClearErrors();
 	bool GLLogErrors();
 	GLFWmonitor* glfwmonitor;
@@ -38,4 +40,5 @@ private:
 	unsigned int rectvbo;
 	unsigned int rectibo;
 	Shader* circleShader;
+	Shader* rectangleShader;
 };
