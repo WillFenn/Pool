@@ -1,14 +1,37 @@
 #include <iostream>
 #include <vector>
+#include <cstdlib>
+#include <ctime>
 #include <Window.h>
 #include <Input.h>
 #include <Ball.h>
 #include <Cue.h>
 
-void setBalls(std::vector<Ball> balls) {
-	balls.push_back({ { 0.0f, 0.0f }, green, false });
-	balls.push_back({ { 2.0f, 2.0f }, green, false });
+void setPositions(std::vector<Ball>* balls) {
+	glm::vec2 frontPos = { 5.0f, 0.0f };
+	float gapLength = 0.05;
+	std::vector<glm::vec2> positions;
 
+	for (int i = 0; i < 5; i++) {
+		glm::vec2 columnStart = frontPos + (float)i * glm::vec2(1.0f + gapLength, 0.5f + gapLength / 2);
+		for (int j = 0; j < i + 1; j++) {
+			positions.push_back(columnStart + (float)j * glm::vec2(0.0f, -1.0f - gapLength));
+		}
+	}
+
+	srand(time(0));
+
+	for (int i = 0; i < balls->size(); i++) {
+		balls->at(i).pos = positions.at(rand() % balls->size());
+	}
+
+	for (int i = 0; i < positions.size(); i++) {																		// delete
+		std::cout << "position " << i << "     x: " << positions.at(i).x << "  y: " << positions.at(i).y << std::endl;	//
+	}																													//
+
+	for (int i = 0; i < balls->size(); i++) {																					// delete
+		std::cout << "ball " << i << " position     x: " << balls->at(i).pos.x << "  y: " << balls->at(i).pos.y << std::endl;	//
+	}																															//
 }
 
 int main() {
@@ -30,8 +53,23 @@ int main() {
 	Input input(window.getglfwwindow());
 
 	std::vector<Ball> balls;
-	balls.push_back({ { 0.0f, 0.0f }, green, false});
-	balls.push_back({ { 2.0f, 2.0f }, green, false });
+	balls.push_back({ { 0.0f, 0.0f }, black, false });
+	balls.push_back({ { 0.0f, 0.0f }, black, false });
+	balls.push_back({ { 0.0f, 0.0f }, black, false });
+	balls.push_back({ { 0.0f, 0.0f }, black, false });
+	balls.push_back({ { 0.0f, 0.0f }, black, false });
+	balls.push_back({ { 0.0f, 0.0f }, black, false });
+	balls.push_back({ { 0.0f, 0.0f }, black, false });
+	balls.push_back({ { 0.0f, 0.0f }, black, false });
+	balls.push_back({ { 0.0f, 0.0f }, black, false });
+	balls.push_back({ { 0.0f, 0.0f }, black, false });
+	balls.push_back({ { 0.0f, 0.0f }, black, false });
+	balls.push_back({ { 0.0f, 0.0f }, black, false });
+	balls.push_back({ { 0.0f, 0.0f }, black, false });
+	balls.push_back({ { 0.0f, 0.0f }, black, false });
+	balls.push_back({ { 0.0f, 0.0f }, black, false });
+
+	setPositions(&balls);
 
 	Ball cueBall = { {0.0f, 0.0f}, white, false };
 

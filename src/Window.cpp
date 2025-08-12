@@ -19,7 +19,7 @@ Window::Window(glm::vec4 backgroundColor) {
 
 	std::cout << "width: " << resolution.x << std::endl << "height: " << resolution.y << std::endl;	// delete
 
-	cameraScale = { 16.0f, 9.0f };
+	cameraScale = { 32.0f, 18.0f };
 
 	windowTitle = "Pool";
 
@@ -89,7 +89,7 @@ void Window::drawCircle(glm::vec2 pos, glm::vec4 color) {
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
 	circleShader->bind();
 
-	glm::mat4 projection = glm::ortho(-8.0f, 8.0f, -4.5f, 4.5f, -1.0f, 1.0f);
+	glm::mat4 projection = glm::ortho(-(cameraScale.x / 2.0f), cameraScale.x / 2.0f, -(cameraScale.y / 2.0f), cameraScale.y / 2.0f, -1.0f, 1.0f);
 	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos, 0.0f));
 
@@ -109,7 +109,7 @@ void Window::drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
 	rectangleShader->bind();
 
-	glm::mat4 projection = glm::ortho(-8.0f, 8.0f, -4.5f, 4.5f, -1.0f, 1.0f);
+	glm::mat4 projection = glm::ortho(-(cameraScale.x / 2.0f), cameraScale.x / 2.0f, -(cameraScale.y / 2.0f), cameraScale.y / 2.0f, -1.0f, 1.0f);
 	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos, 0.0f));
 	model = glm::rotate(model, rotation, glm::vec3(0, 0, 1));
@@ -117,7 +117,6 @@ void Window::drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::
 
 	glm::mat4 mvp = projection * view * model;
 	rectangleShader->setUniformMat4(mvp, "uMVP");
-
 	rectangleShader->setUniformVec4(color, "uColor");
 
 	GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
