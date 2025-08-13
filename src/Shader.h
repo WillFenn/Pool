@@ -21,7 +21,8 @@ public:
 	void bind();
 	void unbind();
 	std::string readFile(const char* filepath);
-	void setUniformFloat(float f, const char* name);
+	void setUniformInt(int value, const char* name);
+	void setUniformFloat(float value, const char* name);
 	void setUniformVec2(glm::vec2 vec2, const char* name);
 	void setUniformIVec2(glm::ivec2 ivec2, const char* name);
 	void setUniformVec4(glm::vec4 vec4, const char* name);

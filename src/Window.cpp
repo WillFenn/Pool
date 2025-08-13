@@ -66,14 +66,16 @@ Window::~Window() {
 	glfwTerminate();
 }
 
-void Window::drawFrame(std::vector<Ball>* balls, Cue cue) {
+void Window::drawFrame(std::vector<Ball>* balls, Ball cueBall, Cue cue) {
 	std::cout << "balls->size(): " << balls->size() << std::endl;	//delete
 	
 	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
 
 	for (int i = 0; i < balls->size(); i++) {
-		drawCircle(balls->at(i).pos, balls->at(i).color);
+		drawCircle(balls->at(i).pos, balls->at(i).color, balls->at(i).striped);
 	}
+
+	drawCircle(cueBall.pos, cueBall.color, cueBall.striped);
 
 	drawRectangle(cue.pos, cue.scale, cue.rotation, cue.color);
 
@@ -82,7 +84,7 @@ void Window::drawFrame(std::vector<Ball>* balls, Cue cue) {
 	glfwPollEvents();
 }
 
-void Window::drawCircle(glm::vec2 pos, glm::vec4 color) {
+void Window::drawCircle(glm::vec2 pos, glm::vec4 color, bool striped) {
 	std::cout << "drawing circle" << std::endl;	//delete
 
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectvbo));
@@ -98,6 +100,8 @@ void Window::drawCircle(glm::vec2 pos, glm::vec4 color) {
 	circleShader->setUniformIVec2(resolution, "uResolution");
 	circleShader->setUniformVec2(pos, "uPosition");
 	circleShader->setUniformVec2(cameraScale, "uCameraScale");
+	circleShader->setUniformVec4(color, "uColor");
+	circleShader->setUniformInt(striped, "uStriped");
 
 	GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 }

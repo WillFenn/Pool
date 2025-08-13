@@ -6,6 +6,7 @@ uniform ivec2 uResolution;
 uniform vec2 uPosition;
 uniform vec2 uCameraScale;
 uniform vec4 uColor;
+uniform int uStriped;
 
 void main()
 {
@@ -15,7 +16,11 @@ void main()
 	vec2 uv = (((gl_FragCoord.xy / uResolution - 0.5) * uCameraScale) - uPosition);
 
 	if (length(uv) <= 0.5) {
-		fragColor = vec4(0.0, 0.0, 0.0, 1.0);
+		fragColor = uColor;
+		
+		if (uStriped != 0 && abs(uv.y) > 0.3) {
+			fragColor = vec4(1.0, 1.0, 1.0, 1.0);
+		}
 	}
 	else {
 		discard;

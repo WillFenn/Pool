@@ -8,7 +8,7 @@
 #include <Cue.h>
 
 void setPositions(std::vector<Ball>* balls) {
-	glm::vec2 frontPos = { 5.0f, 0.0f };
+	glm::vec2 frontPos = { 7.0f, 0.0f };
 	float gapLength = 0.05;
 	std::vector<glm::vec2> positions;
 
@@ -21,8 +21,12 @@ void setPositions(std::vector<Ball>* balls) {
 
 	srand(time(0));
 
+	std::cout << "balls->size(): " << balls->size() << std::endl;	// delete
+
 	for (int i = 0; i < balls->size(); i++) {
-		balls->at(i).pos = positions.at(rand() % balls->size());
+		int randIndex = rand() % positions.size();
+		balls->at(i).pos = positions.at(randIndex);
+		positions.erase(positions.begin() + randIndex);
 	}
 
 	for (int i = 0; i < positions.size(); i++) {																		// delete
@@ -41,41 +45,42 @@ int main() {
 	glm::vec4 black = { 0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 1.0f };
 	glm::vec4 yellow = { 255.0f / 255.0f, 255.0f / 255.0f, 0.0f / 255.0f, 1.0f };
 	glm::vec4 red = { 255.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 1.0f };
-	glm::vec4 green = { 0.0f / 255.0f, 150.0f / 255.0f, 0.0f / 255.0f, 1.0f };
+	glm::vec4 lightGreen = { 0.0f / 255.0f, 150.0f / 255.0f, 0.0f / 255.0f, 1.0f };
+	glm::vec4 darkGreen = { 0.0f / 255.0f, 80.0f / 255.0f, 0.0f / 255.0f, 1.0f };
 	glm::vec4 blue = { 0.0f / 255.0f, 0.0f / 255.0f, 255.0f / 255.0f, 1.0f };
 	glm::vec4 orange = { 255.0f / 255.0f, 128.0f / 255.0f, 0.0f / 255.0f, 1.0f };
 	glm::vec4 purple = { 48.0f / 255.0f, 25.0f / 255.0f, 52.0f / 255.0f, 1.0f };
-	glm::vec4 brown = { 255.0f / 255.0f, 150.0f / 255.0f, 0.0f / 255.0f, 1.0f };
-	glm::vec4 maroon = { 128.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 1.0f };
+	glm::vec4 lightBrown = { 200.0f / 255.0f, 150.0f / 255.0f, 0.0f / 255.0f, 1.0f };
+	glm::vec4 darkBrown = { 150.0f / 255.0f, 80.0f / 255.0f, 0.0f / 255.0f, 1.0f };
 
-	Window window(green);
+	Window window(lightGreen);
 
 	Input input(window.getglfwwindow());
 
 	std::vector<Ball> balls;
 	balls.push_back({ { 0.0f, 0.0f }, black, false });
-	balls.push_back({ { 0.0f, 0.0f }, black, false });
-	balls.push_back({ { 0.0f, 0.0f }, black, false });
-	balls.push_back({ { 0.0f, 0.0f }, black, false });
-	balls.push_back({ { 0.0f, 0.0f }, black, false });
-	balls.push_back({ { 0.0f, 0.0f }, black, false });
-	balls.push_back({ { 0.0f, 0.0f }, black, false });
-	balls.push_back({ { 0.0f, 0.0f }, black, false });
-	balls.push_back({ { 0.0f, 0.0f }, black, false });
-	balls.push_back({ { 0.0f, 0.0f }, black, false });
-	balls.push_back({ { 0.0f, 0.0f }, black, false });
-	balls.push_back({ { 0.0f, 0.0f }, black, false });
-	balls.push_back({ { 0.0f, 0.0f }, black, false });
-	balls.push_back({ { 0.0f, 0.0f }, black, false });
-	balls.push_back({ { 0.0f, 0.0f }, black, false });
+	balls.push_back({ { 0.0f, 0.0f }, yellow, false });
+	balls.push_back({ { 0.0f, 0.0f }, yellow, true });
+	balls.push_back({ { 0.0f, 0.0f }, red, false });
+	balls.push_back({ { 0.0f, 0.0f }, red, true });
+	balls.push_back({ { 0.0f, 0.0f }, darkGreen, false });
+	balls.push_back({ { 0.0f, 0.0f }, darkGreen, true });
+	balls.push_back({ { 0.0f, 0.0f }, blue, false });
+	balls.push_back({ { 0.0f, 0.0f }, blue, true });
+	balls.push_back({ { 0.0f, 0.0f }, orange, false });
+	balls.push_back({ { 0.0f, 0.0f }, orange, true });
+	balls.push_back({ { 0.0f, 0.0f }, purple, false });
+	balls.push_back({ { 0.0f, 0.0f }, purple, true });
+	balls.push_back({ { 0.0f, 0.0f }, darkBrown, false });
+	balls.push_back({ { 0.0f, 0.0f }, darkBrown, true });
 
 	setPositions(&balls);
 
-	Ball cueBall = { {0.0f, 0.0f}, white, false };
+	Ball cueBall = { {5.0f, 0.0f}, white, false };
 
-	Cue cue = { {0.0f, 0.0f}, {10.0f, 0.2f}, 0.0f, brown };
+	Cue cue = { {0.0f, 0.0f}, {10.0f, 0.2f}, 0.0f, lightBrown };
 
 	while (!(input.escKeyPressed() || window.shouldClose())) {
-		window.drawFrame(&balls, cue);
+		window.drawFrame(&balls, cueBall, cue);
 	}
 }

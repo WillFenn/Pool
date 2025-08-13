@@ -66,10 +66,16 @@ std::string Shader::readFile(const char* filepath) {
 	return text;
 }
 
-void Shader::setUniformFloat(float f, const char* name) {
+void Shader::setUniformInt(int value, const char* name) {
 	GLCALL(int location = glGetUniformLocation(programID, name));
 
-	GLCALL(glUniform1f(location, f));
+	GLCALL(glUniform1i(location, value));
+}
+
+void Shader::setUniformFloat(float value, const char* name) {
+	GLCALL(int location = glGetUniformLocation(programID, name));
+
+	GLCALL(glUniform1f(location, value));
 }
 
 void Shader::setUniformVec2(glm::vec2 vec2, const char* name) {
