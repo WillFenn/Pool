@@ -19,7 +19,7 @@ Window::Window(glm::vec4 backgroundColor) {
 
 	std::cout << "width: " << resolution.x << std::endl << "height: " << resolution.y << std::endl;	// delete
 
-	cameraScale = { 32.0f, 18.0f };
+	cameraScale = { 48.0f, 27.0f };
 
 	windowTitle = "Pool";
 

@@ -39,7 +39,7 @@ void setPositions(std::vector<Ball>* balls) {
 }
 
 int main() {
-	std::cout << "starting" << std::endl;
+	std::cout << "starting" << std::endl;	// delete
 
 	glm::vec4 white = { 255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f, 1.0f };
 	glm::vec4 black = { 0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 1.0f };
@@ -82,5 +82,9 @@ int main() {
 
 	while (!(input.escKeyPressed() || window.shouldClose())) {
 		window.drawFrame(&balls, cueBall, cue);
+		
+		glm::vec2 mousePos;
+		mousePos = input.getMousePos();
+		std::cout << "mouse position: <" << mousePos.x << ", " << mousePos.y << ">" << std::endl;
 	}
 }
