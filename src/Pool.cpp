@@ -7,6 +7,10 @@
 #include <Ball.h>
 #include <Cue.h>
 
+float projection(glm::vec2 a, glm::vec2 b) {
+	return glm::dot(a, b) / glm::length(b);
+}
+
 void setPositions(std::vector<Ball>* balls) {
 	glm::vec2 frontPos = { 7.0f, 0.0f };
 	float gapLength = 0.05;
@@ -38,6 +42,24 @@ void setPositions(std::vector<Ball>* balls) {
 	}																															//
 }
 
+void setCuePos(Window* window, Input* input, Cue* cue, Ball cueBall) {
+	glm::vec2 mouseWorldPos = ((input->getMousePos() - window->getResolution() / 2.0f) / (window->getResolution() / 2.0f)) * (window->getWorldScale() / 2.0f);
+	mouseWorldPos.y *= -1;
+	
+	if (input->leftMousePressed()) {
+		glm::vec2 cueDirection = glm::normalize(cue->pos - cueBall.pos);
+		glm::vec2 cueBallToMouse = mouseWorldPos - cueBall.pos;
+		cue->pos = cueBall.pos + cueDirection * projection(cueBallToMouse, cueDirection);
+	}
+	else{
+		glm::vec2 mouseDirection = glm::normalize(mouseWorldPos - cueBall.pos);
+		cue->pos = cueBall.pos + mouseDirection * ((cue->scale.x / 2.0f) + 0.5f + cue->distanceFromCueBall);
+		cue->rotation = glm::atan(mouseDirection.y / mouseDirection.x);
+	}
+
+	std::cout << "mouse position: " << "(" << mouseWorldPos.x << ", " << mouseWorldPos.y << ")" << std::endl;	// delete
+}
+
 int main() {
 	std::cout << "starting" << std::endl;	// delete
 
@@ -53,7 +75,9 @@ int main() {
 	glm::vec4 lightBrown = { 200.0f / 255.0f, 150.0f / 255.0f, 0.0f / 255.0f, 1.0f };
 	glm::vec4 darkBrown = { 150.0f / 255.0f, 80.0f / 255.0f, 0.0f / 255.0f, 1.0f };
 
-	Window window(lightGreen);
+	glm::vec2 worldScale = { 48.0f, 27.0f };
+
+	Window window(worldScale, lightGreen);
 
 	Input input(window.getglfwwindow());
 
@@ -78,13 +102,11 @@ int main() {
 
 	Ball cueBall = { {5.0f, 0.0f}, white, false };
 
-	Cue cue = { {0.0f, 0.0f}, {10.0f, 0.2f}, 0.0f, lightBrown };
+	Cue cue = { {0.0f, 0.0f}, {10.0f, 0.2f}, 0.0f, lightBrown, {0.0f, 0.0f} };
 
 	while (!(input.escKeyPressed() || window.shouldClose())) {
 		window.drawFrame(&balls, cueBall, cue);
 		
-		glm::vec2 mousePos;
-		mousePos = input.getMousePos();
-		std::cout << "mouse position: <" << mousePos.x << ", " << mousePos.y << ">" << std::endl;
+		setCuePos(&window, &input, &cue, cueBall);
 	}
 }

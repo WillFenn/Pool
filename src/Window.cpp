@@ -1,6 +1,6 @@
 #include <Window.h>
 
-Window::Window(glm::vec4 backgroundColor) {
+Window::Window(glm::vec2 worldScale, glm::vec4 backgroundColor) {
 	std::cout << "window created" << std::endl;	// delete
 
 	if (!glfwInit()) {
@@ -19,7 +19,7 @@ Window::Window(glm::vec4 backgroundColor) {
 
 	std::cout << "width: " << resolution.x << std::endl << "height: " << resolution.y << std::endl;	// delete
 
-	cameraScale = { 48.0f, 27.0f };
+	this->worldScale = worldScale;
 
 	windowTitle = "Pool";
 
@@ -91,7 +91,7 @@ void Window::drawCircle(glm::vec2 pos, glm::vec4 color, bool striped) {
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
 	circleShader->bind();
 
-	glm::mat4 projection = glm::ortho(-(cameraScale.x / 2.0f), cameraScale.x / 2.0f, -(cameraScale.y / 2.0f), cameraScale.y / 2.0f, -1.0f, 1.0f);
+	glm::mat4 projection = glm::ortho(-(worldScale.x / 2.0f), worldScale.x / 2.0f, -(worldScale.y / 2.0f), worldScale.y / 2.0f, -1.0f, 1.0f);
 	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos, 0.0f));
 
@@ -99,7 +99,7 @@ void Window::drawCircle(glm::vec2 pos, glm::vec4 color, bool striped) {
 	circleShader->setUniformMat4(mvp, "uMVP");
 	circleShader->setUniformIVec2(resolution, "uResolution");
 	circleShader->setUniformVec2(pos, "uPosition");
-	circleShader->setUniformVec2(cameraScale, "uCameraScale");
+	circleShader->setUniformVec2(worldScale, "uWorldScale");
 	circleShader->setUniformVec4(color, "uColor");
 	circleShader->setUniformInt(striped, "uStriped");
 
@@ -113,7 +113,7 @@ void Window::drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
 	rectangleShader->bind();
 
-	glm::mat4 projection = glm::ortho(-(cameraScale.x / 2.0f), cameraScale.x / 2.0f, -(cameraScale.y / 2.0f), cameraScale.y / 2.0f, -1.0f, 1.0f);
+	glm::mat4 projection = glm::ortho(-(worldScale.x / 2.0f), worldScale.x / 2.0f, -(worldScale.y / 2.0f), worldScale.y / 2.0f, -1.0f, 1.0f);
 	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos, 0.0f));
 	model = glm::rotate(model, rotation, glm::vec3(0, 0, 1));
@@ -132,6 +132,14 @@ bool Window::shouldClose() {
 
 GLFWwindow* Window::getglfwwindow() {
 	return glfwwindow;
+}
+
+glm::vec2 Window::getResolution() {
+	return resolution;
+}
+
+glm::vec2 Window::getWorldScale() {
+	return worldScale;
 }
 
 void Window::GLClearErrors() {

@@ -15,6 +15,11 @@ glm::vec2 Input::getMousePos() {
 	return glm::vec2(xPos, yPos);
 }
 
+bool Input::leftMousePressed() {
+	int state = glfwGetMouseButton(glfwwindow, GLFW_MOUSE_BUTTON_LEFT);
+	return state == GLFW_PRESS;
+}
+
 bool Input::escKeyPressed() {
 	return glfwGetKey(glfwwindow, GLFW_KEY_ESCAPE) == GLFW_PRESS;
 }

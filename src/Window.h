@@ -21,10 +21,12 @@
 
 class Window {
 public:
-	Window(glm::vec4 backgroundColor);
+	Window(glm::vec2 worldScale, glm::vec4 backgroundColor);
 	~Window();
 	void drawFrame(std::vector<Ball>* balls, Ball cueBall, Cue cue);
 	GLFWwindow* getglfwwindow();
+	glm::vec2 getResolution();
+	glm::vec2 getWorldScale();
 	bool shouldClose();
 private:
 	void drawCircle(glm::vec2 pos, glm::vec4 color, bool striped);
@@ -35,7 +37,7 @@ private:
 	GLFWwindow* glfwwindow;
 	const char* windowTitle;
 	glm::vec2 resolution;
-	glm::vec2 cameraScale;
+	glm::vec2 worldScale;
 	unsigned int rectvao;
 	unsigned int rectvbo;
 	unsigned int rectibo;

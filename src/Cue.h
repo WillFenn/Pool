@@ -8,4 +8,5 @@ struct Cue {
 	glm::vec2 scale;
 	float rotation;
 	glm::vec4 color;
+	glm::vec2 distanceFromCueBall;
 };
