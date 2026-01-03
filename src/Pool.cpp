@@ -11,6 +11,14 @@ float projection(glm::vec2 a, glm::vec2 b) {
 	return glm::dot(a, b) / glm::length(b);
 }
 
+float max(float x, float y) {
+	if (x >= y) {
+		return x;
+	}
+
+	return y;
+}
+
 void setPositions(std::vector<Ball>* balls) {
 	glm::vec2 frontPos = { 7.0f, 0.0f };
 	float gapLength = 0.05;
@@ -49,7 +57,7 @@ void setCuePos(Window* window, Input* input, Cue* cue, Ball cueBall) {
 	if (input->leftMousePressed()) {
 		glm::vec2 cueDirection = glm::normalize(cue->pos - cueBall.pos);
 		glm::vec2 cueBallToMouse = mouseWorldPos - cueBall.pos;
-		cue->pos = cueBall.pos + cueDirection * projection(cueBallToMouse, cueDirection);
+		cue->pos = cueBall.pos + cueDirection * max(projection(cueBallToMouse, cueDirection), (cue->scale.x / 2) + 0.5f);
 	}
 	else{
 		glm::vec2 mouseDirection = glm::normalize(mouseWorldPos - cueBall.pos);
