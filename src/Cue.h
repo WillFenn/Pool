@@ -6,6 +6,7 @@
 struct Cue {
 	glm::vec2 pos;
 	glm::vec2 scale;
+	float speed;
 	float rotation;
 	glm::vec4 color;
 	glm::vec2 distanceFromCueBall;

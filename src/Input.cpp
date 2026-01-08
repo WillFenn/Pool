@@ -2,10 +2,29 @@
 
 Input::Input(GLFWwindow* glfwwindow) {
 	this->glfwwindow = glfwwindow;
+	deltaTimeCalled = false;
 }
 
 Input::~Input() {
 
+}
+
+double Input::deltaTime() {
+	if (!deltaTimeCalled) {
+		deltaTimeCalled = true;
+
+		prevTime = glfwGetTime();
+
+		return 0.0f;
+	}
+
+	double currentTime = glfwGetTime();
+
+	double deltaTime = currentTime - prevTime;
+
+	prevTime = currentTime;
+
+	return deltaTime;
 }
 
 glm::vec2 Input::getMousePos() {

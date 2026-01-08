@@ -6,7 +6,7 @@ Window::Window(glm::vec2 worldScale, glm::vec4 backgroundColor) {
 	if (!glfwInit()) {
 		std::cout << "Failed to initialize GLFW" << std::endl << std::endl;
 	}
-
+	
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);

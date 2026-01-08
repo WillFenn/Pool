@@ -4,6 +4,7 @@
 
 struct Ball {
 	glm::vec2 pos;
+	glm::vec2 velocity;
 	glm::vec4 color;
 	bool striped;
 };

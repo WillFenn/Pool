@@ -2,13 +2,23 @@
 #include <vector>
 #include <cstdlib>
 #include <ctime>
+#include <vec2.hpp>
 #include <Window.h>
 #include <Input.h>
 #include <Ball.h>
 #include <Cue.h>
+#include <Physics.h>
 
 float projection(glm::vec2 a, glm::vec2 b) {
 	return glm::dot(a, b) / glm::length(b);
+}
+
+float absoluteValue(float x) {
+	if (x < 0.0f) {
+		return -x;
+	}
+	
+	return x;
 }
 
 float max(float x, float y) {
@@ -17,6 +27,10 @@ float max(float x, float y) {
 	}
 
 	return y;
+}
+
+bool approximatelyEqual(float x, float y) {
+	return absoluteValue(x - y) < 0.1f;
 }
 
 void setPositions(std::vector<Ball>* balls) {
@@ -50,7 +64,7 @@ void setPositions(std::vector<Ball>* balls) {
 	}																															//
 }
 
-void setCuePos(Window* window, Input* input, Cue* cue, Ball cueBall) {
+void setCuePos(Window* window, Input* input, Ball cueBall, Cue* cue) {
 	glm::vec2 mouseWorldPos = ((input->getMousePos() - window->getResolution() / 2.0f) / (window->getResolution() / 2.0f)) * (window->getWorldScale() / 2.0f);
 	mouseWorldPos.y *= -1;
 	
@@ -60,9 +74,14 @@ void setCuePos(Window* window, Input* input, Cue* cue, Ball cueBall) {
 		cue->pos = cueBall.pos + cueDirection * max(projection(cueBallToMouse, cueDirection), (cue->scale.x / 2) + 0.5f);
 	}
 	else{
-		glm::vec2 mouseDirection = glm::normalize(mouseWorldPos - cueBall.pos);
-		cue->pos = cueBall.pos + mouseDirection * ((cue->scale.x / 2.0f) + 0.5f + cue->distanceFromCueBall);
-		cue->rotation = glm::atan(mouseDirection.y / mouseDirection.x);
+		if (approximatelyEqual(glm::distance(cueBall.pos,cue->pos), ((cue->scale.x / 2) + 0.5f))) {
+			glm::vec2 mouseDirection = glm::normalize(mouseWorldPos - cueBall.pos);
+			cue->pos = cueBall.pos + mouseDirection * ((cue->scale.x / 2.0f) + 0.5f + cue->distanceFromCueBall);
+			cue->rotation = glm::atan(mouseDirection.y / mouseDirection.x);
+		}
+		else {
+			cue->speed = glm::distance(cueBall.pos, cue->pos) - ((cue->scale.x / 2) + 0.5f);
+		}
 	}
 
 	std::cout << "mouse position: " << "(" << mouseWorldPos.x << ", " << mouseWorldPos.y << ")" << std::endl;	// delete
@@ -90,31 +109,35 @@ int main() {
 	Input input(window.getglfwwindow());
 
 	std::vector<Ball> balls;
-	balls.push_back({ { 0.0f, 0.0f }, black, false });
-	balls.push_back({ { 0.0f, 0.0f }, yellow, false });
-	balls.push_back({ { 0.0f, 0.0f }, yellow, true });
-	balls.push_back({ { 0.0f, 0.0f }, red, false });
-	balls.push_back({ { 0.0f, 0.0f }, red, true });
-	balls.push_back({ { 0.0f, 0.0f }, darkGreen, false });
-	balls.push_back({ { 0.0f, 0.0f }, darkGreen, true });
-	balls.push_back({ { 0.0f, 0.0f }, blue, false });
-	balls.push_back({ { 0.0f, 0.0f }, blue, true });
-	balls.push_back({ { 0.0f, 0.0f }, orange, false });
-	balls.push_back({ { 0.0f, 0.0f }, orange, true });
-	balls.push_back({ { 0.0f, 0.0f }, purple, false });
-	balls.push_back({ { 0.0f, 0.0f }, purple, true });
-	balls.push_back({ { 0.0f, 0.0f }, darkBrown, false });
-	balls.push_back({ { 0.0f, 0.0f }, darkBrown, true });
+	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, black, false });
+	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, yellow, false });
+	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, yellow, true });
+	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, red, false });
+	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, red, true });
+	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, darkGreen, false });
+	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, darkGreen, true });
+	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, blue, false });
+	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, blue, true });
+	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, orange, false });
+	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, orange, true });
+	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, purple, false });
+	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, purple, true });
+	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, darkBrown, false });
+	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, darkBrown, true });
 
 	setPositions(&balls);
 
-	Ball cueBall = { {5.0f, 0.0f}, white, false };
+	Ball cueBall = { {5.0f, 0.0f}, { 0.0f, 0.0f }, white, false };
 
-	Cue cue = { {0.0f, 0.0f}, {10.0f, 0.2f}, 0.0f, lightBrown, {0.0f, 0.0f} };
+	Cue cue = { {0.0f, 0.0f}, {10.0f, 0.2f}, 0.0f, 0.0f, lightBrown, {0.0f, 0.0f} };
+
+	Physics physics;
 
 	while (!(input.escKeyPressed() || window.shouldClose())) {
 		window.drawFrame(&balls, cueBall, cue);
 		
-		setCuePos(&window, &input, &cue, cueBall);
+		setCuePos(&window, &input, cueBall, &cue);
+
+		physics.update(&balls, &cueBall, &cue, input.deltaTime());
 	}
 }
