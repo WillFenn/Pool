@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <vector>
 #include <vec2.hpp>
 #include <vec3.hpp>

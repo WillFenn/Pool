@@ -9,5 +9,4 @@ struct Cue {
 	float speed;
 	float rotation;
 	glm::vec4 color;
-	glm::vec2 distanceFromCueBall;
 };

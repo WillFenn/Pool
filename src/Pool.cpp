@@ -73,14 +73,16 @@ void setCuePos(Window* window, Input* input, Ball cueBall, Cue* cue) {
 		glm::vec2 cueBallToMouse = mouseWorldPos - cueBall.pos;
 		cue->pos = cueBall.pos + cueDirection * max(projection(cueBallToMouse, cueDirection), (cue->scale.x / 2) + 0.5f);
 	}
-	else{
-		if (approximatelyEqual(glm::distance(cueBall.pos,cue->pos), ((cue->scale.x / 2) + 0.5f))) {
+	else {
+		if (approximatelyEqual(glm::distance(cueBall.pos,cue->pos), ((cue->scale.x / 2) + 0.5f)) && cue->speed == 0.0f) {
+			std::cout << "11111111111111111111111111111111111111111111" << std::endl;	// delete
 			glm::vec2 mouseDirection = glm::normalize(mouseWorldPos - cueBall.pos);
-			cue->pos = cueBall.pos + mouseDirection * ((cue->scale.x / 2.0f) + 0.5f + cue->distanceFromCueBall);
+			cue->pos = cueBall.pos + mouseDirection * ((cue->scale.x / 2.0f) + 0.5f);
 			cue->rotation = glm::atan(mouseDirection.y / mouseDirection.x);
 		}
-		else {
-			cue->speed = glm::distance(cueBall.pos, cue->pos) - ((cue->scale.x / 2) + 0.5f);
+		else if (cue->speed == 0.0f) {
+			std::cout << "2222222222222222222222222222222222222222222222222" << std::endl;	// delete
+			cue->speed = 3 * (glm::distance(cueBall.pos, cue->pos) - ((cue->scale.x / 2) + 0.5f));
 		}
 	}
 
@@ -129,15 +131,17 @@ int main() {
 
 	Ball cueBall = { {5.0f, 0.0f}, { 0.0f, 0.0f }, white, false };
 
-	Cue cue = { {0.0f, 0.0f}, {10.0f, 0.2f}, 0.0f, 0.0f, lightBrown, {0.0f, 0.0f} };
+	glm::vec2 cueStartPosition = cueBall.pos + glm::vec2(-1.0f, 0.0f) * ((10.0f / 2.0f) + 0.5f);
+
+	Cue cue = { cueStartPosition, {10.0f, 0.2f}, 0.0f, 0.0f, lightBrown };
 
 	Physics physics;
 
 	while (!(input.escKeyPressed() || window.shouldClose())) {
-		window.drawFrame(&balls, cueBall, cue);
-		
 		setCuePos(&window, &input, cueBall, &cue);
 
 		physics.update(&balls, &cueBall, &cue, input.deltaTime());
+		
+		window.drawFrame(&balls, cueBall, cue);
 	}
 }

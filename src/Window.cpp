@@ -67,7 +67,7 @@ Window::~Window() {
 }
 
 void Window::drawFrame(std::vector<Ball>* balls, Ball cueBall, Cue cue) {
-	std::cout << "balls->size(): " << balls->size() << std::endl;	//delete
+	//std::cout << "balls->size(): " << balls->size() << std::endl;	//delete
 	
 	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
 
@@ -85,7 +85,7 @@ void Window::drawFrame(std::vector<Ball>* balls, Ball cueBall, Cue cue) {
 }
 
 void Window::drawCircle(glm::vec2 pos, glm::vec4 color, bool striped) {
-	std::cout << "drawing circle" << std::endl;	//delete
+	//std::cout << "drawing circle" << std::endl;	//delete
 
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectvbo));
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
@@ -107,7 +107,7 @@ void Window::drawCircle(glm::vec2 pos, glm::vec4 color, bool striped) {
 }
 
 void Window::drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::vec4 color) {
-	std::cout << "drawing square" << std::endl;	//delete
+	//std::cout << "drawing square" << std::endl;	//delete
 
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectvbo));
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));

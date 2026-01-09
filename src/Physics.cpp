@@ -1,7 +1,18 @@
 #include <Physics.h>
 
+Physics::Physics() {
+
+}
+
+Physics::~Physics() {
+
+}
+
 void Physics::update(std::vector<Ball>* balls, Ball* cueBall, Cue* cue, float deltaTime) {
 	// update positions
+	std::cout << "cue speed: " << cue->speed << std::endl;	// delete
+	std::cout << "cue ball speed: " << glm::length(cueBall->velocity) << std::endl;	// delete
+
 	cue->pos += glm::normalize(cueBall->pos - cue->pos) * cue->speed * deltaTime;
 
 	cueBall->pos += cueBall->velocity * deltaTime;
@@ -11,35 +22,51 @@ void Physics::update(std::vector<Ball>* balls, Ball* cueBall, Cue* cue, float de
 	}
 	
 	// collision between cue and cue ball
-	if (glm::distance(cue->pos, cueBall->pos) <= ((cue->scale.x / 2) + 0.5f)) {
-		cue->speed = 0.0f;
+	if (glm::distance(cue->pos, cueBall->pos) <= ((cue->scale.x / 2) + 0.5f) && cue->speed != 0.0f) {
+		std::cout << "collision between cue and cue ball" << std::endl;	// delete
+
 		cueBall->velocity = glm::normalize(cueBall->pos - cue->pos) * cue->speed;
+		cue->speed = 0.0f;
 	}
 
-	// collision between balls
+	// collisions between balls
 	glm::vec2 collisionNormal(0.0f, 0.0f);
 
 	for (int i = 0; i < balls->size(); i++) {
 		if (detectBallCollision(cueBall, &balls->at(i), &collisionNormal)) {
+			std::cout << "collision between ball and cue ball" << std::endl;	// delete
+			std::cout << "ball speed before collision: " << glm::length(balls->at(i).velocity) << "     cue ball speed before collision: " << glm::length(cueBall->velocity) << std::endl;	// delete
+
 			resolveBallCollision(cueBall, &balls->at(i), &collisionNormal);
+
+			std::cout << "ball speed after collision: " << glm::length(balls->at(i).velocity) << "     cue ball speed after collision: " << glm::length(cueBall->velocity) << std::endl;	// delete
 		}
 	}
 
 	for (int i = 0; i < balls->size(); i++) {
 		for (int j = i + 1; j < balls->size(); j++) {
 			if (detectBallCollision(&balls->at(i), &balls->at(j), &collisionNormal)) {
+				std::cout << "collision between balls" << std::endl;	// delete
+				std::cout << "ball1 speed before collision: " << glm::length(balls->at(i).velocity) << "     ball2 speed before collision: " << glm::length(balls->at(j).velocity) << std::endl;	// delete
+
 				resolveBallCollision(&balls->at(i), &balls->at(j), &collisionNormal);
+
+				std::cout << "ball1 speed after collision: " << glm::length(balls->at(i).velocity) << "     ball2 speed after collision: " << glm::length(balls->at(j).velocity) << std::endl;	// delete
 			}
 		}
 	}
 
-	// collision between balls and sides
+	// collisions between balls and sides
 	if (detectBallSideCollision(cueBall, &collisionNormal)) {
+		std::cout << "collision between ball and side" << std::endl;	// delete
+
 		resolveBallSideCollision(cueBall, &collisionNormal);
 	}
 
 	for (int i = 0; i < balls->size(); i++) {
 		if (detectBallSideCollision(&balls->at(i), &collisionNormal)) {
+			std::cout << "collision between ball and side" << std::endl;	// delete
+
 			resolveBallSideCollision(&balls->at(i), &collisionNormal);
 		}
 	}
@@ -51,6 +78,8 @@ bool Physics::detectBallCollision(Ball* ball1, Ball* ball2, glm::vec2* outCollis
 
 		return true;
 	}
+
+	return false;
 }
 
 bool Physics::detectBallSideCollision(Ball* ball, glm::vec2* outCollisionNormal) {
@@ -82,19 +111,25 @@ bool Physics::detectBallSideCollision(Ball* ball, glm::vec2* outCollisionNormal)
 }
 
 void Physics::resolveBallCollision(Ball* ball1, Ball* ball2, glm::vec2* collisionNormal) {
-	float elasticity = 0.5f;
+	std::cout << "collision normal x: " << collisionNormal->x << "     collision normal y: " << collisionNormal->y << std::endl;	// delete
+	std::cout << "collision normal magnitude: " << glm::length(*collisionNormal) << std::endl;	// delete
+	
+	float elasticity = 0.8f;
 
-	glm::vec2 relativeVelocity = ball1->velocity - ball2->velocity;
+	glm::vec2 relativeVelocity = ball2->velocity - ball1->velocity;
 	float impulseMagnitude = -((1 + elasticity) * glm::dot(relativeVelocity, *collisionNormal)) / 2;
+
+	std::cout << "impulse magnitude: " << impulseMagnitude << std::endl;	// delete
 	
 	ball1->velocity -= impulseMagnitude * *collisionNormal;
 	ball2->velocity += impulseMagnitude * *collisionNormal;
 }
 
 void Physics::resolveBallSideCollision(Ball* ball, glm::vec2* collisionNormal) {
-	float elasticity = 0.5f;
+	float elasticity = 0.8f;
 
-	float impulseMagnitude = -((1 + elasticity) * glm::dot(ball->velocity, *collisionNormal));
+	glm::vec2 relativeVelocity = -ball->velocity;
+	float impulseMagnitude = -((1 + elasticity) * glm::dot(relativeVelocity, *collisionNormal));
 
 	ball->velocity -= impulseMagnitude * *collisionNormal;
 }
