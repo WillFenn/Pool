@@ -17,7 +17,7 @@ float absoluteValue(float x) {
 	if (x < 0.0f) {
 		return -x;
 	}
-	
+
 	return x;
 }
 
@@ -78,7 +78,7 @@ void setCuePos(Window* window, Input* input, Ball cueBall, Cue* cue) {
 			std::cout << "11111111111111111111111111111111111111111111" << std::endl;	// delete
 			glm::vec2 mouseDirection = glm::normalize(mouseWorldPos - cueBall.pos);
 			cue->pos = cueBall.pos + mouseDirection * ((cue->scale.x / 2.0f) + 0.5f);
-			cue->rotation = glm::atan(mouseDirection.y / mouseDirection.x);
+			cue->rotation = atan(mouseDirection.y / mouseDirection.x);
 		}
 		else if (cue->speed == 0.0f) {
 			std::cout << "2222222222222222222222222222222222222222222222222" << std::endl;	// delete

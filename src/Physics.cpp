@@ -9,6 +9,42 @@ Physics::~Physics() {
 }
 
 void Physics::update(std::vector<Ball>* balls, Ball* cueBall, Cue* cue, float deltaTime) {
+	// stop ball if its speed is close to zero
+	if ((glm::length(cueBall->velocity) < 0.05f)) {
+		cueBall->velocity = { 0.0f, 0.0f };
+	}
+
+	for (int i = 0; i < balls->size(); i++) {
+		if (glm::length(balls->at(i).velocity) < 0.05f) {
+			balls->at(i).velocity = { 0.0f, 0.0f };
+		}
+	}
+	
+	// apply friction
+	if (glm::length(cueBall->velocity) > 0) {
+		glm::vec2 newVelocity = cueBall->velocity - glm::normalize(cueBall->velocity) * frictionAcceleration * deltaTime;
+
+		if (glm::dot(cueBall->velocity, newVelocity) > 0) {
+			cueBall->velocity = newVelocity;
+		}
+		else {
+			cueBall->velocity = { 0.0f, 0.0f };
+		}
+	}
+
+	for (int i = 0; i < balls->size(); i++) {
+		if (glm::length(balls->at(i).velocity) > 0) {
+			glm::vec2 newVelocity = balls->at(i).velocity - glm::normalize(balls->at(i).velocity) * frictionAcceleration * deltaTime;
+
+			if (glm::dot(balls->at(i).velocity, newVelocity) > 0) {
+				balls->at(i).velocity = newVelocity;
+			}
+			else {
+				balls->at(i).velocity = { 0.0f, 0.0f };
+			}
+		}
+	}
+	
 	// update positions
 	std::cout << "cue speed: " << cue->speed << std::endl;	// delete
 	std::cout << "cue ball speed: " << glm::length(cueBall->velocity) << std::endl;	// delete
@@ -73,7 +109,7 @@ void Physics::update(std::vector<Ball>* balls, Ball* cueBall, Cue* cue, float de
 }
 
 bool Physics::detectBallCollision(Ball* ball1, Ball* ball2, glm::vec2* outCollisionNormal) {
-	if (glm::length(ball1->pos - ball2->pos) <= 1.0f) {
+	if (glm::length(ball1->pos - ball2->pos) <= 1.0f && glm::length(ball1->velocity - ball2->velocity) != 0.0f) {
 		*outCollisionNormal = glm::normalize(ball2->pos - ball1->pos);
 
 		return true;
