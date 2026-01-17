@@ -9,4 +9,5 @@ struct Cue {
 	float speed;
 	float rotation;
 	glm::vec4 color;
+	bool wasPulledBack;
 };

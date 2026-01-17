@@ -69,20 +69,25 @@ void setCuePos(Window* window, Input* input, Ball cueBall, Cue* cue) {
 	mouseWorldPos.y *= -1;
 	
 	if (input->leftMousePressed()) {
+		std::cout << "left mouse button is pressed" << std::endl;	// delete
+
 		glm::vec2 cueDirection = glm::normalize(cue->pos - cueBall.pos);
 		glm::vec2 cueBallToMouse = mouseWorldPos - cueBall.pos;
 		cue->pos = cueBall.pos + cueDirection * max(projection(cueBallToMouse, cueDirection), (cue->scale.x / 2) + 0.5f);
+		cue->wasPulledBack = true;
 	}
 	else {
-		if (approximatelyEqual(glm::distance(cueBall.pos,cue->pos), ((cue->scale.x / 2) + 0.5f)) && cue->speed == 0.0f) {
+		if (cue->wasPulledBack) {
+			std::cout << "left mouse button was let go" << std::endl;	// delete
+
+			cue->speed = 3 * (glm::distance(cueBall.pos, cue->pos) - ((cue->scale.x / 2) + 0.5f));
+			cue->wasPulledBack = false;
+		}
+		else {
 			std::cout << "11111111111111111111111111111111111111111111" << std::endl;	// delete
 			glm::vec2 mouseDirection = glm::normalize(mouseWorldPos - cueBall.pos);
 			cue->pos = cueBall.pos + mouseDirection * ((cue->scale.x / 2.0f) + 0.5f);
 			cue->rotation = atan(mouseDirection.y / mouseDirection.x);
-		}
-		else if (cue->speed == 0.0f) {
-			std::cout << "2222222222222222222222222222222222222222222222222" << std::endl;	// delete
-			cue->speed = 3 * (glm::distance(cueBall.pos, cue->pos) - ((cue->scale.x / 2) + 0.5f));
 		}
 	}
 
@@ -133,7 +138,7 @@ int main() {
 
 	glm::vec2 cueStartPosition = cueBall.pos + glm::vec2(-1.0f, 0.0f) * ((10.0f / 2.0f) + 0.5f);
 
-	Cue cue = { cueStartPosition, {10.0f, 0.2f}, 0.0f, 0.0f, lightBrown };
+	Cue cue = { cueStartPosition, {10.0f, 0.2f}, 0.0f, 0.0f, lightBrown, false };
 
 	Physics physics;
 

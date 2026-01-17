@@ -16,9 +16,9 @@ public:
 
 private:
 	bool detectBallCollision(Ball* ball1, Ball* ball2, glm::vec2* collisionNormal);
-	bool detectBallSideCollision(Ball* ball, glm::vec2* collisionNormal);
+	bool detectBallSideCollision(Ball* ball, std::vector<glm::vec2>* collisionNormals);
 	void resolveBallCollision(Ball* ball1, Ball* ball2, glm::vec2* collisionNormal);
-	void resolveBallSideCollision(Ball* ball, glm::vec2* collisionNormal);
+	void resolveBallSideCollision(Ball* ball, std::vector<glm::vec2>* collisionNormals);
 
 private:
 	float frictionAcceleration = 0.1f * 9.8f;
