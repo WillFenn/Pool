@@ -9,7 +9,11 @@ Input::~Input() {
 
 }
 
-double Input::deltaTime() {
+double Input::getTime() {
+	return glfwGetTime();
+}
+
+double Input::getDeltaTime() {
 	if (!deltaTimeCalled) {
 		deltaTimeCalled = true;
 

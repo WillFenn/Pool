@@ -7,7 +7,8 @@ class Input {
 public:
 	Input(GLFWwindow* glfwwindow);
 	~Input();
-	double deltaTime();
+	double getTime();
+	double getDeltaTime();
 	glm::vec2 getMousePos();
 	bool leftMousePressed();
 	bool escKeyPressed();

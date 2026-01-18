@@ -55,13 +55,13 @@ void setPositions(std::vector<Ball>* balls) {
 		positions.erase(positions.begin() + randIndex);
 	}
 
-	for (int i = 0; i < positions.size(); i++) {																		// delete
-		std::cout << "position " << i << "     x: " << positions.at(i).x << "  y: " << positions.at(i).y << std::endl;	//
-	}																													//
+	//for (int i = 0; i < positions.size(); i++) {																		// delete
+	//	std::cout << "position " << i << "     x: " << positions.at(i).x << "  y: " << positions.at(i).y << std::endl;	//
+	//}																													//
 
-	for (int i = 0; i < balls->size(); i++) {																					// delete
-		std::cout << "ball " << i << " position     x: " << balls->at(i).pos.x << "  y: " << balls->at(i).pos.y << std::endl;	//
-	}																															//
+	//for (int i = 0; i < balls->size(); i++) {																					// delete
+	//	std::cout << "ball " << i << " position     x: " << balls->at(i).pos.x << "  y: " << balls->at(i).pos.y << std::endl;	//
+	//}																															//
 }
 
 void setCuePos(Window* window, Input* input, Ball cueBall, Cue* cue) {
@@ -69,7 +69,7 @@ void setCuePos(Window* window, Input* input, Ball cueBall, Cue* cue) {
 	mouseWorldPos.y *= -1;
 	
 	if (input->leftMousePressed()) {
-		std::cout << "left mouse button is pressed" << std::endl;	// delete
+		//std::cout << "left mouse button is pressed" << std::endl;	// delete
 
 		glm::vec2 cueDirection = glm::normalize(cue->pos - cueBall.pos);
 		glm::vec2 cueBallToMouse = mouseWorldPos - cueBall.pos;
@@ -78,20 +78,20 @@ void setCuePos(Window* window, Input* input, Ball cueBall, Cue* cue) {
 	}
 	else {
 		if (cue->wasPulledBack) {
-			std::cout << "left mouse button was let go" << std::endl;	// delete
+			//std::cout << "left mouse button was let go" << std::endl;	// delete
 
 			cue->speed = 3 * (glm::distance(cueBall.pos, cue->pos) - ((cue->scale.x / 2) + 0.5f));
 			cue->wasPulledBack = false;
 		}
 		else {
-			std::cout << "11111111111111111111111111111111111111111111" << std::endl;	// delete
+			//std::cout << "11111111111111111111111111111111111111111111" << std::endl;	// delete
 			glm::vec2 mouseDirection = glm::normalize(mouseWorldPos - cueBall.pos);
 			cue->pos = cueBall.pos + mouseDirection * ((cue->scale.x / 2.0f) + 0.5f);
 			cue->rotation = atan(mouseDirection.y / mouseDirection.x);
 		}
 	}
 
-	std::cout << "mouse position: " << "(" << mouseWorldPos.x << ", " << mouseWorldPos.y << ")" << std::endl;	// delete
+	//std::cout << "mouse position: " << "(" << mouseWorldPos.x << ", " << mouseWorldPos.y << ")" << std::endl;	// delete
 }
 
 int main() {
@@ -142,10 +142,18 @@ int main() {
 
 	Physics physics;
 
+	int numFrames = 0;
+
+	double timeToFirstFrame = input.getTime();
+
 	while (!(input.escKeyPressed() || window.shouldClose())) {
+		numFrames++;
+		std::cout << std::endl << std::endl;
+		std::cout << "frame " << numFrames << std::endl << "average framerate: " << numFrames / (input.getTime() - timeToFirstFrame) << std::endl;
+
 		setCuePos(&window, &input, cueBall, &cue);
 
-		physics.update(&balls, &cueBall, &cue, input.deltaTime());
+		physics.update(&balls, &cueBall, &cue, input.getDeltaTime());
 		
 		window.drawFrame(&balls, cueBall, cue);
 	}
