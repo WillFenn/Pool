@@ -116,29 +116,31 @@ int main() {
 	Input input(window.getglfwwindow());
 
 	std::vector<Ball> balls;
-	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, black, false });
-	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, yellow, false });
-	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, yellow, true });
-	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, red, false });
-	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, red, true });
-	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, darkGreen, false });
-	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, darkGreen, true });
-	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, blue, false });
-	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, blue, true });
-	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, orange, false });
-	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, orange, true });
-	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, purple, false });
-	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, purple, true });
-	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, darkBrown, false });
-	balls.push_back({ { 0.0f, 0.0f }, { 0.0f, 0.0f }, darkBrown, true });
+	balls.push_back({ 1, { 0.0f, 0.0f }, { 0.0f, 0.0f }, black, false });
+	balls.push_back({ 2, { 0.0f, 0.0f }, { 0.0f, 0.0f }, yellow, false });
+	balls.push_back({ 3, { 0.0f, 0.0f }, { 0.0f, 0.0f }, yellow, true });
+	balls.push_back({ 4, { 0.0f, 0.0f }, { 0.0f, 0.0f }, red, false });
+	balls.push_back({ 5, { 0.0f, 0.0f }, { 0.0f, 0.0f }, red, true });
+	balls.push_back({ 6, { 0.0f, 0.0f }, { 0.0f, 0.0f }, darkGreen, false });
+	balls.push_back({ 7, { 0.0f, 0.0f }, { 0.0f, 0.0f }, darkGreen, true });
+	balls.push_back({ 8, { 0.0f, 0.0f }, { 0.0f, 0.0f }, blue, false });
+	balls.push_back({ 9, { 0.0f, 0.0f }, { 0.0f, 0.0f }, blue, true });
+	balls.push_back({ 10, { 0.0f, 0.0f }, { 0.0f, 0.0f }, orange, false });
+	balls.push_back({ 11, { 0.0f, 0.0f }, { 0.0f, 0.0f }, orange, true });
+	balls.push_back({ 12, { 0.0f, 0.0f }, { 0.0f, 0.0f }, purple, false });
+	balls.push_back({ 13, { 0.0f, 0.0f }, { 0.0f, 0.0f }, purple, true });
+	balls.push_back({ 14, { 0.0f, 0.0f }, { 0.0f, 0.0f }, darkBrown, false });
+	balls.push_back({ 15, { 0.0f, 0.0f }, { 0.0f, 0.0f }, darkBrown, true });
 
 	setPositions(&balls);
 
-	Ball cueBall = { {5.0f, 0.0f}, { 0.0f, 0.0f }, white, false };
+	glm::vec2 pocketPositions[6] = { { -24.0f, 13.5f }, { 0.0f, 13.5f }, { 24.0f, 13.5f }, { 24.0f, -13.5f }, { 0.0f, -13.5f }, { -24.0f, -13.5f } };
+
+	Ball cueBall = {0, { 5.0f, 0.0f }, { 0.0f, 0.0f }, white, false };
 
 	glm::vec2 cueStartPosition = cueBall.pos + glm::vec2(-1.0f, 0.0f) * ((10.0f / 2.0f) + 0.5f);
 
-	Cue cue = { cueStartPosition, {10.0f, 0.2f}, 0.0f, 0.0f, lightBrown, false };
+	Cue cue = { cueStartPosition, { 10.0f, 0.2f }, 0.0f, 0.0f, lightBrown, false };
 
 	Physics physics;
 
@@ -155,6 +157,6 @@ int main() {
 
 		physics.update(&balls, &cueBall, &cue, input.getDeltaTime());
 		
-		window.drawFrame(&balls, cueBall, cue);
+		window.drawFrame(pocketPositions, &balls, cueBall, cue);
 	}
 }

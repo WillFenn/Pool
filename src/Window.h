@@ -23,13 +23,13 @@ class Window {
 public:
 	Window(glm::vec2 worldScale, glm::vec4 backgroundColor);
 	~Window();
-	void drawFrame(std::vector<Ball>* balls, Ball cueBall, Cue cue);
+	void drawFrame(glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball cueBall, Cue cue);
 	GLFWwindow* getglfwwindow();
 	glm::vec2 getResolution();
 	glm::vec2 getWorldScale();
 	bool shouldClose();
 private:
-	void drawCircle(glm::vec2 pos, glm::vec4 color, bool striped);
+	void drawCircle(float radius, glm::vec2 pos, glm::vec4 color, bool striped);
 	void drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::vec4 color);
 	void GLClearErrors();
 	bool GLLogErrors();

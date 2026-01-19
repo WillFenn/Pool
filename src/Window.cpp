@@ -66,16 +66,21 @@ Window::~Window() {
 	glfwTerminate();
 }
 
-void Window::drawFrame(std::vector<Ball>* balls, Ball cueBall, Cue cue) {
+void Window::drawFrame(glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball cueBall, Cue cue) {
 	//std::cout << "balls->size(): " << balls->size() << std::endl;	//delete
 	
 	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
 
-	for (int i = 0; i < balls->size(); i++) {
-		drawCircle(balls->at(i).pos, balls->at(i).color, balls->at(i).striped);
+	glm::vec4 black = { 0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 1.0f };
+	for (int i = 0; i < 6; i++) {
+		drawCircle(1.0f, pocketPositions[i], black, false);
 	}
 
-	drawCircle(cueBall.pos, cueBall.color, cueBall.striped);
+	for (int i = 0; i < balls->size(); i++) {
+		drawCircle(0.5f, balls->at(i).pos, balls->at(i).color, balls->at(i).striped);
+	}
+
+	drawCircle(0.5f, cueBall.pos, cueBall.color, cueBall.striped);
 
 	drawRectangle(cue.pos, cue.scale, cue.rotation, cue.color);
 
@@ -84,7 +89,7 @@ void Window::drawFrame(std::vector<Ball>* balls, Ball cueBall, Cue cue) {
 	glfwPollEvents();
 }
 
-void Window::drawCircle(glm::vec2 pos, glm::vec4 color, bool striped) {
+void Window::drawCircle(float radius, glm::vec2 pos, glm::vec4 color, bool striped) {
 	//std::cout << "drawing circle" << std::endl;	//delete
 
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectvbo));
@@ -94,10 +99,12 @@ void Window::drawCircle(glm::vec2 pos, glm::vec4 color, bool striped) {
 	glm::mat4 projection = glm::ortho(-(worldScale.x / 2.0f), worldScale.x / 2.0f, -(worldScale.y / 2.0f), worldScale.y / 2.0f, -1.0f, 1.0f);
 	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos, 0.0f));
+	model = glm::scale(model, glm::vec3(radius * 2, radius * 2, 1.0f));
 
 	glm::mat4 mvp = projection * view * model;
 	circleShader->setUniformMat4(mvp, "uMVP");
 	circleShader->setUniformIVec2(resolution, "uResolution");
+	circleShader->setUniformFloat(radius, "uRadius");
 	circleShader->setUniformVec2(pos, "uPosition");
 	circleShader->setUniformVec2(worldScale, "uWorldScale");
 	circleShader->setUniformVec4(color, "uColor");
