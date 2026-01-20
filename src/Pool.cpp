@@ -99,6 +99,7 @@ int main() {
 
 	glm::vec4 white = { 255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f, 1.0f };
 	glm::vec4 black = { 0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 1.0f };
+	glm::vec4 gray = { 127.0f / 255.0f, 127.0f / 255.0f, 127.0f / 255.0f, 0.5f };
 	glm::vec4 yellow = { 255.0f / 255.0f, 255.0f / 255.0f, 0.0f / 255.0f, 1.0f };
 	glm::vec4 red = { 255.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 1.0f };
 	glm::vec4 lightGreen = { 0.0f / 255.0f, 150.0f / 255.0f, 0.0f / 255.0f, 1.0f };
@@ -109,9 +110,10 @@ int main() {
 	glm::vec4 lightBrown = { 200.0f / 255.0f, 150.0f / 255.0f, 0.0f / 255.0f, 1.0f };
 	glm::vec4 darkBrown = { 150.0f / 255.0f, 80.0f / 255.0f, 0.0f / 255.0f, 1.0f };
 
-	glm::vec2 worldScale = { 48.0f, 27.0f };
+	//glm::vec2 worldScale = { 48.0f, 27.0f };
+	glm::vec2 worldScale = { 96.0f, 54.0f };
 
-	Window window(worldScale, lightGreen);
+	Window window(worldScale, gray);
 
 	Input input(window.getglfwwindow());
 
@@ -134,7 +136,12 @@ int main() {
 
 	setPositions(&balls);
 
-	glm::vec2 pocketPositions[6] = { { -24.0f, 13.5f }, { 0.0f, 13.5f }, { 24.0f, 13.5f }, { 24.0f, -13.5f }, { 0.0f, -13.5f }, { -24.0f, -13.5f } };
+	glm::vec2 pocketPositions[6] = { { -24.0f - (1 / glm::sqrt(2)), 13.5f + (1 / glm::sqrt(2))},
+									{ 0.0f, 13.5f + 1.0f },
+									{ 24.0f + (1 / glm::sqrt(2)), 13.5f + (1 / glm::sqrt(2)) },
+									{ 24.0f + (1 / glm::sqrt(2)), -13.5f - (1 / glm::sqrt(2))},
+									{ 0.0f, -13.5f  - 1.0f },
+									{ -24.0f - (1 / glm::sqrt(2)), -13.5f - (1 / glm::sqrt(2))} };
 
 	Ball cueBall = {0, { 5.0f, 0.0f }, { 0.0f, 0.0f }, white, false };
 

@@ -71,6 +71,9 @@ void Window::drawFrame(glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ba
 	
 	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
 
+	glm::vec4 lightGreen = { 0.0f / 255.0f, 150.0f / 255.0f, 0.0f / 255.0f, 1.0f };
+	drawRectangle(glm::vec2(0.0f, 0.0f), glm::vec2(48.0f, 27.0f), 0.0f, lightGreen);
+
 	glm::vec4 black = { 0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 1.0f };
 	for (int i = 0; i < 6; i++) {
 		drawCircle(1.0f, pocketPositions[i], black, false);
