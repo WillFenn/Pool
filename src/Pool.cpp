@@ -5,6 +5,7 @@
 #include <vec2.hpp>
 #include <Window.h>
 #include <Input.h>
+#include <Side.h>
 #include <Ball.h>
 #include <Cue.h>
 #include <Physics.h>
@@ -31,6 +32,10 @@ float max(float x, float y) {
 
 bool approximatelyEqual(float x, float y) {
 	return absoluteValue(x - y) < 0.1f;
+}
+
+glm::vec2 normal(glm::vec2 a) {
+	return glm::normalize(glm::vec2(a.y, -a.x));
 }
 
 void setPositions(std::vector<Ball>* balls) {
@@ -110,12 +115,37 @@ int main() {
 	glm::vec4 lightBrown = { 200.0f / 255.0f, 150.0f / 255.0f, 0.0f / 255.0f, 1.0f };
 	glm::vec4 darkBrown = { 150.0f / 255.0f, 80.0f / 255.0f, 0.0f / 255.0f, 1.0f };
 
-	//glm::vec2 worldScale = { 48.0f, 27.0f };
 	glm::vec2 worldScale = { 96.0f, 54.0f };
 
 	Window window(worldScale, gray);
 
 	Input input(window.getglfwwindow());
+
+	Side sides[18] = { { { -24.0f, 13.5f - glm::sqrt(2) }, { -24.0f - glm::sqrt(2), 13.5f }, { 1 / glm::sqrt(2), 1 / glm::sqrt(2)} },
+						{ { -24.0f, 13.5f + glm::sqrt(2) }, { -24.0f + glm::sqrt(2), 13.5f }, { -(1 / glm::sqrt(2)), -(1 / glm::sqrt(2))} },
+						{ { -24.0f + glm::sqrt(2), 13.5f }, { -1.2f, 13.5f }, { 0.0f, -1.0f } },
+						{ { -1.2f, 13.5f }, { -1.0f, 14.5f }, { normal(glm::vec2(-1.0f, 14.5f) - glm::vec2(-1.2f, 13.5f)) } },
+						{ { 1.0f, 14.5f }, { 1.2f, 13.5f }, { normal(glm::vec2(1.2f, 13.5f) - glm::vec2(1.0f, 14.5f)) } },
+						{ { 1.2f, 13.5f }, { 24.0f - glm::sqrt(2), 13.5f }, { 0.0f, -1.0f } },
+						{ { 24.0f - glm::sqrt(2), 13.5f }, { 24.0f, 13.5f + glm::sqrt(2) }, { 1 / glm::sqrt(2), -(1 / glm::sqrt(2)) } },
+						{ { 24.0f + glm::sqrt(2), 13.5f }, { 24.0f, 13.5f - glm::sqrt(2) }, { -(1 / glm::sqrt(2)), 1 / glm::sqrt(2) } },
+						{ { 24.0f, 13.5f - glm::sqrt(2) }, { 24.0f, -13.5f + glm::sqrt(2) }, { -1.0f, 0.0f } },
+						{ { 24.0f, -13.5f + glm::sqrt(2) }, { 24.0f + glm::sqrt(2), -13.5f }, { -(1 / glm::sqrt(2)), -(1 / glm::sqrt(2)) }},
+						{ { 24.0f, -13.5f - glm::sqrt(2) }, { 24.0f - glm::sqrt(2), -13.5f }, { 1 / glm::sqrt(2), 1 / glm::sqrt(2) }},
+						{ { 24.0f - glm::sqrt(2), -13.5f }, { 1.2f, -13.5f }, { 0.0f, 1.0f } },
+						{ { 1.2f, -13.5f }, { 1.0f, -14.5 }, { normal(glm::vec2(1.0f, -14.5) - glm::vec2(1.2f, -13.5f)) } },
+						{ { -1.0f, -14.5f }, { -1.2, -13.5f }, { normal(glm::vec2(-1.2, -13.5f) - glm::vec2(-1.0f, -14.5f)) } },
+						{ { -1.2, -13.5f }, { -24.0f + glm::sqrt(2), -13.5 }, { 0.0f, 1.0f } },
+						{ { -24.0f + glm::sqrt(2), -13.5 }, { -24.0f, -13.5f - glm::sqrt(2) }, { normal(glm::vec2(-24.0f, -13.5f - glm::sqrt(2)) - glm::vec2(-24.0f + glm::sqrt(2), -13.5)) } },
+						{ { -24.0f - glm::sqrt(2), -13.5f }, { -24.0f, -13.5f + glm::sqrt(2) }, { normal(glm::vec2(-24.0f, -13.5f + glm::sqrt(2)) - glm::vec2(-24.0f - glm::sqrt(2), -13.5f)) } },
+						{ { -24.0f, -13.5f + glm::sqrt(2) }, { -24.0f, 13.5f - glm::sqrt(2) }, { 1.0f, 0.0f } } };
+
+	glm::vec2 pocketPositions[6] = { { -24.0f - (1 / glm::sqrt(2)), 13.5f + (1 / glm::sqrt(2))},
+									{ 0.0f, 13.5f + 1.0f },
+									{ 24.0f + (1 / glm::sqrt(2)), 13.5f + (1 / glm::sqrt(2)) },
+									{ 24.0f + (1 / glm::sqrt(2)), -13.5f - (1 / glm::sqrt(2))},
+									{ 0.0f, -13.5f - 1.0f },
+									{ -24.0f - (1 / glm::sqrt(2)), -13.5f - (1 / glm::sqrt(2))} };
 
 	std::vector<Ball> balls;
 	balls.push_back({ 1, { 0.0f, 0.0f }, { 0.0f, 0.0f }, black, false });
@@ -135,13 +165,6 @@ int main() {
 	balls.push_back({ 15, { 0.0f, 0.0f }, { 0.0f, 0.0f }, darkBrown, true });
 
 	setPositions(&balls);
-
-	glm::vec2 pocketPositions[6] = { { -24.0f - (1 / glm::sqrt(2)), 13.5f + (1 / glm::sqrt(2))},
-									{ 0.0f, 13.5f + 1.0f },
-									{ 24.0f + (1 / glm::sqrt(2)), 13.5f + (1 / glm::sqrt(2)) },
-									{ 24.0f + (1 / glm::sqrt(2)), -13.5f - (1 / glm::sqrt(2))},
-									{ 0.0f, -13.5f  - 1.0f },
-									{ -24.0f - (1 / glm::sqrt(2)), -13.5f - (1 / glm::sqrt(2))} };
 
 	Ball cueBall = {0, { 5.0f, 0.0f }, { 0.0f, 0.0f }, white, false };
 
@@ -164,6 +187,6 @@ int main() {
 
 		physics.update(&balls, &cueBall, &cue, input.getDeltaTime());
 		
-		window.drawFrame(pocketPositions, &balls, cueBall, cue);
+		window.drawFrame(sides, pocketPositions, &balls, cueBall, cue);
 	}
 }

@@ -51,8 +51,18 @@ Window::Window(glm::vec2 worldScale, glm::vec4 backgroundColor) {
 	unsigned int rectIndices[6] = { 0, 1, 3, 1, 2, 3 };
 	GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(rectIndices), rectIndices, GL_STREAM_DRAW));
 
+	GLCALL(glCreateVertexArrays(1, &linevao));
+	GLCALL(glBindVertexArray(linevao));
+
+	GLCALL(glCreateBuffers(1, &linevbo));
+	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, linevbo));
+
+	GLCALL(glVertexAttribPointer(0, 2, GL_FLOAT, false, sizeof(glm::vec2), 0));
+	GLCALL(glEnableVertexAttribArray(0));
+
 	circleShader = new Shader("res/Vertex.glsl", "res/CircleFragment.glsl");
-	rectangleShader = new Shader("res/Vertex.glsl", "res/RectangleFragment.glsl");
+	rectangleShader = new Shader("res/Vertex.glsl", "res/LineRectangleFragment.glsl");
+	lineShader = new Shader("res/Vertex.glsl", "res/LineRectangleFragment.glsl");
 
 	GLCALL(glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a));
 }
@@ -66,25 +76,37 @@ Window::~Window() {
 	glfwTerminate();
 }
 
-void Window::drawFrame(glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball cueBall, Cue cue) {
+void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball cueBall, Cue cue) {
 	//std::cout << "balls->size(): " << balls->size() << std::endl;	//delete
 	
 	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
 
+	// draw table
 	glm::vec4 lightGreen = { 0.0f / 255.0f, 150.0f / 255.0f, 0.0f / 255.0f, 1.0f };
+	glm::vec4 darkBrown = { 150.0f / 255.0f, 80.0f / 255.0f, 0.0f / 255.0f, 1.0f };
 	drawRectangle(glm::vec2(0.0f, 0.0f), glm::vec2(48.0f, 27.0f), 0.0f, lightGreen);
+	drawRectangle(glm::vec2(0.0f, 14.5f), glm::vec2(52.0f, 2.0f), 0.0f, darkBrown);
+	drawRectangle(glm::vec2(25.0f, 0.0f), glm::vec2(2.0f, 27.0f), 0.0f, darkBrown);
+	drawRectangle(glm::vec2(0.0f, -14.5f), glm::vec2(52.0f, 2.0f), 0.0f, darkBrown);
+	drawRectangle(glm::vec2(-25.0f, 0.0f), glm::vec2(2.0f, 27.0f), 0.0f, darkBrown);
 
 	glm::vec4 black = { 0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 1.0f };
+	for (int i = 0; i < 18; i++) {
+		drawLineSegment(sides[i].pointA, sides[i].pointB, black);
+	}
+
 	for (int i = 0; i < 6; i++) {
 		drawCircle(1.0f, pocketPositions[i], black, false);
 	}
 
+	// draw balls
 	for (int i = 0; i < balls->size(); i++) {
 		drawCircle(0.5f, balls->at(i).pos, balls->at(i).color, balls->at(i).striped);
 	}
 
 	drawCircle(0.5f, cueBall.pos, cueBall.color, cueBall.striped);
 
+	// draw cue
 	drawRectangle(cue.pos, cue.scale, cue.rotation, cue.color);
 
 	glfwSwapBuffers(glfwwindow);
@@ -95,6 +117,7 @@ void Window::drawFrame(glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ba
 void Window::drawCircle(float radius, glm::vec2 pos, glm::vec4 color, bool striped) {
 	//std::cout << "drawing circle" << std::endl;	//delete
 
+	GLCALL(glBindVertexArray(rectvao));
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectvbo));
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
 	circleShader->bind();
@@ -119,6 +142,7 @@ void Window::drawCircle(float radius, glm::vec2 pos, glm::vec4 color, bool strip
 void Window::drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::vec4 color) {
 	//std::cout << "drawing square" << std::endl;	//delete
 
+	GLCALL(glBindVertexArray(rectvao));
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectvbo));
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
 	rectangleShader->bind();
@@ -134,6 +158,24 @@ void Window::drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::
 	rectangleShader->setUniformVec4(color, "uColor");
 
 	GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+}
+
+void Window::drawLineSegment(glm::vec2 pointA, glm::vec2 pointB, glm::vec4 color) {
+	glm::vec2 lineVertices[2] = { pointA, pointB };
+
+	GLCALL(glBindVertexArray(linevao));
+	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, linevbo));
+	GLCALL(glBufferData(GL_ARRAY_BUFFER, sizeof(lineVertices), lineVertices, GL_STREAM_DRAW));
+	lineShader->bind();
+
+	glm::mat4 projection = glm::ortho(-(worldScale.x / 2.0f), worldScale.x / 2.0f, -(worldScale.y / 2.0f), worldScale.y / 2.0f, -1.0f, 1.0f);
+	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+
+	glm::mat4 mvp = projection * view;
+	rectangleShader->setUniformMat4(mvp, "uMVP");
+	lineShader->setUniformVec4(color, "uColor");
+
+	GLCALL(glDrawArrays(GL_LINES, 0, 2));
 }
 
 bool Window::shouldClose() {

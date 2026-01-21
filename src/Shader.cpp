@@ -9,6 +9,7 @@ Shader::Shader(const char* vsFilepath, const char* fsFilepath) {
 	std::string fsSourceString = readFile(fsFilepath);
 	const char* fsSource = fsSourceString.c_str();
 	std::cout << "fragment shader:\n" << fsSource << std::endl;	//delete
+	std::cout << "\n\n\n\n\n";
 
 	compileShader(vsSource, GL_VERTEX_SHADER, &vsID);
 	compileShader(fsSource, GL_FRAGMENT_SHADER, &fsID);
