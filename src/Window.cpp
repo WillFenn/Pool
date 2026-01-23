@@ -76,7 +76,7 @@ Window::~Window() {
 	glfwTerminate();
 }
 
-void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball cueBall, Cue cue) {
+void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball* cueBall, Cue* cue) {
 	//std::cout << "balls->size(): " << balls->size() << std::endl;	//delete
 	
 	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
@@ -104,10 +104,12 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 		drawCircle(0.5f, balls->at(i).pos, balls->at(i).color, balls->at(i).striped);
 	}
 
-	drawCircle(0.5f, cueBall.pos, cueBall.color, cueBall.striped);
+	drawCircle(0.5f, cueBall->pos, cueBall->color, cueBall->striped);
 
 	// draw cue
-	drawRectangle(cue.pos, cue.scale, cue.rotation, cue.color);
+	if (cue != nullptr) {
+		drawRectangle(cue->pos, cue->scale, cue->rotation, cue->color);
+	}
 
 	glfwSwapBuffers(glfwwindow);
 	

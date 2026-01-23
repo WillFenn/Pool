@@ -99,6 +99,30 @@ void setCuePos(Window* window, Input* input, Ball cueBall, Cue* cue) {
 	//std::cout << "mouse position: " << "(" << mouseWorldPos.x << ", " << mouseWorldPos.y << ")" << std::endl;	// delete
 }
 
+void removeBallsInPockets(glm::vec2 pocketPositions[], std::vector<Ball>* balls) {
+	for (int i = 0; i < balls->size(); i++) {
+		for (int j = 0; j < 6; j++) {
+			if (glm::distance(pocketPositions[j], balls->at(i).pos) < 1.5f) {
+				balls->erase(balls->begin() + i);
+			}
+		}
+	}
+}
+
+bool ballsAreMoving(std::vector<Ball>* balls, Ball* cueBall) {
+	if (glm::length(cueBall->velocity) != 0.0f) {
+		return true;
+	}
+
+	for (int i = 0; i < balls->size(); i++) {
+		if (glm::length(balls->at(i).velocity) != 0.0f) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 int main() {
 	std::cout << "starting" << std::endl;	// delete
 
@@ -185,8 +209,10 @@ int main() {
 
 		setCuePos(&window, &input, cueBall, &cue);
 
-		physics.update(&balls, &cueBall, &cue, input.getDeltaTime());
-		
-		window.drawFrame(sides, pocketPositions, &balls, cueBall, cue);
+		removeBallsInPockets(pocketPositions, &balls);
+
+		physics.update(sides, &balls, &cueBall, &cue, input.getDeltaTime());
+
+		window.drawFrame(sides, pocketPositions, &balls, &cueBall, ballsAreMoving(&balls, &cueBall) ? nullptr : &cue);
 	}
 }
