@@ -3,40 +3,13 @@
 #include <cstdlib>
 #include <ctime>
 #include <vec2.hpp>
+#include <PoolMath.h>
 #include <Window.h>
 #include <Input.h>
 #include <Side.h>
 #include <Ball.h>
 #include <Cue.h>
 #include <Physics.h>
-
-float projection(glm::vec2 a, glm::vec2 b) {
-	return glm::dot(a, b) / glm::length(b);
-}
-
-float absoluteValue(float x) {
-	if (x < 0.0f) {
-		return -x;
-	}
-
-	return x;
-}
-
-float max(float x, float y) {
-	if (x >= y) {
-		return x;
-	}
-
-	return y;
-}
-
-bool approximatelyEqual(float x, float y) {
-	return absoluteValue(x - y) < 0.1f;
-}
-
-glm::vec2 normal(glm::vec2 a) {
-	return glm::normalize(glm::vec2(a.y, -a.x));
-}
 
 void setPositions(std::vector<Ball>* balls) {
 	glm::vec2 frontPos = { 7.0f, 0.0f };
@@ -78,7 +51,7 @@ void setCuePos(Window* window, Input* input, Ball cueBall, Cue* cue) {
 
 		glm::vec2 cueDirection = glm::normalize(cue->pos - cueBall.pos);
 		glm::vec2 cueBallToMouse = mouseWorldPos - cueBall.pos;
-		cue->pos = cueBall.pos + cueDirection * max(projection(cueBallToMouse, cueDirection), (cue->scale.x / 2) + 0.5f);
+		cue->pos = cueBall.pos + cueDirection * PoolMath::max(PoolMath::projection(cueBallToMouse, cueDirection), (cue->scale.x / 2) + 0.5f);
 		cue->wasPulledBack = true;
 	}
 	else {
@@ -148,8 +121,8 @@ int main() {
 	Side sides[18] = { { { -24.0f, 13.5f - glm::sqrt(2) }, { -24.0f - glm::sqrt(2), 13.5f }, { 1 / glm::sqrt(2), 1 / glm::sqrt(2)} },
 						{ { -24.0f, 13.5f + glm::sqrt(2) }, { -24.0f + glm::sqrt(2), 13.5f }, { -(1 / glm::sqrt(2)), -(1 / glm::sqrt(2))} },
 						{ { -24.0f + glm::sqrt(2), 13.5f }, { -1.2f, 13.5f }, { 0.0f, -1.0f } },
-						{ { -1.2f, 13.5f }, { -1.0f, 14.5f }, { normal(glm::vec2(-1.0f, 14.5f) - glm::vec2(-1.2f, 13.5f)) } },
-						{ { 1.0f, 14.5f }, { 1.2f, 13.5f }, { normal(glm::vec2(1.2f, 13.5f) - glm::vec2(1.0f, 14.5f)) } },
+						{ { -1.2f, 13.5f }, { -1.0f, 14.5f }, { PoolMath::normal(glm::vec2(-1.0f, 14.5f) - glm::vec2(-1.2f, 13.5f)) } },
+						{ { 1.0f, 14.5f }, { 1.2f, 13.5f }, { PoolMath::normal(glm::vec2(1.2f, 13.5f) - glm::vec2(1.0f, 14.5f)) } },
 						{ { 1.2f, 13.5f }, { 24.0f - glm::sqrt(2), 13.5f }, { 0.0f, -1.0f } },
 						{ { 24.0f - glm::sqrt(2), 13.5f }, { 24.0f, 13.5f + glm::sqrt(2) }, { 1 / glm::sqrt(2), -(1 / glm::sqrt(2)) } },
 						{ { 24.0f + glm::sqrt(2), 13.5f }, { 24.0f, 13.5f - glm::sqrt(2) }, { -(1 / glm::sqrt(2)), 1 / glm::sqrt(2) } },
@@ -157,11 +130,11 @@ int main() {
 						{ { 24.0f, -13.5f + glm::sqrt(2) }, { 24.0f + glm::sqrt(2), -13.5f }, { -(1 / glm::sqrt(2)), -(1 / glm::sqrt(2)) }},
 						{ { 24.0f, -13.5f - glm::sqrt(2) }, { 24.0f - glm::sqrt(2), -13.5f }, { 1 / glm::sqrt(2), 1 / glm::sqrt(2) }},
 						{ { 24.0f - glm::sqrt(2), -13.5f }, { 1.2f, -13.5f }, { 0.0f, 1.0f } },
-						{ { 1.2f, -13.5f }, { 1.0f, -14.5 }, { normal(glm::vec2(1.0f, -14.5) - glm::vec2(1.2f, -13.5f)) } },
-						{ { -1.0f, -14.5f }, { -1.2, -13.5f }, { normal(glm::vec2(-1.2, -13.5f) - glm::vec2(-1.0f, -14.5f)) } },
+						{ { 1.2f, -13.5f }, { 1.0f, -14.5 }, { PoolMath::normal(glm::vec2(1.0f, -14.5) - glm::vec2(1.2f, -13.5f)) } },
+						{ { -1.0f, -14.5f }, { -1.2, -13.5f }, { PoolMath::normal(glm::vec2(-1.2, -13.5f) - glm::vec2(-1.0f, -14.5f)) } },
 						{ { -1.2, -13.5f }, { -24.0f + glm::sqrt(2), -13.5 }, { 0.0f, 1.0f } },
-						{ { -24.0f + glm::sqrt(2), -13.5 }, { -24.0f, -13.5f - glm::sqrt(2) }, { normal(glm::vec2(-24.0f, -13.5f - glm::sqrt(2)) - glm::vec2(-24.0f + glm::sqrt(2), -13.5)) } },
-						{ { -24.0f - glm::sqrt(2), -13.5f }, { -24.0f, -13.5f + glm::sqrt(2) }, { normal(glm::vec2(-24.0f, -13.5f + glm::sqrt(2)) - glm::vec2(-24.0f - glm::sqrt(2), -13.5f)) } },
+						{ { -24.0f + glm::sqrt(2), -13.5 }, { -24.0f, -13.5f - glm::sqrt(2) }, { PoolMath::normal(glm::vec2(-24.0f, -13.5f - glm::sqrt(2)) - glm::vec2(-24.0f + glm::sqrt(2), -13.5)) } },
+						{ { -24.0f - glm::sqrt(2), -13.5f }, { -24.0f, -13.5f + glm::sqrt(2) }, { PoolMath::normal(glm::vec2(-24.0f, -13.5f + glm::sqrt(2)) - glm::vec2(-24.0f - glm::sqrt(2), -13.5f)) } },
 						{ { -24.0f, -13.5f + glm::sqrt(2) }, { -24.0f, 13.5f - glm::sqrt(2) }, { 1.0f, 0.0f } } };
 
 	glm::vec2 pocketPositions[6] = { { -24.0f - (1 / glm::sqrt(2)), 13.5f + (1 / glm::sqrt(2))},
