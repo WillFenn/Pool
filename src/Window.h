@@ -15,26 +15,31 @@
 #include <mat4x4.hpp>
 #include <ext/matrix_clip_space.hpp>
 #include <ext/matrix_transform.hpp>
+#include <PoolColors.h>
 #include <Shader.h>
+#include <Game.h>
 #include <Side.h>
 #include <Ball.h>
 #include <Cue.h>
 
 class Window {
 public:
-	Window(glm::vec2 worldScale, glm::vec4 backgroundColor);
+	Window();
 	~Window();
 	void drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball* cueBall, Cue* cue);
 	GLFWwindow* getglfwwindow();
 	glm::vec2 getResolution();
 	glm::vec2 getWorldScale();
 	bool shouldClose();
+
 private:
 	void drawCircle(float radius, glm::vec2 pos, glm::vec4 color, bool striped);
 	void drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::vec4 color);
 	void drawLineSegment(glm::vec2 pointA, glm::vec2 pointB, glm::vec4 color);
 	void GLClearErrors();
 	bool GLLogErrors();
+
+private:
 	GLFWmonitor* glfwmonitor;
 	GLFWwindow* glfwwindow;
 	const char* windowTitle;

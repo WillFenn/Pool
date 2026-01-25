@@ -29,6 +29,7 @@ public:
 	void setUniformMat4(glm::mat4 mat4, const char* name);
 	void GLClearErrors();
 	bool GLLogErrors();
+
 private:
 	unsigned int vsID;
 	unsigned int fsID;

@@ -12,6 +12,7 @@ public:
 	glm::vec2 getMousePos();
 	bool leftMousePressed();
 	bool escKeyPressed();
+
 private:
 	GLFWwindow* glfwwindow;
 	bool deltaTimeCalled;

@@ -1,6 +1,6 @@
 #include <Window.h>
 
-Window::Window(glm::vec2 worldScale, glm::vec4 backgroundColor) {
+Window::Window() {
 	std::cout << "window created" << std::endl;	// delete
 
 	if (!glfwInit()) {
@@ -19,7 +19,7 @@ Window::Window(glm::vec2 worldScale, glm::vec4 backgroundColor) {
 
 	std::cout << "width: " << resolution.x << std::endl << "height: " << resolution.y << std::endl;	// delete
 
-	this->worldScale = worldScale;
+	worldScale = { 96.0f, 54.0f };
 
 	windowTitle = "Pool";
 
@@ -64,6 +64,7 @@ Window::Window(glm::vec2 worldScale, glm::vec4 backgroundColor) {
 	rectangleShader = new Shader("res/Vertex.glsl", "res/LineRectangleFragment.glsl");
 	lineShader = new Shader("res/Vertex.glsl", "res/LineRectangleFragment.glsl");
 
+	glm::vec4 backgroundColor = PoolColors::gray();
 	GLCALL(glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a));
 }
 
@@ -82,13 +83,11 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
 
 	// draw table
-	glm::vec4 lightGreen = { 0.0f / 255.0f, 150.0f / 255.0f, 0.0f / 255.0f, 1.0f };
-	glm::vec4 darkBrown = { 150.0f / 255.0f, 80.0f / 255.0f, 0.0f / 255.0f, 1.0f };
-	drawRectangle(glm::vec2(0.0f, 0.0f), glm::vec2(48.0f, 27.0f), 0.0f, lightGreen);
-	drawRectangle(glm::vec2(0.0f, 14.5f), glm::vec2(52.0f, 2.0f), 0.0f, darkBrown);
-	drawRectangle(glm::vec2(25.0f, 0.0f), glm::vec2(2.0f, 27.0f), 0.0f, darkBrown);
-	drawRectangle(glm::vec2(0.0f, -14.5f), glm::vec2(52.0f, 2.0f), 0.0f, darkBrown);
-	drawRectangle(glm::vec2(-25.0f, 0.0f), glm::vec2(2.0f, 27.0f), 0.0f, darkBrown);
+	drawRectangle(glm::vec2(0.0f, 0.0f), glm::vec2(48.0f, 27.0f), 0.0f, PoolColors::lightGreen());
+	drawRectangle(glm::vec2(0.0f, 14.5f), glm::vec2(52.0f, 2.0f), 0.0f, PoolColors::darkBrown());
+	drawRectangle(glm::vec2(25.0f, 0.0f), glm::vec2(2.0f, 27.0f), 0.0f, PoolColors::darkBrown());
+	drawRectangle(glm::vec2(0.0f, -14.5f), glm::vec2(52.0f, 2.0f), 0.0f, PoolColors::darkBrown());
+	drawRectangle(glm::vec2(-25.0f, 0.0f), glm::vec2(2.0f, 27.0f), 0.0f, PoolColors::darkBrown());
 
 	glm::vec4 black = { 0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 1.0f };
 	for (int i = 0; i < 18; i++) {
