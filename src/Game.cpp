@@ -51,7 +51,7 @@ Game::Game() {
 	
 	setPositions();
 
-	currentPlayer = Player1;
+	//currentPlayer = Player1;
 }
 
 Game::~Game() {
@@ -98,9 +98,9 @@ std::vector<Ball>* Game::getBalls() {
 	return &balls;
 }
 
-Player Game::getCurrentPlayer() {
-	return currentPlayer;
-}
+//Player Game::getCurrentPlayer() {
+//	return currentPlayer;
+//}
 
 void Game::setPositions() {
 	glm::vec2 frontPos = { 7.0f, 0.0f };

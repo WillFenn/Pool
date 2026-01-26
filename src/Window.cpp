@@ -45,6 +45,25 @@ Window::Window() {
 	GLCALL(glVertexAttribPointer(0, 2, GL_FLOAT, false, sizeof(glm::vec2), 0));
 	GLCALL(glEnableVertexAttribArray(0));
 
+	GLCALL(glCreateVertexArrays(1, &rectTexturevao));
+	GLCALL(glBindVertexArray(rectTexturevao));
+
+	GLCALL(glCreateBuffers(1, &rectTexturevbo));
+	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectTexturevbo));
+
+	glm::vec2 rectTextureVertices[8] = { { -0.5f, 0.5f }, { 0.0f, 1.0f },
+										{ 0.5f, 0.5f }, { 1.0f, 1.0f },
+										{ 0.5f, -0.5f }, { 1.0f, 0.0f },
+										{ -0.5f, -0.5f }, { 0.0f, 0.0f } };
+	
+	GLCALL(glBufferData(GL_ARRAY_BUFFER, sizeof(rectTextureVertices), rectTextureVertices, GL_STREAM_DRAW));
+
+	GLCALL(glVertexAttribPointer(0, 2, GL_FLOAT, false, sizeof(glm::vec2), 0));
+	GLCALL(glEnableVertexAttribArray(0));
+
+	GLCALL(glVertexAttribPointer(1, 2, GL_FLOAT, false, 2 * sizeof(glm::vec2), (const void*)sizeof(glm::vec2)));
+	GLCALL(glEnableVertexAttribArray(1));
+
 	GLCALL(glCreateBuffers(1, &rectibo));
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
 
@@ -60,9 +79,12 @@ Window::Window() {
 	GLCALL(glVertexAttribPointer(0, 2, GL_FLOAT, false, sizeof(glm::vec2), 0));
 	GLCALL(glEnableVertexAttribArray(0));
 
-	circleShader = new Shader("res/Vertex.glsl", "res/CircleFragment.glsl");
-	rectangleShader = new Shader("res/Vertex.glsl", "res/LineRectangleFragment.glsl");
-	lineShader = new Shader("res/Vertex.glsl", "res/LineRectangleFragment.glsl");
+	circleShader = new Shader("res/shaders/CircleRectangleLineVertex.glsl", "res/shaders/CircleFragment.glsl");
+	rectangleShader = new Shader("res/shaders/CircleRectangleLineVertex.glsl", "res/shaders/LineRectangleFragment.glsl");
+	rectangleTextureShader = new Shader("res/shaders/RectangleTextureVertex.glsl", "res/shaders/RectangleTextureFragment.glsl");
+	lineShader = new Shader("res/shaders/CircleRectangleLineVertex.glsl", "res/shaders/LineRectangleFragment.glsl");
+
+	texture = new Texture("res/textures/container.jpg");
 
 	glm::vec4 backgroundColor = PoolColors::gray();
 	GLCALL(glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a));
@@ -71,6 +93,10 @@ Window::Window() {
 Window::~Window() {
 	delete circleShader;
 	delete rectangleShader;
+	delete rectangleTextureShader;
+	delete lineShader;
+
+	delete texture;
 
 	glfwSetWindowShouldClose(glfwwindow, true);
 
@@ -81,6 +107,7 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 	//std::cout << "balls->size(): " << balls->size() << std::endl;	//delete
 	
 	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
+	std::cout << "glClear() called" << std::endl;	// delete
 
 	// draw table
 	drawRectangle(glm::vec2(0.0f, 0.0f), glm::vec2(48.0f, 27.0f), 0.0f, PoolColors::lightGreen());
@@ -88,27 +115,36 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 	drawRectangle(glm::vec2(25.0f, 0.0f), glm::vec2(2.0f, 27.0f), 0.0f, PoolColors::darkBrown());
 	drawRectangle(glm::vec2(0.0f, -14.5f), glm::vec2(52.0f, 2.0f), 0.0f, PoolColors::darkBrown());
 	drawRectangle(glm::vec2(-25.0f, 0.0f), glm::vec2(2.0f, 27.0f), 0.0f, PoolColors::darkBrown());
+	std::cout << "drawRectangle() called" << std::endl;	// delete
 
 	glm::vec4 black = { 0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 1.0f };
 	for (int i = 0; i < 18; i++) {
 		drawLineSegment(sides[i].pointA, sides[i].pointB, black);
 	}
+	std::cout << "drawLineSegment() called" << std::endl;	// delete
 
 	for (int i = 0; i < 6; i++) {
 		drawCircle(1.0f, pocketPositions[i], black, false);
 	}
+	std::cout << "drawCircle() called" << std::endl;	// delete
 
 	// draw balls
 	for (int i = 0; i < balls->size(); i++) {
 		drawCircle(0.5f, balls->at(i).pos, balls->at(i).color, balls->at(i).striped);
 	}
+	std::cout << "drawCircle() called" << std::endl;	// delete
 
 	drawCircle(0.5f, cueBall->pos, cueBall->color, cueBall->striped);
+	std::cout << "drawCircle() called" << std::endl;	// delete
 
 	// draw cue
 	if (cue != nullptr) {
 		drawRectangle(cue->pos, cue->scale, cue->rotation, cue->color);
+		std::cout << "drawRectangle() called" << std::endl;	// delete
 	}
+
+	//drawRectangleTexture(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), 0.0f, texture);	// delete
+	std::cout << "drawRectangleTexture() called" << std::endl;	// delete
 
 	glfwSwapBuffers(glfwwindow);
 	
@@ -161,22 +197,62 @@ void Window::drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::
 	GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 }
 
+void Window::drawRectangleTexture(glm::vec2 pos, glm::vec2 scale, float rotation, Texture* texture) {
+	//std::cout << "drawing square" << std::endl;	//delete
+
+	GLCALL(glBindVertexArray(rectTexturevao));
+	std::cout << "rectTexturevao bound" << std::endl;	// delete
+	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectTexturevbo));
+	std::cout << "rectTexturevbo bount" << std::endl;	// delete
+	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
+	std::cout << "rectibo bound" << std::endl;	// delete
+	rectangleTextureShader->bind();
+	std::cout << "rectangleTextureShader bound" << std::endl;	// delete
+	texture->bind();
+	std::cout << "texture bound" << std::endl;	// delete
+	
+	glm::mat4 projection = glm::ortho(-(worldScale.x / 2.0f), worldScale.x / 2.0f, -(worldScale.y / 2.0f), worldScale.y / 2.0f, -1.0f, 1.0f);
+	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos, 0.0f));
+	model = glm::rotate(model, rotation, glm::vec3(0, 0, 1));
+	model = glm::scale(model, glm::vec3(scale.x, scale.y, 1.0f));
+
+	glm::mat4 mvp = projection * view * model;
+	rectangleTextureShader->setUniformMat4(mvp, "uMVP");
+	std::cout << "uMVP set" << std::endl;	// delete
+	rectangleTextureShader->setUniformInt(texture->getSlot(), "uTexture");
+	std::cout << "uTexture set" << std::endl;	// delete
+
+	GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+	std::cout << "glDrawElements() called" << std::endl;	// delete
+}
+
 void Window::drawLineSegment(glm::vec2 pointA, glm::vec2 pointB, glm::vec4 color) {
 	glm::vec2 lineVertices[2] = { pointA, pointB };
 
 	GLCALL(glBindVertexArray(linevao));
+	std::cout << "1" << std::endl;	// delete
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, linevbo));
+	std::cout << "2" << std::endl;	// delete
 	GLCALL(glBufferData(GL_ARRAY_BUFFER, sizeof(lineVertices), lineVertices, GL_STREAM_DRAW));
+	std::cout << "3" << std::endl;	// delete
 	lineShader->bind();
+	std::cout << "4" << std::endl;	// delete
 
 	glm::mat4 projection = glm::ortho(-(worldScale.x / 2.0f), worldScale.x / 2.0f, -(worldScale.y / 2.0f), worldScale.y / 2.0f, -1.0f, 1.0f);
+	std::cout << "5" << std::endl;	// delete
 	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+	std::cout << "6" << std::endl;	// delete
 
 	glm::mat4 mvp = projection * view;
+	std::cout << "7" << std::endl;	// delete
 	rectangleShader->setUniformMat4(mvp, "uMVP");
+	std::cout << "8" << std::endl;	// delete
 	lineShader->setUniformVec4(color, "uColor");
+	std::cout << "9" << std::endl;	// delete
 
 	GLCALL(glDrawArrays(GL_LINES, 0, 2));
+	std::cout << "10" << std::endl;	// delete
 }
 
 bool Window::shouldClose() {

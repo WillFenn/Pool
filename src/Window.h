@@ -17,7 +17,7 @@
 #include <ext/matrix_transform.hpp>
 #include <PoolColors.h>
 #include <Shader.h>
-#include <Game.h>
+#include <Texture.h>
 #include <Side.h>
 #include <Ball.h>
 #include <Cue.h>
@@ -35,6 +35,7 @@ public:
 private:
 	void drawCircle(float radius, glm::vec2 pos, glm::vec4 color, bool striped);
 	void drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::vec4 color);
+	void drawRectangleTexture(glm::vec2 pos, glm::vec2 scale, float rotation, Texture* texture);
 	void drawLineSegment(glm::vec2 pointA, glm::vec2 pointB, glm::vec4 color);
 	void GLClearErrors();
 	bool GLLogErrors();
@@ -47,10 +48,14 @@ private:
 	glm::vec2 worldScale;
 	unsigned int rectvao;
 	unsigned int rectvbo;
+	unsigned int rectTexturevao;
+	unsigned int rectTexturevbo;
 	unsigned int rectibo;
 	unsigned int linevao;
 	unsigned int linevbo;
 	Shader* circleShader;
 	Shader* rectangleShader;
 	Shader* lineShader;
+	Shader* rectangleTextureShader;
+	Texture* texture;
 };
