@@ -58,7 +58,7 @@ Window::Window() {
 	
 	GLCALL(glBufferData(GL_ARRAY_BUFFER, sizeof(rectTextureVertices), rectTextureVertices, GL_STREAM_DRAW));
 
-	GLCALL(glVertexAttribPointer(0, 2, GL_FLOAT, false, sizeof(glm::vec2), 0));
+	GLCALL(glVertexAttribPointer(0, 2, GL_FLOAT, false, 2 * sizeof(glm::vec2), 0));
 	GLCALL(glEnableVertexAttribArray(0));
 
 	GLCALL(glVertexAttribPointer(1, 2, GL_FLOAT, false, 2 * sizeof(glm::vec2), (const void*)sizeof(glm::vec2)));
@@ -85,6 +85,8 @@ Window::Window() {
 	lineShader = new Shader("res/shaders/CircleRectangleLineVertex.glsl", "res/shaders/LineRectangleFragment.glsl");
 
 	texture = new Texture("res/textures/container.jpg");
+	player1Texture = new Texture("res/textures/player1.png");
+	player2Texture = new Texture("res/textures/player2.png");
 
 	glm::vec4 backgroundColor = PoolColors::gray();
 	GLCALL(glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a));
@@ -97,13 +99,15 @@ Window::~Window() {
 	delete lineShader;
 
 	delete texture;
+	delete player1Texture;
+	delete player2Texture;
 
 	glfwSetWindowShouldClose(glfwwindow, true);
 
 	glfwTerminate();
 }
 
-void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball* cueBall, Cue* cue) {
+void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball* cueBall, Cue* cue, Player currentPlayer) {
 	//std::cout << "balls->size(): " << balls->size() << std::endl;	//delete
 	
 	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
@@ -116,6 +120,9 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 	drawRectangle(glm::vec2(0.0f, -14.5f), glm::vec2(52.0f, 2.0f), 0.0f, PoolColors::darkBrown());
 	drawRectangle(glm::vec2(-25.0f, 0.0f), glm::vec2(2.0f, 27.0f), 0.0f, PoolColors::darkBrown());
 	std::cout << "drawRectangle() called" << std::endl;	// delete
+
+	drawRectangleTexture(glm::vec2(0.0f, 0.0f), glm::vec2(10.0f, 10.0f), 0.0f, texture);	// delete
+	std::cout << "drawRectangleTexture() called" << std::endl;	// delete
 
 	glm::vec4 black = { 0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 1.0f };
 	for (int i = 0; i < 18; i++) {
@@ -143,8 +150,7 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 		std::cout << "drawRectangle() called" << std::endl;	// delete
 	}
 
-	//drawRectangleTexture(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), 0.0f, texture);	// delete
-	std::cout << "drawRectangleTexture() called" << std::endl;	// delete
+	drawRectangleTexture(glm::vec2(-45.5f, 26.0f), glm::vec2(5.0f, 2.0f), 0.0f, currentPlayer == Player1 ? player1Texture : player2Texture);
 
 	glfwSwapBuffers(glfwwindow);
 	
@@ -152,8 +158,6 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 }
 
 void Window::drawCircle(float radius, glm::vec2 pos, glm::vec4 color, bool striped) {
-	//std::cout << "drawing circle" << std::endl;	//delete
-
 	GLCALL(glBindVertexArray(rectvao));
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectvbo));
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
@@ -177,8 +181,6 @@ void Window::drawCircle(float radius, glm::vec2 pos, glm::vec4 color, bool strip
 }
 
 void Window::drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::vec4 color) {
-	//std::cout << "drawing square" << std::endl;	//delete
-
 	GLCALL(glBindVertexArray(rectvao));
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectvbo));
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
@@ -198,18 +200,11 @@ void Window::drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::
 }
 
 void Window::drawRectangleTexture(glm::vec2 pos, glm::vec2 scale, float rotation, Texture* texture) {
-	//std::cout << "drawing square" << std::endl;	//delete
-
 	GLCALL(glBindVertexArray(rectTexturevao));
-	std::cout << "rectTexturevao bound" << std::endl;	// delete
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectTexturevbo));
-	std::cout << "rectTexturevbo bount" << std::endl;	// delete
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
-	std::cout << "rectibo bound" << std::endl;	// delete
 	rectangleTextureShader->bind();
-	std::cout << "rectangleTextureShader bound" << std::endl;	// delete
 	texture->bind();
-	std::cout << "texture bound" << std::endl;	// delete
 	
 	glm::mat4 projection = glm::ortho(-(worldScale.x / 2.0f), worldScale.x / 2.0f, -(worldScale.y / 2.0f), worldScale.y / 2.0f, -1.0f, 1.0f);
 	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
@@ -219,40 +214,27 @@ void Window::drawRectangleTexture(glm::vec2 pos, glm::vec2 scale, float rotation
 
 	glm::mat4 mvp = projection * view * model;
 	rectangleTextureShader->setUniformMat4(mvp, "uMVP");
-	std::cout << "uMVP set" << std::endl;	// delete
 	rectangleTextureShader->setUniformInt(texture->getSlot(), "uTexture");
-	std::cout << "uTexture set" << std::endl;	// delete
 
 	GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
-	std::cout << "glDrawElements() called" << std::endl;	// delete
 }
 
 void Window::drawLineSegment(glm::vec2 pointA, glm::vec2 pointB, glm::vec4 color) {
 	glm::vec2 lineVertices[2] = { pointA, pointB };
 
 	GLCALL(glBindVertexArray(linevao));
-	std::cout << "1" << std::endl;	// delete
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, linevbo));
-	std::cout << "2" << std::endl;	// delete
 	GLCALL(glBufferData(GL_ARRAY_BUFFER, sizeof(lineVertices), lineVertices, GL_STREAM_DRAW));
-	std::cout << "3" << std::endl;	// delete
 	lineShader->bind();
-	std::cout << "4" << std::endl;	// delete
 
 	glm::mat4 projection = glm::ortho(-(worldScale.x / 2.0f), worldScale.x / 2.0f, -(worldScale.y / 2.0f), worldScale.y / 2.0f, -1.0f, 1.0f);
-	std::cout << "5" << std::endl;	// delete
 	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-	std::cout << "6" << std::endl;	// delete
 
 	glm::mat4 mvp = projection * view;
-	std::cout << "7" << std::endl;	// delete
 	rectangleShader->setUniformMat4(mvp, "uMVP");
-	std::cout << "8" << std::endl;	// delete
 	lineShader->setUniformVec4(color, "uColor");
-	std::cout << "9" << std::endl;	// delete
 
 	GLCALL(glDrawArrays(GL_LINES, 0, 2));
-	std::cout << "10" << std::endl;	// delete
 }
 
 bool Window::shouldClose() {

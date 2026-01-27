@@ -5,12 +5,11 @@
 #include <PoolColors.h>
 #include <Window.h>
 #include <Input.h>
+#include <Player.h>
 #include <Side.h>
 #include <Cue.h>
 #include <Ball.h>
 #include <ext/matrix_transform.hpp>
-
-//enum Player { Player1, Player2 };
 
 class Game {
 public:
@@ -23,7 +22,7 @@ public:
 	Ball* getCueBall();
 	Cue* getCue();
 	std::vector<Ball>* getBalls();
-	//Player getCurrentPlayer();
+	Player getCurrentPlayer();
 
 private:
 	void setPositions();
@@ -37,5 +36,5 @@ private:
 	glm::vec2 cueStartPosition;
 	Cue cue;
 	std::vector<Ball> balls;
-	//Player currentPlayer;
+	Player currentPlayer;
 };

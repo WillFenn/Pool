@@ -98,9 +98,9 @@ std::vector<Ball>* Game::getBalls() {
 	return &balls;
 }
 
-//Player Game::getCurrentPlayer() {
-//	return currentPlayer;
-//}
+Player Game::getCurrentPlayer() {
+	return currentPlayer;
+}
 
 void Game::setPositions() {
 	glm::vec2 frontPos = { 7.0f, 0.0f };
@@ -166,7 +166,7 @@ void Game::setCuePos(Window* window, Input* input) {
 void Game::removeBallsInPockets() {
 	for (int i = 0; i < balls.size(); i++) {
 		for (int j = 0; j < 6; j++) {
-			if (glm::distance(pocketPositions[j], balls.at(i).pos) < 1.5f) {
+			if (glm::distance(pocketPositions[j], balls.at(i).pos) < 1.0f) {
 				balls.erase(balls.begin() + i);
 			}
 		}

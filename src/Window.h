@@ -6,6 +6,8 @@
 	x;\
 	ASSERT(GLLogErrors());
 
+enum Player;
+
 #include <iostream>
 #include <vector>
 #include <glew.h>
@@ -18,6 +20,7 @@
 #include <PoolColors.h>
 #include <Shader.h>
 #include <Texture.h>
+#include <Player.h>
 #include <Side.h>
 #include <Ball.h>
 #include <Cue.h>
@@ -26,7 +29,7 @@ class Window {
 public:
 	Window();
 	~Window();
-	void drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball* cueBall, Cue* cue);
+	void drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball* cueBall, Cue* cue, Player currentPlayer);
 	GLFWwindow* getglfwwindow();
 	glm::vec2 getResolution();
 	glm::vec2 getWorldScale();
@@ -58,4 +61,6 @@ private:
 	Shader* lineShader;
 	Shader* rectangleTextureShader;
 	Texture* texture;
+	Texture* player1Texture;
+	Texture* player2Texture;
 };

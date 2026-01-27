@@ -36,7 +36,7 @@ int main() {
 		game.update(&window, &input, deltaTime);
 
 		physics.update(game.getSides(), game.getBalls(), game.getCueBall(), game.getCue(), deltaTime);
-		std::cout << "game and physics updated" << std::endl;	// delete
-		window.drawFrame(game.getSides(), game.getPocketPositions(), game.getBalls(), game.getCueBall(), game.ballsAreMoving() ? nullptr : game.getCue());
+
+		window.drawFrame(game.getSides(), game.getPocketPositions(), game.getBalls(), game.getCueBall(), game.ballsAreMoving() ? nullptr : game.getCue(), game.getCurrentPlayer());
 	}
 }
