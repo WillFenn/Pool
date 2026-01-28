@@ -24,6 +24,14 @@ bool PoolMath::approximatelyEqual(float x, float y) {
 	return absoluteValue(x - y) < 0.1f;
 }
 
+bool PoolMath::approximatelyEqual(float x, float y, float error) {
+	return absoluteValue(x - y) < error;
+}
+
+bool PoolMath::approximatelyEqual(glm::vec2 a, glm::vec2 b, float error) {
+	return glm::distance(a, b) < error;
+}
+
 glm::vec2 PoolMath::normal(glm::vec2 a) {
 	return glm::normalize(glm::vec2(a.y, -a.x));
 }

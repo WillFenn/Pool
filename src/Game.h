@@ -22,17 +22,24 @@ public:
 	Ball* getCueBall();
 	Cue* getCue();
 	std::vector<Ball>* getBalls();
+	bool getCueBallPocketed();
 	Player getCurrentPlayer();
+	bool cueBallShouldBeDrawn();
+	bool cueShouldBeDrawn();
 
 private:
 	void setPositions();
 	void setCuePos(Window* window, Input* input);
+	glm::vec2 getMouseWorldPos(Window* window, Input* input);
 	void removeBallsInPockets();
+	bool positionOutOfBounds(Window* window, Input* input);
 
 private:
 	Side sides[18];
 	glm::vec2 pocketPositions[6];
 	Ball cueBall;
+	bool cueBallPocketed = false;
+	bool leftMouseWasPressed = false;
 	glm::vec2 cueStartPosition;
 	Cue cue;
 	std::vector<Ball> balls;

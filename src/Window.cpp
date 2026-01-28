@@ -111,7 +111,6 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 	//std::cout << "balls->size(): " << balls->size() << std::endl;	//delete
 	
 	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
-	std::cout << "glClear() called" << std::endl;	// delete
 
 	// draw table
 	drawRectangle(glm::vec2(0.0f, 0.0f), glm::vec2(48.0f, 27.0f), 0.0f, PoolColors::lightGreen());
@@ -119,45 +118,47 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 	drawRectangle(glm::vec2(25.0f, 0.0f), glm::vec2(2.0f, 27.0f), 0.0f, PoolColors::darkBrown());
 	drawRectangle(glm::vec2(0.0f, -14.5f), glm::vec2(52.0f, 2.0f), 0.0f, PoolColors::darkBrown());
 	drawRectangle(glm::vec2(-25.0f, 0.0f), glm::vec2(2.0f, 27.0f), 0.0f, PoolColors::darkBrown());
-	std::cout << "drawRectangle() called" << std::endl;	// delete
+	std::cout << "table drawn" << std::endl;	// delete
 
-	drawRectangleTexture(glm::vec2(0.0f, 0.0f), glm::vec2(10.0f, 10.0f), 0.0f, texture);	// delete
-	std::cout << "drawRectangleTexture() called" << std::endl;	// delete
+	//drawRectangleTexture(glm::vec2(0.0f, 0.0f), glm::vec2(10.0f, 10.0f), 0.0f, texture);	// delete
 
 	glm::vec4 black = { 0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 1.0f };
 	for (int i = 0; i < 18; i++) {
 		drawLineSegment(sides[i].pointA, sides[i].pointB, black);
 	}
-	std::cout << "drawLineSegment() called" << std::endl;	// delete
+	std::cout << "sides drawn" << std::endl;	// delete
 
 	for (int i = 0; i < 6; i++) {
-		drawCircle(1.0f, pocketPositions[i], black, false);
+		drawCircle(1.0f, pocketPositions[i], black, Solid);
 	}
-	std::cout << "drawCircle() called" << std::endl;	// delete
+	std::cout << "pockets drawn" << std::endl;	// delete
 
 	// draw balls
 	for (int i = 0; i < balls->size(); i++) {
-		drawCircle(0.5f, balls->at(i).pos, balls->at(i).color, balls->at(i).striped);
+		drawCircle(0.5f, balls->at(i).pos, balls->at(i).color, balls->at(i).ballType);
 	}
-	std::cout << "drawCircle() called" << std::endl;	// delete
+	std::cout << "balls drawn" << std::endl;	// delete
 
-	drawCircle(0.5f, cueBall->pos, cueBall->color, cueBall->striped);
-	std::cout << "drawCircle() called" << std::endl;	// delete
+	if (cueBall != nullptr) {
+		drawCircle(0.5f, cueBall->pos, cueBall->color, cueBall->ballType);
+		std::cout << "cue ball drawn" << std::endl;	// delete
+	}
 
 	// draw cue
 	if (cue != nullptr) {
 		drawRectangle(cue->pos, cue->scale, cue->rotation, cue->color);
-		std::cout << "drawRectangle() called" << std::endl;	// delete
+		std::cout << "cue drawn" << std::endl;	// delete
+		std::cout << "cue position     x: " << cue->pos.x << "   y: " << cue->pos.y << std::endl;	// delete
 	}
 
-	drawRectangleTexture(glm::vec2(-45.5f, 26.0f), glm::vec2(5.0f, 2.0f), 0.0f, currentPlayer == Player1 ? player1Texture : player2Texture);
+	drawRectangleTexture(glm::vec2(-45.5f, 26.0f), glm::vec2(5.0f, 2.0f), 0.0f, currentPlayer.playerNumber == 1 ? player1Texture : player2Texture);
 
 	glfwSwapBuffers(glfwwindow);
 	
 	glfwPollEvents();
 }
 
-void Window::drawCircle(float radius, glm::vec2 pos, glm::vec4 color, bool striped) {
+void Window::drawCircle(float radius, glm::vec2 pos, glm::vec4 color, BallType ballType) {
 	GLCALL(glBindVertexArray(rectvao));
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectvbo));
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
@@ -175,7 +176,7 @@ void Window::drawCircle(float radius, glm::vec2 pos, glm::vec4 color, bool strip
 	circleShader->setUniformVec2(pos, "uPosition");
 	circleShader->setUniformVec2(worldScale, "uWorldScale");
 	circleShader->setUniformVec4(color, "uColor");
-	circleShader->setUniformInt(striped, "uStriped");
+	circleShader->setUniformInt(ballType == Striped ? true : false, "uStriped");
 
 	GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 }

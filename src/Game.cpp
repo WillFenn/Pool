@@ -16,7 +16,7 @@ Game::Game() {
 	sides[12] = { { 1.2f, -13.5f }, { 1.0f, -14.5 }, { PoolMath::normal(glm::vec2(1.0f, -14.5) - glm::vec2(1.2f, -13.5f)) } };
 	sides[13] = { { -1.0f, -14.5f }, { -1.2, -13.5f }, { PoolMath::normal(glm::vec2(-1.2, -13.5f) - glm::vec2(-1.0f, -14.5f)) } };
 	sides[14] = { { -1.2, -13.5f }, { -24.0f + glm::sqrt(2), -13.5 }, { 0.0f, 1.0f } };
-	sides[15] = { { -24.0f + glm::sqrt(2), -13.5 }, { -24.0f, -13.5f - glm::sqrt(2) }, { PoolMath::normal(glm::vec2(-24.0f, -13.5f - glm::sqrt(2)) - glm::vec2(-24.0f + glm::sqrt(2), -13.5)) } };
+	sides[15] = { { -24.0f + glm::sqrt(2), -13.5 }, { -24.0f, -13.5f - glm::sqrt(2) }, { PoolMath::normal(glm::vec2(-24.0f, -13.5f - glm::sqrt(2)) - glm::vec2(-24.0f + glm::sqrt(2), -13.5f)) } };
 	sides[16] = { { -24.0f - glm::sqrt(2), -13.5f }, { -24.0f, -13.5f + glm::sqrt(2) }, { PoolMath::normal(glm::vec2(-24.0f, -13.5f + glm::sqrt(2)) - glm::vec2(-24.0f - glm::sqrt(2), -13.5f)) } };
 	sides[17] = { { -24.0f, -13.5f + glm::sqrt(2) }, { -24.0f, 13.5f - glm::sqrt(2) }, { 1.0f, 0.0f } };
 
@@ -27,31 +27,34 @@ Game::Game() {
 	pocketPositions[4] = { 0.0f, -13.5f - 1.0f };
 	pocketPositions[5] = { -24.0f - (1 / glm::sqrt(2)), -13.5f - (1 / glm::sqrt(2)) };
 	
-	cueBall = { 0, { 5.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::white(), false};
+	cueBall = { 0, { 5.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::white(), Solid };
 	
 	cueStartPosition = cueBall.pos + glm::vec2(-1.0f, 0.0f) * ((10.0f / 2.0f) + 0.5f);
 	
 	cue = { cueStartPosition, { 10.0f, 0.2f }, 0.0f, 0.0f, PoolColors::lightBrown(), false};
 	
-	balls.push_back({ 1, {0.0f, 0.0f}, {0.0f, 0.0f}, PoolColors::black(), false });
-	balls.push_back({ 2, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::yellow(), false });
-	balls.push_back({ 3, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::yellow(), true });
-	balls.push_back({ 4, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::red(), false });
-	balls.push_back({ 5, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::red(), true });
-	balls.push_back({ 6, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::darkGreen(), false });
-	balls.push_back({ 7, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::darkGreen(), true });
-	balls.push_back({ 8, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::blue(), false });
-	balls.push_back({ 9, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::blue(), true });
-	balls.push_back({ 10, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::orange(), false });
-	balls.push_back({ 11, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::orange(), true });
-	balls.push_back({ 12, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::purple(), false });
-	balls.push_back({ 13, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::purple(), true });
-	balls.push_back({ 14, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::darkBrown(), false });
-	balls.push_back({ 15, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::darkBrown(), true });
+	balls.push_back({ 1, {0.0f, 0.0f}, {0.0f, 0.0f}, PoolColors::black(), Solid });
+	balls.push_back({ 2, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::yellow(), Solid });
+	balls.push_back({ 3, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::yellow(), Striped });
+	balls.push_back({ 4, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::red(), Solid });
+	balls.push_back({ 5, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::red(), Striped });
+	balls.push_back({ 6, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::darkGreen(), Solid });
+	balls.push_back({ 7, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::darkGreen(), Striped });
+	balls.push_back({ 8, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::blue(), Solid });
+	balls.push_back({ 9, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::blue(), Striped });
+	balls.push_back({ 10, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::orange(), Solid });
+	balls.push_back({ 11, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::orange(), Striped });
+	balls.push_back({ 12, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::purple(), Solid });
+	balls.push_back({ 13, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::purple(), Striped });
+	balls.push_back({ 14, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::darkBrown(), Solid });
+	balls.push_back({ 15, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::darkBrown(), Striped });
 	
 	setPositions();
 
-	//currentPlayer = Player1;
+	Player player1 = { 1 };
+	Player player2 = { 2 };
+
+	currentPlayer = player1;
 }
 
 Game::~Game() {
@@ -59,9 +62,25 @@ Game::~Game() {
 }
 
 void Game::update(Window* window, Input* input, float deltaTime) {
-	setCuePos(window, input);
+	if (!ballsAreMoving() && !cueBallPocketed) {
+		setCuePos(window, input);
+	}
 
 	removeBallsInPockets();
+
+	if (cueBallPocketed && !ballsAreMoving() && !positionOutOfBounds(window, input)) {
+		cueBall.pos = getMouseWorldPos(window, input);
+		std::cout << "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj" << std::endl;	// delete
+		
+		if (input->leftMousePressed()) {
+			std::cout << "jjdklsjfa;dklsf;ladkjsf;lkjasd;flkja;sdflkja;sldfjla;dkjsf" << std::endl;	// delete
+			leftMouseWasPressed = true;
+		}
+		else if (leftMouseWasPressed) {
+			cueBallPocketed = false;
+			leftMouseWasPressed = false;
+		}
+	}
 }
 
 bool Game::ballsAreMoving() {
@@ -98,8 +117,21 @@ std::vector<Ball>* Game::getBalls() {
 	return &balls;
 }
 
+bool Game::getCueBallPocketed() {
+	return cueBallPocketed;
+}
+
 Player Game::getCurrentPlayer() {
 	return currentPlayer;
+}
+
+bool Game::cueBallShouldBeDrawn() {
+	return !getCueBallPocketed() || !ballsAreMoving();
+}
+
+bool Game::cueShouldBeDrawn() {
+	std::cout << "ballsAreMoving(): " << ballsAreMoving() << "     getCueBallPocketed(): " << getCueBallPocketed() << std::endl;
+	return !ballsAreMoving() && !getCueBallPocketed();
 }
 
 void Game::setPositions() {
@@ -134,11 +166,10 @@ void Game::setPositions() {
 }
 
 void Game::setCuePos(Window* window, Input* input) {
-	glm::vec2 mouseWorldPos = ((input->getMousePos() - window->getResolution() / 2.0f) / (window->getResolution() / 2.0f)) * (window->getWorldScale() / 2.0f);
-	mouseWorldPos.y *= -1;
+	glm::vec2 mouseWorldPos = getMouseWorldPos(window, input);
 
 	if (input->leftMousePressed()) {
-		//std::cout << "left mouse button is pressed" << std::endl;	// delete
+		std::cout << "left mouse button is pressed" << std::endl;	// delete
 
 		glm::vec2 cueDirection = glm::normalize(cue.pos - cueBall.pos);
 		glm::vec2 cueBallToMouse = mouseWorldPos - cueBall.pos;
@@ -147,14 +178,20 @@ void Game::setCuePos(Window* window, Input* input) {
 	}
 	else {
 		if (cue.wasPulledBack) {
-			//std::cout << "left mouse button was let go" << std::endl;	// delete
+			std::cout << "left mouse button was let go" << std::endl;	// delete
 
 			cue.speed = 3 * (glm::distance(cueBall.pos, cue.pos) - ((cue.scale.x / 2) + 0.5f));
 			cue.wasPulledBack = false;
 		}
 		else {
-			//std::cout << "11111111111111111111111111111111111111111111" << std::endl;	// delete
-			glm::vec2 mouseDirection = glm::normalize(mouseWorldPos - cueBall.pos);
+			std::cout << "11111111111111111111111111111111111111111111" << std::endl;	// delete
+			glm::vec2 mouseDirection;
+			if (!PoolMath::approximatelyEqual(mouseWorldPos, cueBall.pos, 0.0001f)) {
+				mouseDirection = glm::normalize(mouseWorldPos - cueBall.pos);
+			}
+			else {
+				mouseDirection = glm::vec2(-1.0f, 0.0f);
+			}
 			cue.pos = cueBall.pos + mouseDirection * ((cue.scale.x / 2.0f) + 0.5f);
 			cue.rotation = atan(mouseDirection.y / mouseDirection.x);
 		}
@@ -163,12 +200,46 @@ void Game::setCuePos(Window* window, Input* input) {
 	//std::cout << "mouse position: " << "(" << mouseWorldPos.x << ", " << mouseWorldPos.y << ")" << std::endl;	// delete
 }
 
+glm::vec2 Game::getMouseWorldPos(Window* window, Input* input) {
+	glm::vec2 mouseWorldPos = ((input->getMousePos() - window->getResolution() / 2.0f) / (window->getResolution() / 2.0f)) * (window->getWorldScale() / 2.0f);
+	mouseWorldPos.y *= -1;
+	
+	return mouseWorldPos;
+}
+
 void Game::removeBallsInPockets() {
-	for (int i = 0; i < balls.size(); i++) {
-		for (int j = 0; j < 6; j++) {
+	for (int j = 0; j < 6; j++) {
+		for (int i = 0; i < balls.size(); i++) {
 			if (glm::distance(pocketPositions[j], balls.at(i).pos) < 1.0f) {
 				balls.erase(balls.begin() + i);
 			}
 		}
+
+		if (glm::distance(pocketPositions[j], cueBall.pos) < 1.0f) {
+			cueBall.velocity = glm::vec2(0.0f, 0.0f);
+			cueBallPocketed = true;
+		}
 	}
+}
+
+bool Game::positionOutOfBounds(Window* window, Input* input) {
+	glm::vec2 mouseWorldPos = getMouseWorldPos(window, input);
+
+	for (int i = 0; i < balls.size(); i++) {
+		if (glm::distance(balls.at(i).pos, mouseWorldPos) < 1.0f) {
+			return true;
+		}
+	}
+
+	for (int i = 0; i < 6; i++) {
+		if (glm::distance(pocketPositions[i], mouseWorldPos) < 1.5f) {
+			return true;
+		}
+	}
+
+	if (mouseWorldPos.x < -23.5f || mouseWorldPos.x > 23.5f || mouseWorldPos.y < -13.0f || mouseWorldPos.y > 13.0f) {
+		return true;
+	}
+
+	return false;
 }

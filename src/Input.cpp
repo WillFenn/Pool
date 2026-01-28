@@ -43,6 +43,11 @@ bool Input::leftMousePressed() {
 	return state == GLFW_PRESS;
 }
 
+bool Input::leftMouseReleased() {
+	int state = glfwGetMouseButton(glfwwindow, GLFW_MOUSE_BUTTON_LEFT);
+	return state == GLFW_RELEASE;
+}
+
 bool Input::escKeyPressed() {
 	return glfwGetKey(glfwwindow, GLFW_KEY_ESCAPE) == GLFW_PRESS;
 }

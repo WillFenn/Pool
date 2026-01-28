@@ -11,6 +11,7 @@ public:
 	double getDeltaTime();
 	glm::vec2 getMousePos();
 	bool leftMousePressed();
+	bool leftMouseReleased();
 	bool escKeyPressed();
 
 private:

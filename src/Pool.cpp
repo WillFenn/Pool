@@ -37,6 +37,6 @@ int main() {
 
 		physics.update(game.getSides(), game.getBalls(), game.getCueBall(), game.getCue(), deltaTime);
 
-		window.drawFrame(game.getSides(), game.getPocketPositions(), game.getBalls(), game.getCueBall(), game.ballsAreMoving() ? nullptr : game.getCue(), game.getCurrentPlayer());
+		window.drawFrame(game.getSides(), game.getPocketPositions(), game.getBalls(), game.cueBallShouldBeDrawn() ? game.getCueBall() : nullptr, game.cueShouldBeDrawn() ? game.getCue() : nullptr, game.getCurrentPlayer());
 	}
 }

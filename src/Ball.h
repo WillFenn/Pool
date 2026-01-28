@@ -2,10 +2,12 @@
 
 #include <vec2.hpp>
 
+enum BallType { Striped, Solid };
+
 struct Ball {
 	int index;
 	glm::vec2 pos;
 	glm::vec2 velocity;
 	glm::vec4 color;
-	bool striped;
+	BallType ballType;
 };

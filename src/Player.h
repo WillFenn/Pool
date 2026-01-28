@@ -1,3 +1,8 @@
 #pragma once
 
-enum Player { Player1, Player2 };
+#include <Ball.h>
+
+struct Player {
+	int playerNumber;
+	BallType ballType;
+};
