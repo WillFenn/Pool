@@ -2,7 +2,7 @@
 
 #include <vec2.hpp>
 
-enum BallType { Striped, Solid };
+enum BallType { Unassigned, Striped, Solid };
 
 struct Ball {
 	int index;

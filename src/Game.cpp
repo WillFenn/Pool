@@ -51,10 +51,10 @@ Game::Game() {
 	
 	setPositions();
 
-	Player player1 = { 1 };
-	Player player2 = { 2 };
+	players[0] = {1, Unassigned};
+	players[1] = {2, Unassigned};
 
-	currentPlayer = player1;
+	currentPlayerIndex = 0;
 }
 
 Game::~Game() {
@@ -68,7 +68,7 @@ void Game::update(Window* window, Input* input, float deltaTime) {
 
 	removeBallsInPockets();
 
-	if (cueBallPocketed && !ballsAreMoving() && !positionOutOfBounds(window, input)) {
+	if (cueBallShouldBePlaced && !ballsAreMoving() && !positionOutOfBounds(window, input)) {
 		cueBall.pos = getMouseWorldPos(window, input);
 		std::cout << "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj" << std::endl;	// delete
 		
@@ -77,9 +77,25 @@ void Game::update(Window* window, Input* input, float deltaTime) {
 			leftMouseWasPressed = true;
 		}
 		else if (leftMouseWasPressed) {
-			cueBallPocketed = false;
+			cueBallShouldBePlaced = false;
 			leftMouseWasPressed = false;
 		}
+	}
+
+	if (eightBallPocketed) {
+		gameDone = true;
+
+		if (allBallsPocketed(players[currentPlayerIndex].ballType)) {
+			winner = currentPlayerIndex + 1;
+		}
+		else {
+			winner = ((currentPlayerIndex + 1) % 2) + 1;
+		}
+	}
+
+	if (foul()) {
+		// change current player
+		currentPlayerIndex = (currentPlayerIndex + 1) % 2;
 	}
 }
 
@@ -121,8 +137,8 @@ bool Game::getCueBallPocketed() {
 	return cueBallPocketed;
 }
 
-Player Game::getCurrentPlayer() {
-	return currentPlayer;
+int Game::getCurrentPlayerIndex() {
+	return currentPlayerIndex;
 }
 
 bool Game::cueBallShouldBeDrawn() {
@@ -208,17 +224,63 @@ glm::vec2 Game::getMouseWorldPos(Window* window, Input* input) {
 }
 
 void Game::removeBallsInPockets() {
+	cueBallPocketed = false;
+	stripedPocketed = false;
+	solidPocketed = false;
+	
+	// check object balls
 	for (int j = 0; j < 6; j++) {
 		for (int i = 0; i < balls.size(); i++) {
 			if (glm::distance(pocketPositions[j], balls.at(i).pos) < 1.0f) {
+				// check the ball type of the pocketed ball
+				if (balls.at(i).ballType == Striped) {
+					stripedPocketed = true;
+				}
+				else {
+					solidPocketed = true;
+				}
+
+				// check if pocketed ball is eight ball
+				if (i == 0) {
+					eightBallPocketed = true;
+				}
+				
+				// assign a ball type to each player
+				if (players[currentPlayerIndex].ballType == Unassigned) {
+					if (stripedPocketed) {
+						players[currentPlayerIndex].ballType = Striped;
+						players[(currentPlayerIndex + 1) % 2].ballType = Solid;
+					}
+					else {
+						players[currentPlayerIndex].ballType = Solid;
+						players[(currentPlayerIndex + 1) % 2].ballType = Striped;
+					}
+				}
+
 				balls.erase(balls.begin() + i);
 			}
 		}
 
+		// check cue ball
 		if (glm::distance(pocketPositions[j], cueBall.pos) < 1.0f) {
 			cueBall.velocity = glm::vec2(0.0f, 0.0f);
 			cueBallPocketed = true;
+			cueBallShouldBePlaced = true;
 		}
+	}
+}
+
+bool Game::foul() {
+	if (cueBallPocketed) {
+		return true;
+	}
+
+	if (players[currentPlayerIndex].ballType == Striped && !stripedPocketed) {
+		return true;
+	}
+
+	if (players[currentPlayerIndex].ballType == Solid && !solidPocketed) {
+		return true;
 	}
 }
 
@@ -242,4 +304,22 @@ bool Game::positionOutOfBounds(Window* window, Input* input) {
 	}
 
 	return false;
+}
+
+bool Game:: allBallsPocketed(BallType ballType) {
+	for (int i = 0; i < balls.size(); i++) {
+		if (balls.at(i).ballType == ballType) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool Game::getGameDone() {
+	return gameDone;
+}
+
+int Game::getWinner() {
+	return winner;
 }

@@ -107,7 +107,7 @@ Window::~Window() {
 	glfwTerminate();
 }
 
-void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball* cueBall, Cue* cue, Player currentPlayer) {
+void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball* cueBall, Cue* cue, int currentPlayer, bool gameDone, int winner) {
 	//std::cout << "balls->size(): " << balls->size() << std::endl;	//delete
 	
 	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
@@ -151,7 +151,12 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 		std::cout << "cue position     x: " << cue->pos.x << "   y: " << cue->pos.y << std::endl;	// delete
 	}
 
-	drawRectangleTexture(glm::vec2(-45.5f, 26.0f), glm::vec2(5.0f, 2.0f), 0.0f, currentPlayer.playerNumber == 1 ? player1Texture : player2Texture);
+	if (!gameDone) {
+		drawRectangleTexture(glm::vec2(-45.5f, 26.0f), glm::vec2(5.0f, 2.0f), 0.0f, currentPlayer == 1 ? player1Texture : player2Texture);
+	}
+	else {
+		drawRectangleTexture(glm::vec2(0.0f, 0.0f), glm::vec2(48.0f, 27.0f), 0.0f, winner == 1 ? player1Texture : player2Texture);
+	}
 
 	glfwSwapBuffers(glfwwindow);
 	

@@ -27,7 +27,7 @@ class Window {
 public:
 	Window();
 	~Window();
-	void drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball* cueBall, Cue* cue, Player currentPlayer);
+	void drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball* cueBall, Cue* cue, int currentPlayer, bool gameDone, int winner);
 	GLFWwindow* getglfwwindow();
 	glm::vec2 getResolution();
 	glm::vec2 getWorldScale();
