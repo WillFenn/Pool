@@ -87,6 +87,8 @@ Window::Window() {
 	texture = new Texture("res/textures/container.jpg");
 	player1Texture = new Texture("res/textures/player1.png");
 	player2Texture = new Texture("res/textures/player2.png");
+	stripesTexture = new Texture("res/textures/stripes.png");
+	solidsTexture = new Texture("res/textures/solids.png");
 
 	glm::vec4 backgroundColor = PoolColors::gray();
 	GLCALL(glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a));
@@ -101,13 +103,15 @@ Window::~Window() {
 	delete texture;
 	delete player1Texture;
 	delete player2Texture;
+	delete stripesTexture;
+	delete solidsTexture;
 
 	glfwSetWindowShouldClose(glfwwindow, true);
 
 	glfwTerminate();
 }
 
-void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball* cueBall, Cue* cue, int currentPlayer, bool gameDone, int winner) {
+void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball* cueBall, Cue* cue, glm::vec2* trajectoryA, glm::vec2* trajectoryB, Player* currentPlayer, bool gameDone, int winner) {
 	//std::cout << "balls->size(): " << balls->size() << std::endl;	//delete
 	
 	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
@@ -151,8 +155,17 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 		std::cout << "cue position     x: " << cue->pos.x << "   y: " << cue->pos.y << std::endl;	// delete
 	}
 
+	// draw shot trajectory
+	if (trajectoryA != nullptr) {
+		drawLineSegment(*trajectoryA, *trajectoryB, PoolColors::black());
+	}
+
 	if (!gameDone) {
-		drawRectangleTexture(glm::vec2(-45.5f, 26.0f), glm::vec2(5.0f, 2.0f), 0.0f, currentPlayer == 1 ? player1Texture : player2Texture);
+		drawRectangleTexture(glm::vec2(-45.5f, 26.0f), glm::vec2(5.0f, 2.0f), 0.0f, currentPlayer->playerNumber == 1 ? player1Texture : player2Texture);
+
+		if (currentPlayer->ballType != Unassigned) {
+			drawRectangleTexture(glm::vec2(-45.5f, 24.0f), glm::vec2(5.0f, 2.0f), 0.0f, currentPlayer->ballType == Striped ? stripesTexture : solidsTexture);
+		}
 	}
 	else {
 		drawRectangleTexture(glm::vec2(0.0f, 0.0f), glm::vec2(48.0f, 27.0f), 0.0f, winner == 1 ? player1Texture : player2Texture);

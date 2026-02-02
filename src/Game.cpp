@@ -28,6 +28,8 @@ Game::Game() {
 	pocketPositions[5] = { -24.0f - (1 / glm::sqrt(2)), -13.5f - (1 / glm::sqrt(2)) };
 	
 	cueBall = { 0, { 5.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::white(), Solid };
+
+	leftClickStartPos = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
 	
 	cueStartPosition = cueBall.pos + glm::vec2(-1.0f, 0.0f) * ((10.0f / 2.0f) + 0.5f);
 	
@@ -62,18 +64,56 @@ Game::~Game() {
 }
 
 void Game::update(Window* window, Input* input, float deltaTime) {
-	if (!ballsAreMoving() && !cueBallPocketed) {
+	std::cout << "player 1 ball type: ";		// delete
+	if (players[0].ballType == Unassigned) {	//
+		std::cout << "Unassigned" << std::endl;	//
+	}											//
+	else if (players[0].ballType == Striped) {	//
+		std::cout << "Striped" << std::endl;	//
+	}											//
+	else if (players[0].ballType == Solid) {	//
+		std::cout << "Solid" << std::endl;		//
+	}											//
+												//
+	std::cout << "player 2 ball type: ";		//
+	if (players[1].ballType == Unassigned) {	//
+		std::cout << "Unassigned" << std::endl;	//
+	}											//
+	else if (players[1].ballType == Striped) {	//
+		std::cout << "Striped" << std::endl;	//
+	}											//
+	else if (players[1].ballType == Solid) {	//
+		std::cout << "Solid" << std::endl;		//
+	}											//
+	
+	bool ballsMovingThisFrame = ballsAreMoving();
+
+	if (!ballsMovingThisFrame && ballsMovedLastFrame) {
+		// beginning of turn
+		std::cout << "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" << std::endl;	// delete
+		
+		if (foul()) {
+			// change current player
+			currentPlayerIndex = (currentPlayerIndex + 1) % 2;
+		}
+		
+		cueBallPocketed = false;
+		stripedPocketed = false;
+		solidPocketed = false;
+	}
+	
+	//std::cout << "ballsAreMoving(): " << ballsAreMoving() << std::endl;	// delete
+	//std::cout << "cueBallShouldBePlaced: " << cueBallShouldBePlaced << std::endl;	// delete
+	if (!ballsMovingThisFrame && !cueBallShouldBePlaced) {
 		setCuePos(window, input);
 	}
 
-	removeBallsInPockets();
+	checkPocketedBalls();
 
-	if (cueBallShouldBePlaced && !ballsAreMoving() && !positionOutOfBounds(window, input)) {
+	if (cueBallShouldBePlaced && !ballsMovingThisFrame && !positionOutOfBounds(window, input)) {
 		cueBall.pos = getMouseWorldPos(window, input);
-		std::cout << "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj" << std::endl;	// delete
 		
 		if (input->leftMousePressed()) {
-			std::cout << "jjdklsjfa;dklsf;ladkjsf;lkjasd;flkja;sdflkja;sldfjla;dkjsf" << std::endl;	// delete
 			leftMouseWasPressed = true;
 		}
 		else if (leftMouseWasPressed) {
@@ -93,10 +133,9 @@ void Game::update(Window* window, Input* input, float deltaTime) {
 		}
 	}
 
-	if (foul()) {
-		// change current player
-		currentPlayerIndex = (currentPlayerIndex + 1) % 2;
-	}
+	ballsMovedLastFrame = ballsMovingThisFrame;
+
+	std::cout << "cue speed: " << cue.speed << std::endl;	// delete
 }
 
 bool Game::ballsAreMoving() {
@@ -133,21 +172,43 @@ std::vector<Ball>* Game::getBalls() {
 	return &balls;
 }
 
-bool Game::getCueBallPocketed() {
-	return cueBallPocketed;
+bool Game::getCueBallShouldBePlaced() {
+	return cueBallShouldBePlaced;
 }
 
-int Game::getCurrentPlayerIndex() {
-	return currentPlayerIndex;
+Player* Game::getCurrentPlayer() {
+	return &players[currentPlayerIndex];
 }
 
 bool Game::cueBallShouldBeDrawn() {
-	return !getCueBallPocketed() || !ballsAreMoving();
+	return !cueBallShouldBePlaced || !ballsAreMoving();
 }
 
 bool Game::cueShouldBeDrawn() {
-	std::cout << "ballsAreMoving(): " << ballsAreMoving() << "     getCueBallPocketed(): " << getCueBallPocketed() << std::endl;
-	return !ballsAreMoving() && !getCueBallPocketed();
+	return !ballsAreMoving() && !cueBallShouldBePlaced;
+}
+
+bool Game::trajectory(glm::vec2* pointA, glm::vec2* pointB) {
+	glm::vec2 pathPos = cueBall.pos;
+	glm::vec2 pathIncrement = 0.01f * glm::normalize(cueBall.pos - cue.pos);
+	glm::vec2 collisionNormal;
+
+	while (pathPos.x > -23.5f && pathPos.x < 23.5f && pathPos.y > -13.0f && pathPos.y < 13.0f) {
+		for (int i = 0; i < balls.size(); i++) {
+			if (detectBallCollision(&pathPos, &balls.at(i).pos, &collisionNormal)) {
+				std::cout << "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&" << std::endl;	// delete
+				
+				*pointA = balls.at(i).pos;
+				*pointB = balls.at(i).pos + 3.0f * collisionNormal;
+				
+				return true;
+			}
+		}
+
+		pathPos += pathIncrement;
+	}
+
+	return false;
 }
 
 void Game::setPositions() {
@@ -182,14 +243,21 @@ void Game::setPositions() {
 }
 
 void Game::setCuePos(Window* window, Input* input) {
+	std::cout << "--------------------setCuePos()--------------------" << std::endl;	// delete
+
 	glm::vec2 mouseWorldPos = getMouseWorldPos(window, input);
 
 	if (input->leftMousePressed()) {
 		std::cout << "left mouse button is pressed" << std::endl;	// delete
 
+		if (leftClickStartPos.x == std::numeric_limits<float>::max()) {
+			leftClickStartPos = mouseWorldPos;
+		}
+
 		glm::vec2 cueDirection = glm::normalize(cue.pos - cueBall.pos);
-		glm::vec2 cueBallToMouse = mouseWorldPos - cueBall.pos;
-		cue.pos = cueBall.pos + cueDirection * PoolMath::max(PoolMath::projection(cueBallToMouse, cueDirection), (cue.scale.x / 2) + 0.5f);
+		//glm::vec2 cueBallToMouse = mouseWorldPos - cueBall.pos;
+		glm::vec2 leftClickStartToMouse = mouseWorldPos - leftClickStartPos;
+		cue.pos = cueBall.pos + cueDirection * glm::clamp((((cue.scale.x / 2) + 0.5f) + PoolMath::projection(leftClickStartToMouse, cueDirection)), ((cue.scale.x / 2) + 0.5f), maxCueDistance);
 		cue.wasPulledBack = true;
 	}
 	else {
@@ -198,8 +266,9 @@ void Game::setCuePos(Window* window, Input* input) {
 
 			cue.speed = 3 * (glm::distance(cueBall.pos, cue.pos) - ((cue.scale.x / 2) + 0.5f));
 			cue.wasPulledBack = false;
+			leftClickStartPos = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
 		}
-		else {
+		else if (cue.speed == 0.0f) {
 			std::cout << "11111111111111111111111111111111111111111111" << std::endl;	// delete
 			glm::vec2 mouseDirection;
 			if (!PoolMath::approximatelyEqual(mouseWorldPos, cueBall.pos, 0.0001f)) {
@@ -208,12 +277,13 @@ void Game::setCuePos(Window* window, Input* input) {
 			else {
 				mouseDirection = glm::vec2(-1.0f, 0.0f);
 			}
-			cue.pos = cueBall.pos + mouseDirection * ((cue.scale.x / 2.0f) + 0.5f);
+			cue.pos = cueBall.pos - mouseDirection * ((cue.scale.x / 2.0f) + 0.5f);
 			cue.rotation = atan(mouseDirection.y / mouseDirection.x);
 		}
 	}
 
 	//std::cout << "mouse position: " << "(" << mouseWorldPos.x << ", " << mouseWorldPos.y << ")" << std::endl;	// delete
+	std::cout << std::endl;	// delete
 }
 
 glm::vec2 Game::getMouseWorldPos(Window* window, Input* input) {
@@ -223,11 +293,7 @@ glm::vec2 Game::getMouseWorldPos(Window* window, Input* input) {
 	return mouseWorldPos;
 }
 
-void Game::removeBallsInPockets() {
-	cueBallPocketed = false;
-	stripedPocketed = false;
-	solidPocketed = false;
-	
+void Game::checkPocketedBalls() {
 	// check object balls
 	for (int j = 0; j < 6; j++) {
 		for (int i = 0; i < balls.size(); i++) {
@@ -272,6 +338,7 @@ void Game::removeBallsInPockets() {
 
 bool Game::foul() {
 	if (cueBallPocketed) {
+		std::cout << "====================================================================================================================================================================================================================================" << std::endl;	// delete
 		return true;
 	}
 
@@ -282,6 +349,12 @@ bool Game::foul() {
 	if (players[currentPlayerIndex].ballType == Solid && !solidPocketed) {
 		return true;
 	}
+
+	if (players[currentPlayerIndex].ballType == Unassigned && !solidPocketed && !stripedPocketed) {
+		return true;
+	}
+
+	return false;
 }
 
 bool Game::positionOutOfBounds(Window* window, Input* input) {
@@ -300,6 +373,16 @@ bool Game::positionOutOfBounds(Window* window, Input* input) {
 	}
 
 	if (mouseWorldPos.x < -23.5f || mouseWorldPos.x > 23.5f || mouseWorldPos.y < -13.0f || mouseWorldPos.y > 13.0f) {
+		return true;
+	}
+
+	return false;
+}
+
+bool Game::detectBallCollision(glm::vec2* ball1Pos, glm::vec2* ball2Pos, glm::vec2* outCollisionNormal) {
+	if (glm::length(*ball1Pos - *ball2Pos) <= 1.0f) {
+		*outCollisionNormal = glm::normalize(*ball2Pos - *ball1Pos);
+
 		return true;
 	}
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <limits>
 #include <PoolMath.h>
 #include <PoolColors.h>
 #include <Window.h>
@@ -22,10 +23,11 @@ public:
 	Ball* getCueBall();
 	Cue* getCue();
 	std::vector<Ball>* getBalls();
-	bool getCueBallPocketed();
-	int getCurrentPlayerIndex();
+	bool getCueBallShouldBePlaced();
+	Player* getCurrentPlayer();
 	bool cueBallShouldBeDrawn();
 	bool cueShouldBeDrawn();
+	bool trajectory(glm::vec2* pointA, glm::vec2* pointB);
 	bool getGameDone();
 	int getWinner();
 
@@ -33,9 +35,10 @@ private:
 	void setPositions();
 	void setCuePos(Window* window, Input* input);
 	glm::vec2 getMouseWorldPos(Window* window, Input* input);
-	void removeBallsInPockets();
+	void checkPocketedBalls();
 	bool foul();
 	bool positionOutOfBounds(Window* window, Input* input);
+	bool detectBallCollision(glm::vec2* ball1Pos, glm::vec2* ball2Pos, glm::vec2* outCollisionNormal);
 	bool allBallsPocketed(BallType ballType);
 
 private:
@@ -48,7 +51,10 @@ private:
 	bool solidPocketed = false;
 	bool cueBallShouldBePlaced = false;
 	bool leftMouseWasPressed = false;
+	bool ballsMovedLastFrame = false;
+	glm::vec2 leftClickStartPos;
 	glm::vec2 cueStartPosition;
+	float maxCueDistance = 30.0f;
 	Cue cue;
 	std::vector<Ball> balls;
 	Player players[2];

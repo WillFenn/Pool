@@ -37,6 +37,19 @@ int main() {
 
 		physics.update(game.getSides(), game.getBalls(), game.getCueBall(), game.getCue(), deltaTime);
 
-		window.drawFrame(game.getSides(), game.getPocketPositions(), game.getBalls(), game.cueBallShouldBeDrawn() ? game.getCueBall() : nullptr, game.cueShouldBeDrawn() ? game.getCue() : nullptr, game.getCurrentPlayerIndex(), game.getGameDone(), game.getWinner());
+		glm::vec2 trajectoryA;
+		glm::vec2 trajectoryB;
+
+		bool trajectoryShouldBeDrawn;
+		if (game.ballsAreMoving()) {
+			trajectoryShouldBeDrawn = false;
+		}
+		else {
+			trajectoryShouldBeDrawn = game.trajectory(&trajectoryA, &trajectoryB);
+		}
+		std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!trajectoryShouldBeDrawn: " << trajectoryShouldBeDrawn << std::endl;	// delete
+
+		window.drawFrame(game.getSides(), game.getPocketPositions(), game.getBalls(), game.cueBallShouldBeDrawn() ? game.getCueBall() : nullptr, game.cueShouldBeDrawn() ? game.getCue() : nullptr,
+			trajectoryShouldBeDrawn ? &trajectoryA : nullptr, trajectoryShouldBeDrawn ? &trajectoryB : nullptr, game.getCurrentPlayer(), game.getGameDone(), game.getWinner());
 	}
 }
