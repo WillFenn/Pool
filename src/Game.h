@@ -4,6 +4,7 @@
 #include <limits>
 #include <PoolMath.h>
 #include <PoolColors.h>
+#include <Texture.h>
 #include <Window.h>
 #include <Input.h>
 #include <Player.h>

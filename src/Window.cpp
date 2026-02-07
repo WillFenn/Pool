@@ -150,7 +150,7 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 
 	// draw cue
 	if (cue != nullptr) {
-		drawRectangle(cue->pos, cue->scale, cue->rotation, cue->color);
+		drawRectangleTexture(cue->pos, cue->scale, cue->rotation, cue->texture);
 		std::cout << "cue drawn" << std::endl;	// delete
 		std::cout << "cue position     x: " << cue->pos.x << "   y: " << cue->pos.y << std::endl;	// delete
 	}

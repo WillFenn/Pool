@@ -33,7 +33,7 @@ Game::Game() {
 	
 	cueStartPosition = cueBall.pos + glm::vec2(-1.0f, 0.0f) * ((10.0f / 2.0f) + 0.5f);
 	
-	cue = { cueStartPosition, { 10.0f, 0.2f }, 0.0f, 0.0f, PoolColors::lightBrown(), false};
+	cue = { cueStartPosition, { 10.0f, 0.2f }, 0.0f, 0.0f, new Texture("res/textures/cue.png"), false};
 	
 	balls.push_back({ 1, {0.0f, 0.0f}, {0.0f, 0.0f}, PoolColors::black(), Solid });
 	balls.push_back({ 2, { 0.0f, 0.0f }, { 0.0f, 0.0f }, PoolColors::yellow(), Solid });
@@ -60,7 +60,7 @@ Game::Game() {
 }
 
 Game::~Game() {
-
+	delete cue.texture;
 }
 
 void Game::update(Window* window, Input* input, float deltaTime) {
@@ -255,7 +255,6 @@ void Game::setCuePos(Window* window, Input* input) {
 		}
 
 		glm::vec2 cueDirection = glm::normalize(cue.pos - cueBall.pos);
-		//glm::vec2 cueBallToMouse = mouseWorldPos - cueBall.pos;
 		glm::vec2 leftClickStartToMouse = mouseWorldPos - leftClickStartPos;
 		cue.pos = cueBall.pos + cueDirection * glm::clamp((((cue.scale.x / 2) + 0.5f) + PoolMath::projection(leftClickStartToMouse, cueDirection)), ((cue.scale.x / 2) + 0.5f), maxCueDistance);
 		cue.wasPulledBack = true;
@@ -277,8 +276,13 @@ void Game::setCuePos(Window* window, Input* input) {
 			else {
 				mouseDirection = glm::vec2(-1.0f, 0.0f);
 			}
+			
 			cue.pos = cueBall.pos - mouseDirection * ((cue.scale.x / 2.0f) + 0.5f);
+			
 			cue.rotation = atan(mouseDirection.y / mouseDirection.x);
+			if (mouseDirection.x < 0) {
+				cue.rotation += glm::pi<float>();
+			}
 		}
 	}
 
