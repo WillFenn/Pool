@@ -14,6 +14,7 @@
 #include <Physics.h>
 
 int main() {
+	// new branch
 	Window window;
 
 	Input input(window.getglfwwindow());
@@ -28,6 +29,7 @@ int main() {
 
 	while (!(input.escKeyPressed() || window.shouldClose())) {
 		numFrames++;
+
 		std::cout << std::endl << std::endl;
 		std::cout << "frame " << numFrames << std::endl << "average framerate: " << numFrames / (input.getTime() - timeToFirstFrame) << std::endl;
 
