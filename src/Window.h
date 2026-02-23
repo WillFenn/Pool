@@ -35,6 +35,7 @@ public:
 
 private:
 	void drawCircle(float radius, glm::vec2 pos, glm::vec4 color, BallType ballType);
+	void drawSphereTexture(float radius, glm::vec2 pos, float thetaRotation, float PhiRotation, Texture* texture);
 	void drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::vec4 color);
 	void drawRectangleTexture(glm::vec2 pos, glm::vec2 scale, float rotation, Texture* texture);
 	void drawLineSegment(glm::vec2 pointA, glm::vec2 pointB, glm::vec4 color);
@@ -55,12 +56,14 @@ private:
 	unsigned int linevao;
 	unsigned int linevbo;
 	Shader* circleShader;
+	Shader* sphereTextureShader;
 	Shader* rectangleShader;
-	Shader* lineShader;
 	Shader* rectangleTextureShader;
+	Shader* lineShader;
 	Texture* texture;
 	Texture* player1Texture;
 	Texture* player2Texture;
 	Texture* stripesTexture;
 	Texture* solidsTexture;
+	Texture* earthTexture;
 };

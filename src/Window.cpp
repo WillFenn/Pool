@@ -80,6 +80,7 @@ Window::Window() {
 	GLCALL(glEnableVertexAttribArray(0));
 
 	circleShader = new Shader("res/shaders/CircleRectangleLineVertex.glsl", "res/shaders/CircleFragment.glsl");
+	sphereTextureShader = new Shader("res/shaders/CircleRectangleLineVertex.glsl", "res/shaders/SphereTextureFragment.glsl");
 	rectangleShader = new Shader("res/shaders/CircleRectangleLineVertex.glsl", "res/shaders/LineRectangleFragment.glsl");
 	rectangleTextureShader = new Shader("res/shaders/RectangleTextureVertex.glsl", "res/shaders/RectangleTextureFragment.glsl");
 	lineShader = new Shader("res/shaders/CircleRectangleLineVertex.glsl", "res/shaders/LineRectangleFragment.glsl");
@@ -89,6 +90,7 @@ Window::Window() {
 	player2Texture = new Texture("res/textures/player2.png");
 	stripesTexture = new Texture("res/textures/stripes.png");
 	solidsTexture = new Texture("res/textures/solids.png");
+	earthTexture = new Texture("res/textures/earth.png");
 
 	glm::vec4 backgroundColor = PoolColors::gray();
 	GLCALL(glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a));
@@ -96,6 +98,7 @@ Window::Window() {
 
 Window::~Window() {
 	delete circleShader;
+	delete sphereTextureShader;
 	delete rectangleShader;
 	delete rectangleTextureShader;
 	delete lineShader;
@@ -171,6 +174,9 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 		drawRectangleTexture(glm::vec2(0.0f, 0.0f), glm::vec2(48.0f, 27.0f), 0.0f, winner == 1 ? player1Texture : player2Texture);
 	}
 
+	drawRectangleTexture(glm::vec2(0.0f, 5.0f), glm::vec2(4.0f, 2.0f), 0.0f, earthTexture);	// delete
+	drawSphereTexture(5.0f, glm::vec2(0.0f, 0.0f), 0.0f, 0.0f, earthTexture);	// delete
+
 	glfwSwapBuffers(glfwwindow);
 	
 	glfwPollEvents();
@@ -195,6 +201,31 @@ void Window::drawCircle(float radius, glm::vec2 pos, glm::vec4 color, BallType b
 	circleShader->setUniformVec2(worldScale, "uWorldScale");
 	circleShader->setUniformVec4(color, "uColor");
 	circleShader->setUniformInt(ballType == Striped ? true : false, "uStriped");
+
+	GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+}
+
+void Window::drawSphereTexture(float radius, glm::vec2 pos, float thetaRotation, float phiRotation, Texture* texture) {
+	GLCALL(glBindVertexArray(rectvao));
+	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectvbo));
+	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
+	sphereTextureShader->bind();
+	texture->bind();
+
+	glm::mat4 projection = glm::ortho(-(worldScale.x / 2.0f), worldScale.x / 2.0f, -(worldScale.y / 2.0f), worldScale.y / 2.0f, -1.0f, 1.0f);
+	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos, 0.0f));
+	model = glm::scale(model, glm::vec3(radius * 2, radius * 2, 1.0f));
+
+	glm::mat4 mvp = projection * view * model;
+	sphereTextureShader->setUniformMat4(mvp, "uMVP");
+	sphereTextureShader->setUniformIVec2(resolution, "uResolution");
+	sphereTextureShader->setUniformFloat(radius, "uRadius");
+	sphereTextureShader->setUniformVec2(pos, "uPosition");
+	sphereTextureShader->setUniformFloat(thetaRotation, "uThetaRotation");
+	sphereTextureShader->setUniformFloat(phiRotation, "uPhiRotation");
+	sphereTextureShader->setUniformVec2(worldScale, "uWorldScale");
+	sphereTextureShader->setUniformInt(texture->getSlot(), "uTexture");
 
 	GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 }
