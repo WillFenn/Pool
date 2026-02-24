@@ -7,8 +7,7 @@ uniform mat4 uMVP;
 
 out vec2 textureCoord;
 
-void main()
-{
+void main() {
     gl_Position = uMVP * aPosition;
     textureCoord = aTextureCoord;
 };

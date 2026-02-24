@@ -113,8 +113,8 @@ Window::~Window() {
 
 	glfwTerminate();
 }
-
-void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball* cueBall, Cue* cue, glm::vec2* trajectoryA, glm::vec2* trajectoryB, Player* currentPlayer, bool gameDone, int winner) {
+																																																							// delete
+void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball* cueBall, Cue* cue, glm::vec2* trajectoryA, glm::vec2* trajectoryB, Player* currentPlayer, bool gameDone, int winner, double deltaTime) {
 	//std::cout << "balls->size(): " << balls->size() << std::endl;	//delete
 	
 	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
@@ -174,8 +174,9 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 		drawRectangleTexture(glm::vec2(0.0f, 0.0f), glm::vec2(48.0f, 27.0f), 0.0f, winner == 1 ? player1Texture : player2Texture);
 	}
 
-	drawRectangleTexture(glm::vec2(0.0f, 5.0f), glm::vec2(4.0f, 2.0f), 0.0f, earthTexture);	// delete
-	drawSphereTexture(5.0f, glm::vec2(0.0f, 0.0f), 0.0f, 0.0f, earthTexture);	// delete
+	//thetaRotation += (deltaTime * 2 * glm::pi<float>()) / 3;
+	phiRotation += (deltaTime * 2 * glm::pi<float>()) / 3;
+	drawSphereTexture(5.0f, glm::vec2(0.0f, 0.0f), thetaRotation, phiRotation, earthTexture);	// delete
 
 	glfwSwapBuffers(glfwwindow);
 	

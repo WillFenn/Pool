@@ -26,8 +26,8 @@
 class Window {
 public:
 	Window();
-	~Window();
-	void drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball* cueBall, Cue* cue, glm::vec2* trajectoryA, glm::vec2* trajectoryB, Player* currentPlayer, bool gameDone, int winner);
+	~Window();																																																		// delete
+	void drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball* cueBall, Cue* cue, glm::vec2* trajectoryA, glm::vec2* trajectoryB, Player* currentPlayer, bool gameDone, int winner, double deltaTime);
 	GLFWwindow* getglfwwindow();
 	glm::vec2 getResolution();
 	glm::vec2 getWorldScale();
@@ -66,4 +66,6 @@ private:
 	Texture* stripesTexture;
 	Texture* solidsTexture;
 	Texture* earthTexture;
+	float thetaRotation = 0.0f;
+	float phiRotation = 0.0f;
 };

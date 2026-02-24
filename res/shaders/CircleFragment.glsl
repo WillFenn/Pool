@@ -9,8 +9,7 @@ uniform vec2 uWorldScale;
 uniform vec4 uColor;
 uniform int uStriped;
 
-void main()
-{
+void main() {
 	vec2 uv = (((gl_FragCoord.xy / uResolution - 0.5) * uWorldScale) - uPosition);
 
 	if (length(uv) <= uRadius) {
