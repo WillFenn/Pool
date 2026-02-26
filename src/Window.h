@@ -35,7 +35,7 @@ public:
 
 private:
 	void drawCircle(float radius, glm::vec2 pos, glm::vec4 color, BallType ballType);
-	void drawSphereTexture(float radius, glm::vec2 pos, float thetaRotation, float PhiRotation, Texture* texture);
+	void drawSphereTexture(float radius, glm::vec2 pos, float rotationAngle, glm::vec3 rotationAxis, Texture* texture);
 	void drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::vec4 color);
 	void drawRectangleTexture(glm::vec2 pos, glm::vec2 scale, float rotation, Texture* texture);
 	void drawLineSegment(glm::vec2 pointA, glm::vec2 pointB, glm::vec4 color);
@@ -66,6 +66,5 @@ private:
 	Texture* stripesTexture;
 	Texture* solidsTexture;
 	Texture* earthTexture;
-	float thetaRotation = 0.0f;
-	float phiRotation = 0.0f;
+	float rotationAngle = 0.0f;
 };
