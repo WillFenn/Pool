@@ -16,6 +16,7 @@
 #include <ext/matrix_clip_space.hpp>
 #include <ext/matrix_transform.hpp>
 #include <PoolColors.h>
+#include <PoolMath.h>	// delete
 #include <Shader.h>
 #include <Texture.h>
 #include <Player.h>
@@ -66,5 +67,5 @@ private:
 	Texture* stripesTexture;
 	Texture* solidsTexture;
 	Texture* earthTexture;
-	float rotationAngle = 0.0f;
+	Rotation earthRotation = { 0.0f, glm::vec3(1.0f, 0.0f, 0.0f) };	// delete
 };

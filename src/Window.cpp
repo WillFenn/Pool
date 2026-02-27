@@ -174,8 +174,11 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 		drawRectangleTexture(glm::vec2(0.0f, 0.0f), glm::vec2(48.0f, 27.0f), 0.0f, winner == 1 ? player1Texture : player2Texture);
 	}
 
-	rotationAngle += deltaTime * 2 * glm::pi<float>() / 3;
-	drawSphereTexture(5.0f, glm::vec2(0.0f, 0.0f), rotationAngle, glm::vec3(1.0f, 1.0f, 0.0f), earthTexture);	// delete
+	earthRotation = PoolMath::addRotation(earthRotation, { 0.1f, glm::vec3(0.0f, 0.0f, 1.0f) });
+	std::cout << "_____________________________________________________________________________________________________________________________________________________________________" << std::endl;
+	std::cout << "earthRotation.angle: " << earthRotation.angle << "earthRotation.axis.x: " << earthRotation.axis.x << "  y: " << earthRotation.axis.y << "  z: " << earthRotation.axis.z << std::endl;
+	std::cout << "_____________________________________________________________________________________________________________________________________________________________________" << std::endl;
+	drawSphereTexture(5.0f, glm::vec2(0.0f, 0.0f), earthRotation.angle, earthRotation.axis, earthTexture);	// delete
 
 	glfwSwapBuffers(glfwwindow);
 	

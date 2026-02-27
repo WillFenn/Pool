@@ -20,7 +20,8 @@ void main() {
 		float wBeforeRotation = sqrt(uRadius * uRadius - uvBeforeRotation.x * uvBeforeRotation.x - uvBeforeRotation.y * uvBeforeRotation.y);
 
 		vec3 uvwBeforeRotation = vec3(uvBeforeRotation, wBeforeRotation);
-		vec4 uvw = uRotationMatrix * vec4(uvwBeforeRotation, 1.0f);
+		//vec4 uvw = uRotationMatrix * vec4(uvwBeforeRotation, 1.0f);
+		vec4 uvw = uRotationMatrix * vec4(uvwBeforeRotation, 0.0f);
 
 		float phi = acos(uvw.z / uRadius);
 
