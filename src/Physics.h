@@ -5,6 +5,7 @@
 #include <vec2.hpp>
 #include <vec3.hpp>
 #include <ext/matrix_transform.hpp>
+#include <PoolMath.h>
 #include <Side.h>
 #include <Ball.h>
 #include <Cue.h>

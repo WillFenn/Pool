@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>	// delete
 #include <vec2.hpp>
 #include <vec3.hpp>
 #include <ext/matrix_transform.hpp>
@@ -14,5 +13,5 @@ namespace PoolMath {
 	bool approximatelyEqual(float x, float y, float error);
 	bool approximatelyEqual(glm::vec2 a, glm::vec2 b, float error);
 	glm::vec2 normal(glm::vec2 a);
-	Rotation addRotation(Rotation rotation1, Rotation rotation2);
+	glm::mat4 addToRotationMat(glm::mat4 rotationMat, float rotationAngle, glm::vec3 rotationAxis);
 }

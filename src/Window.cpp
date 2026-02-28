@@ -142,12 +142,14 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 
 	// draw balls
 	for (int i = 0; i < balls->size(); i++) {
-		drawCircle(0.5f, balls->at(i).pos, balls->at(i).color, balls->at(i).ballType);
+		//drawCircle(0.5f, balls->at(i).pos, balls->at(i).color, balls->at(i).ballType);
+		drawSphereTexture(0.5, balls->at(i).pos, balls->at(i).rotationMat, earthTexture);
 	}
 	std::cout << "balls drawn" << std::endl;	// delete
 
 	if (cueBall != nullptr) {
-		drawCircle(0.5f, cueBall->pos, cueBall->color, cueBall->ballType);
+		//drawCircle(0.5f, cueBall->pos, cueBall->color, cueBall->ballType);
+		drawSphereTexture(0.5, cueBall->pos, cueBall->rotationMat, earthTexture);
 		std::cout << "cue ball drawn" << std::endl;	// delete
 	}
 
@@ -174,11 +176,11 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 		drawRectangleTexture(glm::vec2(0.0f, 0.0f), glm::vec2(48.0f, 27.0f), 0.0f, winner == 1 ? player1Texture : player2Texture);
 	}
 
-	earthRotation = PoolMath::addRotation(earthRotation, { 0.1f, glm::vec3(0.0f, 0.0f, 1.0f) });
-	std::cout << "_____________________________________________________________________________________________________________________________________________________________________" << std::endl;
-	std::cout << "earthRotation.angle: " << earthRotation.angle << "earthRotation.axis.x: " << earthRotation.axis.x << "  y: " << earthRotation.axis.y << "  z: " << earthRotation.axis.z << std::endl;
-	std::cout << "_____________________________________________________________________________________________________________________________________________________________________" << std::endl;
-	drawSphereTexture(5.0f, glm::vec2(0.0f, 0.0f), earthRotation.angle, earthRotation.axis, earthTexture);	// delete
+	//earthRotationMat = glm::rotate(earthRotationMat, (float) deltaTime * 2 * glm::pi<float>() / 3, glm::vec3(-1.0f, -1.0f, 0.0f));
+	//std::cout << "_____________________________________________________________________________________________________________________________________________________________________" << std::endl;
+	//std::cout << "earthRotation.angle: " << earthRotation.angle << "earthRotation.axis.x: " << earthRotation.axis.x << "  y: " << earthRotation.axis.y << "  z: " << earthRotation.axis.z << std::endl;
+	//std::cout << "_____________________________________________________________________________________________________________________________________________________________________" << std::endl;
+	//drawSphereTexture(5.0f, glm::vec2(0.0f, 0.0f), earthRotationMat, earthTexture);	// delete
 
 	glfwSwapBuffers(glfwwindow);
 	
@@ -208,7 +210,7 @@ void Window::drawCircle(float radius, glm::vec2 pos, glm::vec4 color, BallType b
 	GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 }
 
-void Window::drawSphereTexture(float radius, glm::vec2 pos, float rotationAngle, glm::vec3 rotationAxis, Texture* texture) {
+void Window::drawSphereTexture(float radius, glm::vec2 pos, glm::mat4 rotationMat, Texture* texture) {
 	GLCALL(glBindVertexArray(rectvao));
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectvbo));
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
@@ -222,13 +224,11 @@ void Window::drawSphereTexture(float radius, glm::vec2 pos, float rotationAngle,
 
 	glm::mat4 mvp = projection * view * model;
 
-	glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), rotationAngle, -rotationAxis);
-
 	sphereTextureShader->setUniformMat4(mvp, "uMVP");
 	sphereTextureShader->setUniformIVec2(resolution, "uResolution");
 	sphereTextureShader->setUniformFloat(radius, "uRadius");
 	sphereTextureShader->setUniformVec2(pos, "uPosition");
-	sphereTextureShader->setUniformMat4(rotationMatrix, "uRotationMatrix");
+	sphereTextureShader->setUniformMat4(rotationMat, "uRotationMatrix");
 	sphereTextureShader->setUniformVec2(worldScale, "uWorldScale");
 	sphereTextureShader->setUniformInt(texture->getSlot(), "uTexture");
 

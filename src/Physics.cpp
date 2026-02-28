@@ -45,7 +45,7 @@ void Physics::update(Side sides[], std::vector<Ball>* balls, Ball* cueBall, Cue*
 		}
 	}
 	
-	// update positions
+	// update positions and rotations
 	//std::cout << "cue speed: " << cue->speed << std::endl;	// delete
 	//std::cout << "cue ball speed: " << glm::length(cueBall->velocity) << std::endl;	// delete
 
@@ -54,7 +54,9 @@ void Physics::update(Side sides[], std::vector<Ball>* balls, Ball* cueBall, Cue*
 	cueBall->pos += cueBall->velocity * deltaTime;
 	
 	for (int i = 0; i < balls->size(); i++) {
-		balls->at(i).pos += balls->at(i).velocity * deltaTime;
+		glm::vec2 deltaPos = balls->at(i).velocity * deltaTime;
+		balls->at(i).pos += deltaPos;
+		balls->at(i).rotationMat = PoolMath::addToRotationMat(balls->at(i).rotationMat, glm::length(deltaPos), glm::cross(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(deltaPos, 0.0f)));
 	}
 	
 	// collision between cue and cue ball
