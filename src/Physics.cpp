@@ -48,17 +48,24 @@ void Physics::update(Side sides[], std::vector<Ball>* balls, Ball* cueBall, Cue*
 	// update positions and rotations
 	//std::cout << "cue speed: " << cue->speed << std::endl;	// delete
 	//std::cout << "cue ball speed: " << glm::length(cueBall->velocity) << std::endl;	// delete
-
+	
 	cue->pos += glm::normalize(cueBall->pos - cue->pos) * cue->speed * deltaTime;
 
-	cueBall->pos += cueBall->velocity * deltaTime;
-	
 	for (int i = 0; i < balls->size(); i++) {
 		glm::vec2 deltaPos = balls->at(i).velocity * deltaTime;
 		balls->at(i).pos += deltaPos;
-		balls->at(i).rotationMat = PoolMath::addToRotationMat(balls->at(i).rotationMat, glm::length(deltaPos), glm::cross(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(deltaPos, 0.0f)));
+
+		if (glm::length(deltaPos) != 0.0f) {
+			balls->at(i).rotationMat = PoolMath::addToRotationMat(balls->at(i).rotationMat, glm::length(deltaPos), glm::cross(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(deltaPos, 0.0f)));
+		}
 	}
-	
+
+	glm::vec2 deltaPos = cueBall->velocity * deltaTime;
+	cueBall->pos += deltaPos;
+	if (glm::length(deltaPos) != 0.0f) {
+		cueBall->rotationMat = PoolMath::addToRotationMat(cueBall->rotationMat, glm::length(deltaPos), glm::cross(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(deltaPos, 0.0f)));
+	}
+
 	// collision between cue and cue ball
 	if (glm::distance(cue->pos, cueBall->pos) <= ((cue->scale.x / 2) + 0.5f) && cue->speed != 0.0f) {
 		std::cout << "********************collision between cue and cue ball********************" << std::endl;	// delete

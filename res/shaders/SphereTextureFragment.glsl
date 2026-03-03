@@ -25,6 +25,10 @@ void main() {
 
 		float phi = acos(uvw.z / uRadius);
 
+		if (phi < 0 || phi > PI) {	// delete
+			discard;
+		}
+
 		float theta;
 
 		if ((uvw.x < 0 && uvw.y > 0) || (uvw.x < 0 && uvw.y < 0)) {
@@ -35,6 +39,10 @@ void main() {
 		}
 		else {
 			theta = atan(uvw.y / uvw.x);
+		}
+
+		if (theta < 0 || theta > 2 * PI) {	// delete
+			discard;
 		}
 
 		float normTheta = theta / (2 * PI);
