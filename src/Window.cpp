@@ -91,6 +91,7 @@ Window::Window() {
 	stripesTexture = new Texture("res/textures/stripes.png");
 	solidsTexture = new Texture("res/textures/solids.png");
 	earthTexture = new Texture("res/textures/earth.png");
+	elevenBallTexture = new Texture("res/textures/eleven_ball.png");
 
 	glm::vec4 backgroundColor = PoolColors::gray();
 	GLCALL(glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a));
@@ -108,6 +109,8 @@ Window::~Window() {
 	delete player2Texture;
 	delete stripesTexture;
 	delete solidsTexture;
+	delete earthTexture;
+	delete elevenBallTexture;
 
 	glfwSetWindowShouldClose(glfwwindow, true);
 
@@ -143,7 +146,7 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 	// draw balls
 	for (int i = 0; i < balls->size(); i++) {
 		//drawCircle(0.5f, balls->at(i).pos, balls->at(i).color, balls->at(i).ballType);
-		drawSphereTexture(0.5, balls->at(i).pos, balls->at(i).rotationMat, earthTexture);
+		drawSphereTexture(0.5, balls->at(i).pos, balls->at(i).rotationMat, elevenBallTexture);
 	}
 	std::cout << "balls drawn" << std::endl;	// delete
 

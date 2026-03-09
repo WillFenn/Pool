@@ -34,22 +34,26 @@ Game::Game() {
 	cueStartPosition = cueBall.pos + glm::vec2(-1.0f, 0.0f) * ((10.0f / 2.0f) + 0.5f);
 	
 	cue = { cueStartPosition, { 10.0f, 0.2f }, 0.0f, 0.0f, new Texture("res/textures/cue.png"), false};
+
+	glm::mat4 initialRotation = glm::mat4(1.0f);
+	initialRotation = PoolMath::addToRotationMat(initialRotation, glm::pi<float>() / 2, glm::vec3(0.0f, 1.0f, 0.0f));
+	initialRotation = PoolMath::addToRotationMat(initialRotation, glm::pi<float>(), glm::vec3(0.0f, 0.0f, 1.0f));
 	
-	balls.push_back({ 1, { 0.0f, 0.0f }, glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f)), { 0.0f, 0.0f }, PoolColors::black(), Solid});
-	balls.push_back({ 2, { 0.0f, 0.0f }, glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f)), { 0.0f, 0.0f }, PoolColors::yellow(), Solid });
-	balls.push_back({ 3, { 0.0f, 0.0f }, glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f)), { 0.0f, 0.0f }, PoolColors::yellow(), Striped });
-	balls.push_back({ 4, { 0.0f, 0.0f }, glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f)), { 0.0f, 0.0f }, PoolColors::red(), Solid });
-	balls.push_back({ 5, { 0.0f, 0.0f }, glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f)), { 0.0f, 0.0f }, PoolColors::red(), Striped });
-	balls.push_back({ 6, { 0.0f, 0.0f }, glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f)), { 0.0f, 0.0f }, PoolColors::darkGreen(), Solid });
-	balls.push_back({ 7, { 0.0f, 0.0f }, glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f)), { 0.0f, 0.0f }, PoolColors::darkGreen(), Striped });
-	balls.push_back({ 8, { 0.0f, 0.0f }, glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f)), { 0.0f, 0.0f }, PoolColors::blue(), Solid });
-	balls.push_back({ 9, { 0.0f, 0.0f }, glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f)), { 0.0f, 0.0f }, PoolColors::blue(), Striped });
-	balls.push_back({ 10, { 0.0f, 0.0f }, glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f)), { 0.0f, 0.0f }, PoolColors::orange(), Solid });
-	balls.push_back({ 11, { 0.0f, 0.0f }, glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f)), { 0.0f, 0.0f }, PoolColors::orange(), Striped });
-	balls.push_back({ 12, { 0.0f, 0.0f }, glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f)), { 0.0f, 0.0f }, PoolColors::purple(), Solid });
-	balls.push_back({ 13, { 0.0f, 0.0f }, glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f)), { 0.0f, 0.0f }, PoolColors::purple(), Striped });
-	balls.push_back({ 14, { 0.0f, 0.0f }, glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f)), { 0.0f, 0.0f }, PoolColors::darkBrown(), Solid });
-	balls.push_back({ 15, { 0.0f, 0.0f }, glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f)), { 0.0f, 0.0f }, PoolColors::darkBrown(), Striped });
+	balls.push_back({ 1, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::black(), Solid});
+	balls.push_back({ 2, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::yellow(), Solid });
+	balls.push_back({ 3, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::yellow(), Striped });
+	balls.push_back({ 4, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::red(), Solid });
+	balls.push_back({ 5, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::red(), Striped });
+	balls.push_back({ 6, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::darkGreen(), Solid });
+	balls.push_back({ 7, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::darkGreen(), Striped });
+	balls.push_back({ 8, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::blue(), Solid });
+	balls.push_back({ 9, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::blue(), Striped });
+	balls.push_back({ 10, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::orange(), Solid });
+	balls.push_back({ 11, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::orange(), Striped });
+	balls.push_back({ 12, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::purple(), Solid });
+	balls.push_back({ 13, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::purple(), Striped });
+	balls.push_back({ 14, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::darkBrown(), Solid });
+	balls.push_back({ 15, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::darkBrown(), Striped });
 	
 	setPositions();
 
