@@ -85,13 +85,13 @@ Window::Window() {
 	rectangleTextureShader = new Shader("res/shaders/RectangleTextureVertex.glsl", "res/shaders/RectangleTextureFragment.glsl");
 	lineShader = new Shader("res/shaders/CircleRectangleLineVertex.glsl", "res/shaders/LineRectangleFragment.glsl");
 
-	texture = new Texture("res/textures/container.jpg");
-	player1Texture = new Texture("res/textures/player1.png");
-	player2Texture = new Texture("res/textures/player2.png");
-	stripesTexture = new Texture("res/textures/stripes.png");
-	solidsTexture = new Texture("res/textures/solids.png");
-	earthTexture = new Texture("res/textures/earth.png");
-	elevenBallTexture = new Texture("res/textures/eleven_ball.png");
+	texture = new Texture("res/textures/container.jpg", true);
+	player1Texture = new Texture("res/textures/player1.png", true);
+	player2Texture = new Texture("res/textures/player2.png", true);
+	stripesTexture = new Texture("res/textures/stripes.png", true);
+	solidsTexture = new Texture("res/textures/solids.png", true);
+	earthTexture = new Texture("res/textures/earth.png", true);
+	twelveBallTexture = new Texture("res/textures/twelve_ball.png", false);
 
 	glm::vec4 backgroundColor = PoolColors::gray();
 	GLCALL(glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a));
@@ -110,7 +110,7 @@ Window::~Window() {
 	delete stripesTexture;
 	delete solidsTexture;
 	delete earthTexture;
-	delete elevenBallTexture;
+	delete twelveBallTexture;
 
 	glfwSetWindowShouldClose(glfwwindow, true);
 
@@ -146,7 +146,7 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 	// draw balls
 	for (int i = 0; i < balls->size(); i++) {
 		//drawCircle(0.5f, balls->at(i).pos, balls->at(i).color, balls->at(i).ballType);
-		drawSphereTexture(0.5, balls->at(i).pos, balls->at(i).rotationMat, elevenBallTexture);
+		drawSphereTexture(0.5, balls->at(i).pos, balls->at(i).rotationMat, twelveBallTexture);
 	}
 	std::cout << "balls drawn" << std::endl;	// delete
 

@@ -1,13 +1,13 @@
 #include <Texture.h>
 
-Texture::Texture(std::string filepath) {
+Texture::Texture(std::string filepath, bool flipOnLoad) {
 	this->filepath = filepath;
 	localBuffer = nullptr;
 	width = 0;
 	height = 0;
 	numChannels = 0;
 
-	stbi_set_flip_vertically_on_load(1);
+	stbi_set_flip_vertically_on_load(flipOnLoad ? 1 : 0);
 
 	localBuffer = stbi_load(filepath.c_str(), &width, &height, &numChannels, 4);
 

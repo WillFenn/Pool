@@ -12,7 +12,7 @@
 
 class Texture {
 public:
-	Texture(std::string filepath);
+	Texture(std::string filepath, bool flipOnLoad);
 	~Texture();
 	void bind(unsigned int slot = 0);
 	void unbind();

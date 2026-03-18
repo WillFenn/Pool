@@ -33,11 +33,11 @@ Game::Game() {
 	
 	cueStartPosition = cueBall.pos + glm::vec2(-1.0f, 0.0f) * ((10.0f / 2.0f) + 0.5f);
 	
-	cue = { cueStartPosition, { 10.0f, 0.2f }, 0.0f, 0.0f, new Texture("res/textures/cue.png"), false};
+	cue = { cueStartPosition, { 10.0f, 0.2f }, 0.0f, 0.0f, new Texture("res/textures/cue.png", true), false};
 
 	glm::mat4 initialRotation = glm::mat4(1.0f);
 	initialRotation = PoolMath::addToRotationMat(initialRotation, glm::pi<float>() / 2, glm::vec3(0.0f, 1.0f, 0.0f));
-	initialRotation = PoolMath::addToRotationMat(initialRotation, glm::pi<float>(), glm::vec3(0.0f, 0.0f, 1.0f));
+	//initialRotation = PoolMath::addToRotationMat(initialRotation, glm::pi<float>(), glm::vec3(0.0f, 0.0f, 1.0f));
 	
 	balls.push_back({ 1, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::black(), Solid});
 	balls.push_back({ 2, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::yellow(), Solid });
