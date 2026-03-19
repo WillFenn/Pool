@@ -27,7 +27,7 @@ Game::Game() {
 	pocketPositions[4] = { 0.0f, -13.5f - 1.0f };
 	pocketPositions[5] = { -24.0f - (1 / glm::sqrt(2)), -13.5f - (1 / glm::sqrt(2)) };
 	
-	cueBall = { 0, { 5.0f, 0.0f }, glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f)), {0.0f, 0.0f}, PoolColors::white(), Solid };
+	cueBall = { 0, { 5.0f, 0.0f }, glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f)), {0.0f, 0.0f}, Solid, new Texture("res/textures/balls/cue_ball.png", false) };
 
 	leftClickStartPos = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
 	
@@ -39,21 +39,21 @@ Game::Game() {
 	initialRotation = PoolMath::addToRotationMat(initialRotation, glm::pi<float>() / 2, glm::vec3(0.0f, 1.0f, 0.0f));
 	//initialRotation = PoolMath::addToRotationMat(initialRotation, glm::pi<float>(), glm::vec3(0.0f, 0.0f, 1.0f));
 	
-	balls.push_back({ 1, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::black(), Solid});
-	balls.push_back({ 2, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::yellow(), Solid });
-	balls.push_back({ 3, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::yellow(), Striped });
-	balls.push_back({ 4, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::red(), Solid });
-	balls.push_back({ 5, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::red(), Striped });
-	balls.push_back({ 6, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::darkGreen(), Solid });
-	balls.push_back({ 7, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::darkGreen(), Striped });
-	balls.push_back({ 8, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::blue(), Solid });
-	balls.push_back({ 9, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::blue(), Striped });
-	balls.push_back({ 10, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::orange(), Solid });
-	balls.push_back({ 11, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::orange(), Striped });
-	balls.push_back({ 12, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::purple(), Solid });
-	balls.push_back({ 13, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::purple(), Striped });
-	balls.push_back({ 14, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::darkBrown(), Solid });
-	balls.push_back({ 15, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, PoolColors::darkBrown(), Striped });
+	balls.push_back({ 1, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/one_ball.png", false) });
+	balls.push_back({ 2, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/two_ball.png", false) });
+	balls.push_back({ 3, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/three_ball.png", false) });
+	balls.push_back({ 4, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/four_ball.png", false) });
+	balls.push_back({ 5, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/five_ball.png", false) });
+	balls.push_back({ 6, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/six_ball.png", false) });
+	balls.push_back({ 7, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/seven_ball.png", false) });
+	balls.push_back({ 8, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/eight_ball.png", false) });
+	balls.push_back({ 9, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/nine_ball.png", false) });
+	balls.push_back({ 10, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/ten_ball.png", false) });
+	balls.push_back({ 11, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/eleven_ball.png", false) });
+	balls.push_back({ 12, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/twelve_ball.png", false) });
+	balls.push_back({ 13, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/thirteen_ball.png", false) });
+	balls.push_back({ 14, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/fourteen_ball.png", false) });
+	balls.push_back({ 15, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/fifteen_ball.png", false) });
 	
 	setPositions();
 
@@ -65,6 +65,10 @@ Game::Game() {
 
 Game::~Game() {
 	delete cue.texture;
+
+	for (Ball ball : balls) {
+		delete ball.texture;
+	}
 }
 
 void Game::update(Window* window, Input* input, float deltaTime) {

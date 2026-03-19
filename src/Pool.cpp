@@ -53,6 +53,6 @@ int main() {
 		std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!trajectoryShouldBeDrawn: " << trajectoryShouldBeDrawn << std::endl;	// delete
 
 		window.drawFrame(game.getSides(), game.getPocketPositions(), game.getBalls(), game.cueBallShouldBeDrawn() ? game.getCueBall() : nullptr, game.cueShouldBeDrawn() ? game.getCue() : nullptr,
-			trajectoryShouldBeDrawn ? &trajectoryA : nullptr, trajectoryShouldBeDrawn ? &trajectoryB : nullptr, game.getCurrentPlayer(), game.getGameDone(), game.getWinner(), deltaTime);
+			trajectoryShouldBeDrawn ? &trajectoryA : nullptr, trajectoryShouldBeDrawn ? &trajectoryB : nullptr, game.getCurrentPlayer(), game.getGameDone(), game.getWinner());
 	}
 }

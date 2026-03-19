@@ -79,6 +79,10 @@ Window::Window() {
 	GLCALL(glVertexAttribPointer(0, 2, GL_FLOAT, false, sizeof(glm::vec2), 0));
 	GLCALL(glEnableVertexAttribArray(0));
 
+	GLCALL(glEnable(GL_BLEND));
+	GLCALL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+	//GLCALL(glBlendEquation(GL_FUNC_ADD));
+
 	circleShader = new Shader("res/shaders/CircleRectangleLineVertex.glsl", "res/shaders/CircleFragment.glsl");
 	sphereTextureShader = new Shader("res/shaders/CircleRectangleLineVertex.glsl", "res/shaders/SphereTextureFragment.glsl");
 	rectangleShader = new Shader("res/shaders/CircleRectangleLineVertex.glsl", "res/shaders/LineRectangleFragment.glsl");
@@ -90,8 +94,9 @@ Window::Window() {
 	player2Texture = new Texture("res/textures/player2.png", true);
 	stripesTexture = new Texture("res/textures/stripes.png", true);
 	solidsTexture = new Texture("res/textures/solids.png", true);
-	earthTexture = new Texture("res/textures/earth.png", true);
-	twelveBallTexture = new Texture("res/textures/twelve_ball.png", false);
+	reflections = new Texture("res/textures/balls/reflections3.png", true);
+
+	reflectionsScale = glm::vec2(1.0f, 1.0f);
 
 	glm::vec4 backgroundColor = PoolColors::gray();
 	GLCALL(glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a));
@@ -109,21 +114,19 @@ Window::~Window() {
 	delete player2Texture;
 	delete stripesTexture;
 	delete solidsTexture;
-	delete earthTexture;
-	delete twelveBallTexture;
 
 	glfwSetWindowShouldClose(glfwwindow, true);
 
 	glfwTerminate();
 }
-																																																							// delete
-void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball* cueBall, Cue* cue, glm::vec2* trajectoryA, glm::vec2* trajectoryB, Player* currentPlayer, bool gameDone, int winner, double deltaTime) {
+
+void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball* cueBall, Cue* cue, glm::vec2* trajectoryA, glm::vec2* trajectoryB, Player* currentPlayer, bool gameDone, int winner) {
 	//std::cout << "balls->size(): " << balls->size() << std::endl;	//delete
 	
 	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
 
 	// draw table
-	drawRectangle(glm::vec2(0.0f, 0.0f), glm::vec2(48.0f, 27.0f), 0.0f, PoolColors::lightGreen());
+	drawRectangle(glm::vec2(0.0f, 0.0f), glm::vec2(48.0f, 27.0f), 0.0f, PoolColors::darkGreen());
 	drawRectangle(glm::vec2(0.0f, 14.5f), glm::vec2(52.0f, 2.0f), 0.0f, PoolColors::darkBrown());
 	drawRectangle(glm::vec2(25.0f, 0.0f), glm::vec2(2.0f, 27.0f), 0.0f, PoolColors::darkBrown());
 	drawRectangle(glm::vec2(0.0f, -14.5f), glm::vec2(52.0f, 2.0f), 0.0f, PoolColors::darkBrown());
@@ -145,14 +148,15 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 
 	// draw balls
 	for (int i = 0; i < balls->size(); i++) {
-		//drawCircle(0.5f, balls->at(i).pos, balls->at(i).color, balls->at(i).ballType);
-		drawSphereTexture(0.5, balls->at(i).pos, balls->at(i).rotationMat, twelveBallTexture);
+		drawSphereTexture(0.5, balls->at(i).pos, balls->at(i).rotationMat, balls->at(i).texture);
+		drawRectangleTexture(balls->at(i).pos, reflectionsScale, 0.0f, reflections);
 	}
 	std::cout << "balls drawn" << std::endl;	// delete
 
 	if (cueBall != nullptr) {
-		//drawCircle(0.5f, cueBall->pos, cueBall->color, cueBall->ballType);
-		drawSphereTexture(0.5, cueBall->pos, cueBall->rotationMat, earthTexture);
+		drawSphereTexture(0.5, cueBall->pos, cueBall->rotationMat, cueBall->texture);
+		drawRectangleTexture(cueBall->pos, reflectionsScale, 0.0f, reflections);
+		
 		std::cout << "cue ball drawn" << std::endl;	// delete
 	}
 
@@ -179,11 +183,8 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 		drawRectangleTexture(glm::vec2(0.0f, 0.0f), glm::vec2(48.0f, 27.0f), 0.0f, winner == 1 ? player1Texture : player2Texture);
 	}
 
-	//earthRotationMat = PoolMath::addToRotationMat(earthRotationMat, (float) deltaTime * 2 * glm::pi<float>() / 3, glm::vec3(1.0f, 1.0f, 0.0f));
-	//std::cout << "_____________________________________________________________________________________________________________________________________________________________________" << std::endl;
-	//std::cout << "earthRotation.angle: " << earthRotation.angle << "earthRotation.axis.x: " << earthRotation.axis.x << "  y: " << earthRotation.axis.y << "  z: " << earthRotation.axis.z << std::endl;
-	//std::cout << "_____________________________________________________________________________________________________________________________________________________________________" << std::endl;
-	//drawSphereTexture(5.0f, glm::vec2(0.0f, 0.0f), earthRotationMat, earthTexture);	// delete
+	//drawSphereTexture(0.5, glm::vec2(0.0f, 0.0f), balls->at(5).rotationMat, balls->at(5).texture);	// delete
+	//drawRectangleTexture(glm::vec2(0.0f, 0.0f), glm::vec2(1.1f, 1.1f), 0.0f, reflections);	// delete
 
 	glfwSwapBuffers(glfwwindow);
 	
