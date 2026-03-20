@@ -81,7 +81,6 @@ Window::Window() {
 
 	GLCALL(glEnable(GL_BLEND));
 	GLCALL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-	//GLCALL(glBlendEquation(GL_FUNC_ADD));
 
 	circleShader = new Shader("res/shaders/CircleRectangleLineVertex.glsl", "res/shaders/CircleFragment.glsl");
 	sphereTextureShader = new Shader("res/shaders/CircleRectangleLineVertex.glsl", "res/shaders/SphereTextureFragment.glsl");
@@ -94,9 +93,9 @@ Window::Window() {
 	player2Texture = new Texture("res/textures/player2.png", true);
 	stripesTexture = new Texture("res/textures/stripes.png", true);
 	solidsTexture = new Texture("res/textures/solids.png", true);
-	reflections = new Texture("res/textures/balls/reflections3.png", true);
+	reflections = new Texture("res/textures/balls/reflections1.png", true);
 
-	reflectionsScale = glm::vec2(1.0f, 1.0f);
+	reflectionsScale = glm::vec2(1.1f, 1.1f);
 
 	glm::vec4 backgroundColor = PoolColors::gray();
 	GLCALL(glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a));
