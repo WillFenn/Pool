@@ -93,9 +93,10 @@ Window::Window() {
 	player2Texture = new Texture("res/textures/player2.png", true);
 	stripesTexture = new Texture("res/textures/stripes.png", true);
 	solidsTexture = new Texture("res/textures/solids.png", true);
-	reflections = new Texture("res/textures/balls/reflections1.png", true);
+	tableTexture = new Texture("res/textures/table.png", true);
+	reflections = new Texture("res/textures/balls/reflections.png", true);
 
-	reflectionsScale = glm::vec2(1.1f, 1.1f);
+	reflectionsScale = glm::vec2(1.0f, 1.0f);
 
 	glm::vec4 backgroundColor = PoolColors::gray();
 	GLCALL(glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a));
@@ -125,11 +126,12 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
 
 	// draw table
-	drawRectangle(glm::vec2(0.0f, 0.0f), glm::vec2(48.0f, 27.0f), 0.0f, PoolColors::darkGreen());
-	drawRectangle(glm::vec2(0.0f, 14.5f), glm::vec2(52.0f, 2.0f), 0.0f, PoolColors::darkBrown());
-	drawRectangle(glm::vec2(25.0f, 0.0f), glm::vec2(2.0f, 27.0f), 0.0f, PoolColors::darkBrown());
-	drawRectangle(glm::vec2(0.0f, -14.5f), glm::vec2(52.0f, 2.0f), 0.0f, PoolColors::darkBrown());
-	drawRectangle(glm::vec2(-25.0f, 0.0f), glm::vec2(2.0f, 27.0f), 0.0f, PoolColors::darkBrown());
+	//drawRectangle(glm::vec2(0.0f, 0.0f), glm::vec2(48.0f, 27.0f), 0.0f, PoolColors::darkGreen());
+	//drawRectangle(glm::vec2(0.0f, 14.5f), glm::vec2(52.0f, 2.0f), 0.0f, PoolColors::darkBrown());
+	//drawRectangle(glm::vec2(25.0f, 0.0f), glm::vec2(2.0f, 27.0f), 0.0f, PoolColors::darkBrown());
+	//drawRectangle(glm::vec2(0.0f, -14.5f), glm::vec2(52.0f, 2.0f), 0.0f, PoolColors::darkBrown());
+	//drawRectangle(glm::vec2(-25.0f, 0.0f), glm::vec2(2.0f, 27.0f), 0.0f, PoolColors::darkBrown());
+	drawRectangleTexture(glm::vec2(0.0f, 0.0f), glm::vec2(52.0f, 31.0f), 0.0f, tableTexture);
 	std::cout << "table drawn" << std::endl;	// delete
 
 	//drawRectangleTexture(glm::vec2(0.0f, 0.0f), glm::vec2(10.0f, 10.0f), 0.0f, texture);	// delete
