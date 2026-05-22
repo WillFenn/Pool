@@ -41,18 +41,18 @@ Game::Game() {
 	
 	balls.push_back({ 1, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/one_ball.png", false) });
 	balls.push_back({ 2, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/two_ball.png", false) });
-	balls.push_back({ 3, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/three_ball.png", false) });
+	balls.push_back({ 3, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/three_ball.png", false) });
 	balls.push_back({ 4, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/four_ball.png", false) });
-	balls.push_back({ 5, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/five_ball.png", false) });
+	balls.push_back({ 5, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/five_ball.png", false) });
 	balls.push_back({ 6, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/six_ball.png", false) });
-	balls.push_back({ 7, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/seven_ball.png", false) });
+	balls.push_back({ 7, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/seven_ball.png", false) });
 	balls.push_back({ 8, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/eight_ball.png", false) });
 	balls.push_back({ 9, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/nine_ball.png", false) });
-	balls.push_back({ 10, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/ten_ball.png", false) });
+	balls.push_back({ 10, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/ten_ball.png", false) });
 	balls.push_back({ 11, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/eleven_ball.png", false) });
-	balls.push_back({ 12, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/twelve_ball.png", false) });
+	balls.push_back({ 12, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/twelve_ball.png", false) });
 	balls.push_back({ 13, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/thirteen_ball.png", false) });
-	balls.push_back({ 14, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/fourteen_ball.png", false) });
+	balls.push_back({ 14, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/fourteen_ball.png", false) });
 	balls.push_back({ 15, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/fifteen_ball.png", false) });
 	
 	setPositions();
@@ -72,28 +72,6 @@ Game::~Game() {
 }
 
 void Game::update(Window* window, Input* input, float deltaTime) {
-	std::cout << "player 1 ball type: ";		// delete
-	if (players[0].ballType == Unassigned) {	//
-		std::cout << "Unassigned" << std::endl;	//
-	}											//
-	else if (players[0].ballType == Striped) {	//
-		std::cout << "Striped" << std::endl;	//
-	}											//
-	else if (players[0].ballType == Solid) {	//
-		std::cout << "Solid" << std::endl;		//
-	}											//
-												//
-	std::cout << "player 2 ball type: ";		//
-	if (players[1].ballType == Unassigned) {	//
-		std::cout << "Unassigned" << std::endl;	//
-	}											//
-	else if (players[1].ballType == Striped) {	//
-		std::cout << "Striped" << std::endl;	//
-	}											//
-	else if (players[1].ballType == Solid) {	//
-		std::cout << "Solid" << std::endl;		//
-	}											//
-	
 	bool ballsMovingThisFrame = ballsAreMoving();
 
 	if (!ballsMovingThisFrame && ballsMovedLastFrame) {
@@ -142,8 +120,6 @@ void Game::update(Window* window, Input* input, float deltaTime) {
 	}
 
 	ballsMovedLastFrame = ballsMovingThisFrame;
-
-	std::cout << "cue speed: " << cue.speed << std::endl;	// delete
 }
 
 bool Game::ballsAreMoving() {
@@ -204,8 +180,6 @@ bool Game::trajectory(glm::vec2* pointA, glm::vec2* pointB) {
 	while (pathPos.x > -23.5f && pathPos.x < 23.5f && pathPos.y > -13.0f && pathPos.y < 13.0f) {
 		for (int i = 0; i < balls.size(); i++) {
 			if (detectBallCollision(&pathPos, &balls.at(i).pos, &collisionNormal)) {
-				std::cout << "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&" << std::endl;	// delete
-				
 				*pointA = balls.at(i).pos;
 				*pointB = balls.at(i).pos + 3.0f * collisionNormal;
 				
@@ -251,13 +225,9 @@ void Game::setPositions() {
 }
 
 void Game::setCuePos(Window* window, Input* input) {
-	std::cout << "--------------------setCuePos()--------------------" << std::endl;	// delete
-
 	glm::vec2 mouseWorldPos = getMouseWorldPos(window, input);
 
 	if (input->leftMousePressed()) {
-		std::cout << "left mouse button is pressed" << std::endl;	// delete
-
 		if (leftClickStartPos.x == std::numeric_limits<float>::max()) {
 			leftClickStartPos = mouseWorldPos;
 		}
@@ -269,14 +239,11 @@ void Game::setCuePos(Window* window, Input* input) {
 	}
 	else {
 		if (cue.wasPulledBack) {
-			std::cout << "left mouse button was let go" << std::endl;	// delete
-
 			cue.speed = 3 * (glm::distance(cueBall.pos, cue.pos) - ((cue.scale.x / 2) + 0.5f));
 			cue.wasPulledBack = false;
 			leftClickStartPos = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
 		}
 		else if (cue.speed == 0.0f) {
-			std::cout << "11111111111111111111111111111111111111111111" << std::endl;	// delete
 			glm::vec2 mouseDirection;
 			if (!PoolMath::approximatelyEqual(mouseWorldPos, cueBall.pos, 0.0001f)) {
 				mouseDirection = glm::normalize(mouseWorldPos - cueBall.pos);
@@ -319,7 +286,7 @@ void Game::checkPocketedBalls() {
 				}
 
 				// check if pocketed ball is eight ball
-				if (i == 0) {
+				if (balls.at(i).index == 8) {
 					eightBallPocketed = true;
 				}
 				
@@ -350,19 +317,22 @@ void Game::checkPocketedBalls() {
 
 bool Game::foul() {
 	if (cueBallPocketed) {
-		std::cout << "====================================================================================================================================================================================================================================" << std::endl;	// delete
+		std::cout << "foul() 111111111111111111111111111111111111111111111111111111111111111111111111111111111111" << std::endl;	// delete
 		return true;
 	}
 
 	if (players[currentPlayerIndex].ballType == Striped && !stripedPocketed) {
+		std::cout << "foul() 222222222222222222222222222222222222222222222222222222222222222222222222222222222222" << std::endl;	// delete
 		return true;
 	}
 
 	if (players[currentPlayerIndex].ballType == Solid && !solidPocketed) {
+		std::cout << "foul() 333333333333333333333333333333333333333333333333333333333333333333333333333333333333" << std::endl;	// delete
 		return true;
 	}
 
 	if (players[currentPlayerIndex].ballType == Unassigned && !solidPocketed && !stripedPocketed) {
+		std::cout << "foul() 444444444444444444444444444444444444444444444444444444444444444444444444444444444444" << std::endl;	// delete
 		return true;
 	}
 

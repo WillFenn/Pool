@@ -56,14 +56,14 @@ void Physics::update(Side sides[], std::vector<Ball>* balls, Ball* cueBall, Cue*
 		balls->at(i).pos += deltaPos;
 
 		if (glm::length(deltaPos) != 0.0f) {
-			balls->at(i).rotationMat = PoolMath::addToRotationMat(balls->at(i).rotationMat, glm::length(deltaPos), glm::cross(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(deltaPos, 0.0f)));
+			balls->at(i).rotationMat = PoolMath::addToRotationMat(balls->at(i).rotationMat, glm::length(deltaPos) / 0.5f, glm::cross(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(deltaPos, 0.0f)));
 		}
 	}
 
 	glm::vec2 deltaPos = cueBall->velocity * deltaTime;
 	cueBall->pos += deltaPos;
 	if (glm::length(deltaPos) != 0.0f) {
-		cueBall->rotationMat = PoolMath::addToRotationMat(cueBall->rotationMat, glm::length(deltaPos), glm::cross(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(deltaPos, 0.0f)));
+		cueBall->rotationMat = PoolMath::addToRotationMat(cueBall->rotationMat, glm::length(deltaPos) / 0.5f, glm::cross(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(deltaPos, 0.0f)));
 	}
 
 	// collision between cue and cue ball
