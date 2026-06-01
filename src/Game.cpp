@@ -1,24 +1,44 @@
 #include <Game.h>
 
 Game::Game() {
-	sides[0] = { { -24.0f, 13.5f - glm::sqrt(2) }, { -24.0f - glm::sqrt(2), 13.5f }, { 1 / glm::sqrt(2), 1 / glm::sqrt(2)} };
-	sides[1] = { { -24.0f, 13.5f + glm::sqrt(2) }, { -24.0f + glm::sqrt(2), 13.5f }, { -(1 / glm::sqrt(2)), -(1 / glm::sqrt(2))} };
-	sides[2] = { { -24.0f + glm::sqrt(2), 13.5f }, { -1.2f, 13.5f }, { 0.0f, -1.0f } };
-	sides[3] = { { -1.2f, 13.5f }, { -1.0f, 14.5f }, { PoolMath::normal(glm::vec2(-1.0f, 14.5f) - glm::vec2(-1.2f, 13.5f)) } };
-	sides[4] = { { 1.0f, 14.5f }, { 1.2f, 13.5f }, { PoolMath::normal(glm::vec2(1.2f, 13.5f) - glm::vec2(1.0f, 14.5f)) } };
-	sides[5] = { { 1.2f, 13.5f }, { 24.0f - glm::sqrt(2), 13.5f }, { 0.0f, -1.0f } };
-	sides[6] = { { 24.0f - glm::sqrt(2), 13.5f }, { 24.0f, 13.5f + glm::sqrt(2) }, { 1 / glm::sqrt(2), -(1 / glm::sqrt(2)) } };
-	sides[7] = { { 24.0f + glm::sqrt(2), 13.5f }, { 24.0f, 13.5f - glm::sqrt(2) }, { -(1 / glm::sqrt(2)), 1 / glm::sqrt(2) } };
-	sides[8] = { { 24.0f, 13.5f - glm::sqrt(2) }, { 24.0f, -13.5f + glm::sqrt(2) }, { -1.0f, 0.0f } };
-	sides[9] = { { 24.0f, -13.5f + glm::sqrt(2) }, { 24.0f + glm::sqrt(2), -13.5f }, { -(1 / glm::sqrt(2)), -(1 / glm::sqrt(2)) } };
-	sides[10] = { { 24.0f, -13.5f - glm::sqrt(2) }, { 24.0f - glm::sqrt(2), -13.5f }, { 1 / glm::sqrt(2), 1 / glm::sqrt(2) } };
-	sides[11] = { { 24.0f - glm::sqrt(2), -13.5f }, { 1.2f, -13.5f }, { 0.0f, 1.0f } };
-	sides[12] = { { 1.2f, -13.5f }, { 1.0f, -14.5 }, { PoolMath::normal(glm::vec2(1.0f, -14.5) - glm::vec2(1.2f, -13.5f)) } };
-	sides[13] = { { -1.0f, -14.5f }, { -1.2, -13.5f }, { PoolMath::normal(glm::vec2(-1.2, -13.5f) - glm::vec2(-1.0f, -14.5f)) } };
-	sides[14] = { { -1.2, -13.5f }, { -24.0f + glm::sqrt(2), -13.5 }, { 0.0f, 1.0f } };
-	sides[15] = { { -24.0f + glm::sqrt(2), -13.5 }, { -24.0f, -13.5f - glm::sqrt(2) }, { PoolMath::normal(glm::vec2(-24.0f, -13.5f - glm::sqrt(2)) - glm::vec2(-24.0f + glm::sqrt(2), -13.5f)) } };
-	sides[16] = { { -24.0f - glm::sqrt(2), -13.5f }, { -24.0f, -13.5f + glm::sqrt(2) }, { PoolMath::normal(glm::vec2(-24.0f, -13.5f + glm::sqrt(2)) - glm::vec2(-24.0f - glm::sqrt(2), -13.5f)) } };
-	sides[17] = { { -24.0f, -13.5f + glm::sqrt(2) }, { -24.0f, 13.5f - glm::sqrt(2) }, { 1.0f, 0.0f } };
+	sides[0] = Side({ -24.0f, 13.5f - glm::sqrt(2) }, { -24.0f - glm::sqrt(2), 13.5f }, { 1 / glm::sqrt(2), 1 / glm::sqrt(2) });
+	sides[1] = Side({ -24.0f, 13.5f + glm::sqrt(2) }, { -24.0f + glm::sqrt(2), 13.5f }, { -(1 / glm::sqrt(2)), -(1 / glm::sqrt(2)) });
+	sides[2] = Side({ -24.0f + glm::sqrt(2), 13.5f }, { -1.2f, 13.5f }, { 0.0f, -1.0f });
+	sides[3] = Side({ -1.2f, 13.5f }, { -1.0f, 14.5f }, { PoolMath::normal(glm::vec2(-1.0f, 14.5f) - glm::vec2(-1.2f, 13.5f)) });
+	sides[4] = Side({ 1.0f, 14.5f }, { 1.2f, 13.5f }, { PoolMath::normal(glm::vec2(1.2f, 13.5f) - glm::vec2(1.0f, 14.5f)) });
+	sides[5] = Side({ 1.2f, 13.5f }, { 24.0f - glm::sqrt(2), 13.5f }, { 0.0f, -1.0f });
+	sides[6] = Side({ 24.0f - glm::sqrt(2), 13.5f }, { 24.0f, 13.5f + glm::sqrt(2) }, { 1 / glm::sqrt(2), -(1 / glm::sqrt(2)) });
+	sides[7] = Side({ 24.0f + glm::sqrt(2), 13.5f }, { 24.0f, 13.5f - glm::sqrt(2) }, { -(1 / glm::sqrt(2)), 1 / glm::sqrt(2) });
+	sides[8] = Side({ 24.0f, 13.5f - glm::sqrt(2) }, { 24.0f, -13.5f + glm::sqrt(2) }, { -1.0f, 0.0f });
+	sides[9] = Side({ 24.0f, -13.5f + glm::sqrt(2) }, { 24.0f + glm::sqrt(2), -13.5f }, { -(1 / glm::sqrt(2)), -(1 / glm::sqrt(2)) });
+	sides[10] = Side({ 24.0f, -13.5f - glm::sqrt(2) }, { 24.0f - glm::sqrt(2), -13.5f }, { 1 / glm::sqrt(2), 1 / glm::sqrt(2) });
+	sides[11] = Side({ 24.0f - glm::sqrt(2), -13.5f }, { 1.2f, -13.5f }, { 0.0f, 1.0f });
+	sides[12] = Side({ 1.2f, -13.5f }, { 1.0f, -14.5 }, { PoolMath::normal(glm::vec2(1.0f, -14.5) - glm::vec2(1.2f, -13.5f)) });
+	sides[13] = Side({ -1.0f, -14.5f }, { -1.2, -13.5f }, { PoolMath::normal(glm::vec2(-1.2, -13.5f) - glm::vec2(-1.0f, -14.5f)) });
+	sides[14] = Side({ -1.2, -13.5f }, { -24.0f + glm::sqrt(2), -13.5 }, { 0.0f, 1.0f });
+	sides[15] = Side({ -24.0f + glm::sqrt(2), -13.5 }, { -24.0f, -13.5f - glm::sqrt(2) }, { PoolMath::normal(glm::vec2(-24.0f, -13.5f - glm::sqrt(2)) - glm::vec2(-24.0f + glm::sqrt(2), -13.5f)) });
+	sides[16] = Side({ -24.0f - glm::sqrt(2), -13.5f }, { -24.0f, -13.5f + glm::sqrt(2) }, { PoolMath::normal(glm::vec2(-24.0f, -13.5f + glm::sqrt(2)) - glm::vec2(-24.0f - glm::sqrt(2), -13.5f)) });
+	sides[17] = Side({ -24.0f, -13.5f + glm::sqrt(2) }, { -24.0f, 13.5f - glm::sqrt(2) }, { 1.0f, 0.0f });
+	
+	// delete
+	//sides[0] = { { { -24.0f, 13.5f - glm::sqrt(2) }, { -24.0f - glm::sqrt(2), 13.5f } }, { 1 / glm::sqrt(2), 1 / glm::sqrt(2)} };
+	//sides[1] = { { { -24.0f, 13.5f + glm::sqrt(2) }, { -24.0f + glm::sqrt(2), 13.5f } }, { -(1 / glm::sqrt(2)), -(1 / glm::sqrt(2))} };
+	//sides[2] = { { { -24.0f + glm::sqrt(2), 13.5f }, { -1.2f, 13.5f } }, { 0.0f, -1.0f } };
+	//sides[3] = { { { -1.2f, 13.5f }, { -1.0f, 14.5f } }, { PoolMath::normal(glm::vec2(-1.0f, 14.5f) - glm::vec2(-1.2f, 13.5f)) } };
+	//sides[4] = { { { 1.0f, 14.5f }, { 1.2f, 13.5f } }, { PoolMath::normal(glm::vec2(1.2f, 13.5f) - glm::vec2(1.0f, 14.5f)) } };
+	//sides[5] = { { { 1.2f, 13.5f }, { 24.0f - glm::sqrt(2), 13.5f } }, { 0.0f, -1.0f } };
+	//sides[6] = { { { 24.0f - glm::sqrt(2), 13.5f }, { 24.0f, 13.5f + glm::sqrt(2) } }, { 1 / glm::sqrt(2), -(1 / glm::sqrt(2)) } };
+	//sides[7] = { { { 24.0f + glm::sqrt(2), 13.5f }, { 24.0f, 13.5f - glm::sqrt(2) } }, { -(1 / glm::sqrt(2)), 1 / glm::sqrt(2) } };
+	//sides[8] = { { { 24.0f, 13.5f - glm::sqrt(2) }, { 24.0f, -13.5f + glm::sqrt(2) } }, { -1.0f, 0.0f } };
+	//sides[9] = { { { 24.0f, -13.5f + glm::sqrt(2) }, { 24.0f + glm::sqrt(2), -13.5f } }, { -(1 / glm::sqrt(2)), -(1 / glm::sqrt(2)) } };
+	//sides[10] = { { { 24.0f, -13.5f - glm::sqrt(2) }, { 24.0f - glm::sqrt(2), -13.5f } }, { 1 / glm::sqrt(2), 1 / glm::sqrt(2) } };
+	//sides[11] = { { { 24.0f - glm::sqrt(2), -13.5f }, { 1.2f, -13.5f } }, { 0.0f, 1.0f } };
+	//sides[12] = { { { 1.2f, -13.5f }, { 1.0f, -14.5 } }, { PoolMath::normal(glm::vec2(1.0f, -14.5) - glm::vec2(1.2f, -13.5f)) } };
+	//sides[13] = { { { -1.0f, -14.5f }, { -1.2, -13.5f } }, { PoolMath::normal(glm::vec2(-1.2, -13.5f) - glm::vec2(-1.0f, -14.5f)) } };
+	//sides[14] = { { { -1.2, -13.5f }, { -24.0f + glm::sqrt(2), -13.5 } }, { 0.0f, 1.0f } };
+	//sides[15] = { { { -24.0f + glm::sqrt(2), -13.5 }, { -24.0f, -13.5f - glm::sqrt(2) } }, { PoolMath::normal(glm::vec2(-24.0f, -13.5f - glm::sqrt(2)) - glm::vec2(-24.0f + glm::sqrt(2), -13.5f)) } };
+	//sides[16] = { { { -24.0f - glm::sqrt(2), -13.5f }, { -24.0f, -13.5f + glm::sqrt(2) } }, { PoolMath::normal(glm::vec2(-24.0f, -13.5f + glm::sqrt(2)) - glm::vec2(-24.0f - glm::sqrt(2), -13.5f)) } };
+	//sides[17] = { { { -24.0f, -13.5f + glm::sqrt(2) }, { -24.0f, 13.5f - glm::sqrt(2) } }, { 1.0f, 0.0f } };
 
 	pocketPositions[0] = { -24.0f - (1 / glm::sqrt(2)), 13.5f + (1 / glm::sqrt(2)) };
 	pocketPositions[1] = { 0.0f, 13.5f + 1.0f };
@@ -27,33 +47,51 @@ Game::Game() {
 	pocketPositions[4] = { 0.0f, -13.5f - 1.0f };
 	pocketPositions[5] = { -24.0f - (1 / glm::sqrt(2)), -13.5f - (1 / glm::sqrt(2)) };
 	
-	cueBall = { 0, { 5.0f, 0.0f }, glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f)), {0.0f, 0.0f}, Solid, new Texture("res/textures/balls/cue_ball.png", false) };
+	cueBall = Ball({ 5.0f, 0.0f }, new Texture("res/textures/balls/cue_ball.png", false),  0, BallType::Unassigned);
+
+	// delete
+	//cueBall = { 0, { 5.0f, 0.0f }, glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f)), {0.0f, 0.0f}, Solid, new Texture("res/textures/balls/cue_ball.png", false) };
 
 	leftClickStartPos = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
 	
 	cueStartPosition = cueBall.pos + glm::vec2(-1.0f, 0.0f) * ((10.0f / 2.0f) + 0.5f);
-	
-	cue = { cueStartPosition, { 10.0f, 0.2f }, 0.0f, 0.0f, new Texture("res/textures/cue.png", true), false};
+	cue = Cue(cueStartPosition, new Texture("res/textures/cue.png", true));
 
-	glm::mat4 initialRotation = glm::mat4(1.0f);
-	initialRotation = PoolMath::addToRotationMat(initialRotation, glm::pi<float>() / 2, glm::vec3(0.0f, 1.0f, 0.0f));
-	//initialRotation = PoolMath::addToRotationMat(initialRotation, glm::pi<float>(), glm::vec3(0.0f, 0.0f, 1.0f));
+	// delete
+	//cue = { cueStartPosition, { 10.0f, 0.2f }, 0.0f, 0.0f, new Texture("res/textures/cue.png", true), false};
+
+	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/one_ball.png", false), 1, BallType::Solid));
+	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/two_ball.png", false), 2, BallType::Solid));
+	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/three_ball.png", false), 3, BallType::Solid));
+	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/four_ball.png", false), 4, BallType::Solid));
+	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/five_ball.png", false), 5, BallType::Solid));
+	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/six_ball.png", false), 6, BallType::Solid));
+	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/seven_ball.png", false), 7, BallType::Solid));
+	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/eight_ball.png", false), 8, BallType::Solid));
+	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/nine_ball.png", false), 9, BallType::Striped));
+	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/ten_ball.png", false), 10, BallType::Striped));
+	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/eleven_ball.png", false), 11, BallType::Striped));
+	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/twelve_ball.png", false), 12, BallType::Striped));
+	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/thirteen_ball.png", false), 13, BallType::Striped));
+	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/fourteen_ball.png", false), 14, BallType::Striped));
+	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/fifteen_ball.png", false), 15, BallType::Striped));
 	
-	balls.push_back({ 1, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/one_ball.png", false) });
-	balls.push_back({ 2, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/two_ball.png", false) });
-	balls.push_back({ 3, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/three_ball.png", false) });
-	balls.push_back({ 4, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/four_ball.png", false) });
-	balls.push_back({ 5, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/five_ball.png", false) });
-	balls.push_back({ 6, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/six_ball.png", false) });
-	balls.push_back({ 7, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/seven_ball.png", false) });
-	balls.push_back({ 8, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/eight_ball.png", false) });
-	balls.push_back({ 9, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/nine_ball.png", false) });
-	balls.push_back({ 10, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/ten_ball.png", false) });
-	balls.push_back({ 11, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/eleven_ball.png", false) });
-	balls.push_back({ 12, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/twelve_ball.png", false) });
-	balls.push_back({ 13, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/thirteen_ball.png", false) });
-	balls.push_back({ 14, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/fourteen_ball.png", false) });
-	balls.push_back({ 15, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/fifteen_ball.png", false) });
+	// delete
+	//balls.push_back({ 1, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/one_ball.png", false) });
+	//balls.push_back({ 2, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/two_ball.png", false) });
+	//balls.push_back({ 3, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/three_ball.png", false) });
+	//balls.push_back({ 4, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/four_ball.png", false) });
+	//balls.push_back({ 5, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/five_ball.png", false) });
+	//balls.push_back({ 6, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/six_ball.png", false) });
+	//balls.push_back({ 7, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/seven_ball.png", false) });
+	//balls.push_back({ 8, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/eight_ball.png", false) });
+	//balls.push_back({ 9, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/nine_ball.png", false) });
+	//balls.push_back({ 10, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/ten_ball.png", false) });
+	//balls.push_back({ 11, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/eleven_ball.png", false) });
+	//balls.push_back({ 12, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/twelve_ball.png", false) });
+	//balls.push_back({ 13, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/thirteen_ball.png", false) });
+	//balls.push_back({ 14, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/fourteen_ball.png", false) });
+	//balls.push_back({ 15, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/fifteen_ball.png", false) });
 	
 	setPositions();
 
@@ -64,11 +102,7 @@ Game::Game() {
 }
 
 Game::~Game() {
-	delete cue.texture;
 
-	for (Ball ball : balls) {
-		delete ball.texture;
-	}
 }
 
 void Game::update(Window* window, Input* input, float deltaTime) {
