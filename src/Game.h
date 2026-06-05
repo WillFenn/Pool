@@ -4,6 +4,7 @@
 #include <limits>
 #include <PoolMath.h>
 #include <PoolColors.h>
+#include <GameObject.h>
 #include <Texture.h>
 #include <Window.h>
 #include <Input.h>
@@ -19,6 +20,7 @@ public:
 	~Game();
 	void update(Window* window, Input* input, float deltaTime);
 	bool ballsAreMoving();
+	GameObject* getTable();
 	Side* getSides();
 	glm::vec2* getPocketPositions();
 	Ball* getCueBall();
@@ -43,6 +45,7 @@ private:
 	bool allBallsPocketed(BallType ballType);
 
 private:
+	GameObject table;
 	Side sides[18];
 	glm::vec2 pocketPositions[6];
 	Ball cueBall;

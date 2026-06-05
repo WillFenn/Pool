@@ -8,13 +8,13 @@
 #include <Window.h>
 #include <Input.h>
 #include <Game.h>
+#include <GameObject.h>
 #include <Side.h>
 #include <Ball.h>
 #include <Cue.h>
 #include <Physics.h>
 
 int main() {
-	// new branch
 	Window window;
 
 	Input input(window.getglfwwindow());
@@ -39,8 +39,9 @@ int main() {
 
 		physics.update(game.getSides(), game.getBalls(), game.getCueBall(), game.getCue(), deltaTime);
 
-		glm::vec2 trajectoryA;
-		glm::vec2 trajectoryB;
+		// change
+		glm::vec2 trajectoryA = glm::vec2(0.0f, 0.0f);
+		glm::vec2 trajectoryB = glm::vec2(0.0f, 0.0f);
 
 		bool trajectoryShouldBeDrawn;
 		if (game.ballsAreMoving()) {
@@ -51,7 +52,19 @@ int main() {
 		}
 		std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!trajectoryShouldBeDrawn: " << trajectoryShouldBeDrawn << std::endl;	// delete
 
-		window.drawFrame(game.getSides(), game.getPocketPositions(), game.getBalls(), game.cueBallShouldBeDrawn() ? game.getCueBall() : nullptr, game.cueShouldBeDrawn() ? game.getCue() : nullptr,
-			trajectoryShouldBeDrawn ? &trajectoryA : nullptr, trajectoryShouldBeDrawn ? &trajectoryB : nullptr, game.getCurrentPlayer(), game.getGameDone(), game.getWinner());
+		// delete
+		//window.drawFrame(game.getSides(), game.getPocketPositions(), game.getBalls(), game.cueBallShouldBeDrawn() ? game.getCueBall() : nullptr, game.cueShouldBeDrawn() ? game.getCue() : nullptr,
+		//	trajectoryShouldBeDrawn ? &trajectoryA : nullptr, trajectoryShouldBeDrawn ? &trajectoryB : nullptr, game.getCurrentPlayer(), game.getGameDone(), game.getWinner());
+
+		std::vector<GameObject> objects;
+		objects.push_back(*game.getTable());
+		objects.push_back(*game.getCueBall());
+		objects.insert(objects.end(), game.getBalls()->begin(), game.getBalls()->end());
+		objects.push_back(*game.getCue());
+
+		std::vector<Line> lines;
+		lines.push_back({ trajectoryA, trajectoryB });
+
+		window.drawFrame(&objects, &lines);
 	}
 }

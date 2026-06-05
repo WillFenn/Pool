@@ -1,6 +1,8 @@
 #include <Game.h>
 
 Game::Game() {
+	table = GameObject(Shape::Rectangle, glm::vec2(0.0f, 0.0f), glm::vec2(52.0f, 31.0f), glm::mat4(1.0f), new Texture("res/textures/table.png", true));
+
 	sides[0] = Side({ -24.0f, 13.5f - glm::sqrt(2) }, { -24.0f - glm::sqrt(2), 13.5f }, { 1 / glm::sqrt(2), 1 / glm::sqrt(2) });
 	sides[1] = Side({ -24.0f, 13.5f + glm::sqrt(2) }, { -24.0f + glm::sqrt(2), 13.5f }, { -(1 / glm::sqrt(2)), -(1 / glm::sqrt(2)) });
 	sides[2] = Side({ -24.0f + glm::sqrt(2), 13.5f }, { -1.2f, 13.5f }, { 0.0f, -1.0f });
@@ -170,6 +172,10 @@ bool Game::ballsAreMoving() {
 	return false;
 }
 
+GameObject* Game::getTable() {
+	return &table;
+}
+
 Side* Game::getSides() {
 	return sides;
 }
@@ -288,9 +294,11 @@ void Game::setCuePos(Window* window, Input* input) {
 			
 			cue.pos = cueBall.pos - mouseDirection * ((cue.scale.x / 2.0f) + 0.5f);
 			
-			cue.rotation = atan(mouseDirection.y / mouseDirection.x);
+			float rotation = atan(mouseDirection.y / mouseDirection.x);
+			cue.rotationMat = PoolMath::addToRotationMat(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f));
+
 			if (mouseDirection.x < 0) {
-				cue.rotation += glm::pi<float>();
+				cue.rotationMat = PoolMath::addToRotationMat(cue.rotationMat, glm::pi<float>(), glm::vec3(0.0f, 0.0f, 1.0f));
 			}
 		}
 	}

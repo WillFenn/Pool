@@ -96,8 +96,7 @@ Window::Window() {
 	player2Texture = new Texture("res/textures/player2.png", true);
 	stripesTexture = new Texture("res/textures/stripes.png", true);
 	solidsTexture = new Texture("res/textures/solids.png", true);
-	tableTexture = new Texture("res/textures/table.png", true);
-	reflections = new Texture("res/textures/balls/reflections.png", true);
+	reflectionsTexture = new Texture("res/textures/balls/reflections.png", true);
 
 	reflectionsScale = glm::vec2(1.0f, 1.0f);
 
@@ -117,10 +116,51 @@ Window::~Window() {
 	delete player2Texture;
 	delete stripesTexture;
 	delete solidsTexture;
+	delete reflectionsTexture;
 
 	glfwSetWindowShouldClose(glfwwindow, true);
 
 	glfwTerminate();
+}
+
+void Window::drawFrame(std::vector<GameObject>* objects, std::vector<Line>* lines) {
+	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
+
+	for (GameObject object : *objects) {
+		if (object.shape == Shape::Rectangle) {
+			drawRectangleTexture(object.pos, object.scale, object.rotationMat, object.texture);
+		}
+		else if (object.shape == Shape::Sphere) {
+			drawSphereTexture(object.scale.x / 2, object.pos, object.rotationMat, object.texture);
+			drawRectangleTexture(object.pos, reflectionsScale, glm::mat4(1.0f), reflectionsTexture);
+		}
+	}
+
+	for (Line line : *lines) {
+		drawLine(line.a, line.b);
+	}
+
+	glfwSwapBuffers(glfwwindow);
+
+	glfwPollEvents();
+}
+
+void Window::drawFrame(std::vector<GameObject>* objects) {
+	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
+
+	for (GameObject object : *objects) {
+		if (object.shape == Shape::Rectangle) {
+			drawRectangleTexture(object.pos, object.scale, object.rotationMat, object.texture);
+		}
+		else if (object.shape == Shape::Sphere) {
+			drawSphereTexture(object.scale.x / 2, object.pos, object.rotationMat, object.texture);
+			drawRectangleTexture(object.pos, reflectionsScale, glm::mat4(1.0f), reflectionsTexture);
+		}
+	}
+
+	glfwSwapBuffers(glfwwindow);
+
+	glfwPollEvents();
 }
 
 void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball* cueBall, Cue* cue, glm::vec2* trajectoryA, glm::vec2* trajectoryB, Player* currentPlayer, bool gameDone, int winner) {
@@ -134,17 +174,17 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 	//drawRectangle(glm::vec2(25.0f, 0.0f), glm::vec2(2.0f, 27.0f), 0.0f, PoolColors::darkBrown());
 	//drawRectangle(glm::vec2(0.0f, -14.5f), glm::vec2(52.0f, 2.0f), 0.0f, PoolColors::darkBrown());
 	//drawRectangle(glm::vec2(-25.0f, 0.0f), glm::vec2(2.0f, 27.0f), 0.0f, PoolColors::darkBrown());
-	drawRectangleTexture(glm::vec2(0.0f, 0.0f), glm::vec2(52.0f, 31.0f), 0.0f, tableTexture);
-	std::cout << "table drawn" << std::endl;	// delete
+	//drawRectangleTexture(glm::vec2(0.0f, 0.0f), glm::vec2(52.0f, 31.0f), 0.0f, tableTexture);
+	//std::cout << "table drawn" << std::endl;	// delete
 
 	//drawRectangleTexture(glm::vec2(0.0f, 0.0f), glm::vec2(10.0f, 10.0f), 0.0f, texture);	// delete
 
-	glm::vec4 black = { 0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 1.0f };
 	for (int i = 0; i < 18; i++) {
-		drawLineSegment(sides[i].pointA, sides[i].pointB, black);
+		drawLine(sides[i].a, sides[i].b);
 	}
 	std::cout << "sides drawn" << std::endl;	// delete
 
+	glm::vec4 black = { 0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 1.0f };
 	for (int i = 0; i < 6; i++) {
 		drawCircle(1.0f, pocketPositions[i], black, Solid);
 	}
@@ -153,27 +193,27 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 	// draw balls
 	for (int i = 0; i < balls->size(); i++) {
 		drawSphereTexture(0.5, balls->at(i).pos, balls->at(i).rotationMat, balls->at(i).texture);
-		drawRectangleTexture(balls->at(i).pos, reflectionsScale, 0.0f, reflections);
+		drawRectangleTexture(balls->at(i).pos, reflectionsScale, 0.0f, reflectionsTexture);
 	}
 	std::cout << "balls drawn" << std::endl;	// delete
 
 	if (cueBall != nullptr) {
 		drawSphereTexture(0.5, cueBall->pos, cueBall->rotationMat, cueBall->texture);
-		drawRectangleTexture(cueBall->pos, reflectionsScale, 0.0f, reflections);
+		drawRectangleTexture(cueBall->pos, reflectionsScale, 0.0f, reflectionsTexture);
 		
 		std::cout << "cue ball drawn" << std::endl;	// delete
 	}
 
 	// draw cue
 	if (cue != nullptr) {
-		drawRectangleTexture(cue->pos, cue->scale, cue->rotation, cue->texture);
+		drawRectangleTexture(cue->pos, cue->scale, cue->rotationMat, cue->texture);
 		std::cout << "cue drawn" << std::endl;	// delete
 		std::cout << "cue position     x: " << cue->pos.x << "   y: " << cue->pos.y << std::endl;	// delete
 	}
 
 	// draw shot trajectory
 	if (trajectoryA != nullptr) {
-		drawLineSegment(*trajectoryA, *trajectoryB, PoolColors::black());
+		drawLine(*trajectoryA, *trajectoryB);
 	}
 
 	if (!gameDone) {
@@ -262,7 +302,7 @@ void Window::drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::
 	GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 }
 
-void Window::drawRectangleTexture(glm::vec2 pos, glm::vec2 scale, float rotation, Texture* texture) {
+void Window::drawRectangleTexture(glm::vec2 pos, glm::vec2 scale, glm::mat4 rotationMat, Texture* texture) {
 	GLCALL(glBindVertexArray(rectTexturevao));
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectTexturevbo));
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
@@ -272,7 +312,8 @@ void Window::drawRectangleTexture(glm::vec2 pos, glm::vec2 scale, float rotation
 	glm::mat4 projection = glm::ortho(-(worldScale.x / 2.0f), worldScale.x / 2.0f, -(worldScale.y / 2.0f), worldScale.y / 2.0f, -1.0f, 1.0f);
 	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos, 0.0f));
-	model = glm::rotate(model, rotation, glm::vec3(0, 0, 1));
+	// = glm::rotate(model, rotation, glm::vec3(0, 0, 1));
+	model *= rotationMat;
 	model = glm::scale(model, glm::vec3(scale.x, scale.y, 1.0f));
 
 	glm::mat4 mvp = projection * view * model;
@@ -282,8 +323,8 @@ void Window::drawRectangleTexture(glm::vec2 pos, glm::vec2 scale, float rotation
 	GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 }
 
-void Window::drawLineSegment(glm::vec2 pointA, glm::vec2 pointB, glm::vec4 color) {
-	glm::vec2 lineVertices[2] = { pointA, pointB };
+void Window::drawLine(glm::vec2 a, glm::vec2 b) {
+	glm::vec2 lineVertices[2] = { a, b };
 
 	GLCALL(glBindVertexArray(linevao));
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, linevbo));
@@ -295,7 +336,7 @@ void Window::drawLineSegment(glm::vec2 pointA, glm::vec2 pointB, glm::vec4 color
 
 	glm::mat4 mvp = projection * view;
 	rectangleShader->setUniformMat4(mvp, "uMVP");
-	lineShader->setUniformVec4(color, "uColor");
+	lineShader->setUniformVec4(PoolColors::black(), "uColor");
 
 	GLCALL(glDrawArrays(GL_LINES, 0, 2));
 }
