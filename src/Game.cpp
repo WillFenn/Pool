@@ -1,7 +1,7 @@
 #include <Game.h>
 
 Game::Game() {
-	table = GameObject(Shape::Rectangle, glm::vec2(0.0f, 0.0f), glm::vec2(52.0f, 31.0f), glm::mat4(1.0f), new Texture("res/textures/table.png", true));
+	table = GameObject(Shape::Rectangle, glm::vec2(0.0f, 0.0f), glm::vec2(52.0f, 31.0f), glm::mat4(1.0f), "res/textures/table.png", true);
 
 	sides[0] = Side({ -24.0f, 13.5f - glm::sqrt(2) }, { -24.0f - glm::sqrt(2), 13.5f }, { 1 / glm::sqrt(2), 1 / glm::sqrt(2) });
 	sides[1] = Side({ -24.0f, 13.5f + glm::sqrt(2) }, { -24.0f + glm::sqrt(2), 13.5f }, { -(1 / glm::sqrt(2)), -(1 / glm::sqrt(2)) });
@@ -49,7 +49,7 @@ Game::Game() {
 	pocketPositions[4] = { 0.0f, -13.5f - 1.0f };
 	pocketPositions[5] = { -24.0f - (1 / glm::sqrt(2)), -13.5f - (1 / glm::sqrt(2)) };
 	
-	cueBall = Ball({ 5.0f, 0.0f }, new Texture("res/textures/balls/cue_ball.png", false),  0, BallType::Unassigned);
+	cueBall = Ball({ 5.0f, 0.0f }, "res/textures/balls/cue_ball.png", false,  0, BallType::Unassigned);
 
 	// delete
 	//cueBall = { 0, { 5.0f, 0.0f }, glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f)), {0.0f, 0.0f}, Solid, new Texture("res/textures/balls/cue_ball.png", false) };
@@ -57,26 +57,26 @@ Game::Game() {
 	leftClickStartPos = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
 	
 	cueStartPosition = cueBall.pos + glm::vec2(-1.0f, 0.0f) * ((10.0f / 2.0f) + 0.5f);
-	cue = Cue(cueStartPosition, new Texture("res/textures/cue.png", true));
+	cue = Cue(cueStartPosition, "res/textures/cue.png", true);
 
 	// delete
 	//cue = { cueStartPosition, { 10.0f, 0.2f }, 0.0f, 0.0f, new Texture("res/textures/cue.png", true), false};
 
-	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/one_ball.png", false), 1, BallType::Solid));
-	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/two_ball.png", false), 2, BallType::Solid));
-	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/three_ball.png", false), 3, BallType::Solid));
-	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/four_ball.png", false), 4, BallType::Solid));
-	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/five_ball.png", false), 5, BallType::Solid));
-	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/six_ball.png", false), 6, BallType::Solid));
-	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/seven_ball.png", false), 7, BallType::Solid));
-	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/eight_ball.png", false), 8, BallType::Solid));
-	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/nine_ball.png", false), 9, BallType::Striped));
-	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/ten_ball.png", false), 10, BallType::Striped));
-	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/eleven_ball.png", false), 11, BallType::Striped));
-	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/twelve_ball.png", false), 12, BallType::Striped));
-	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/thirteen_ball.png", false), 13, BallType::Striped));
-	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/fourteen_ball.png", false), 14, BallType::Striped));
-	balls.push_back(Ball({ 0.0f, 0.0f }, new Texture("res/textures/balls/fifteen_ball.png", false), 15, BallType::Striped));
+	balls.push_back(Ball({ 0.0f, 0.0f }, "res/textures/balls/one_ball.png", false, 1, BallType::Solid));
+	balls.push_back(Ball({ 0.0f, 0.0f }, "res/textures/balls/two_ball.png", false, 2, BallType::Solid));
+	balls.push_back(Ball({ 0.0f, 0.0f }, "res/textures/balls/three_ball.png", false, 3, BallType::Solid));
+	balls.push_back(Ball({ 0.0f, 0.0f }, "res/textures/balls/four_ball.png", false, 4, BallType::Solid));
+	balls.push_back(Ball({ 0.0f, 0.0f }, "res/textures/balls/five_ball.png", false, 5, BallType::Solid));
+	balls.push_back(Ball({ 0.0f, 0.0f }, "res/textures/balls/six_ball.png", false, 6, BallType::Solid));
+	balls.push_back(Ball({ 0.0f, 0.0f }, "res/textures/balls/seven_ball.png", false, 7, BallType::Solid));
+	balls.push_back(Ball({ 0.0f, 0.0f }, "res/textures/balls/eight_ball.png", false, 8, BallType::Solid));
+	balls.push_back(Ball({ 0.0f, 0.0f }, "res/textures/balls/nine_ball.png", false, 9, BallType::Striped));
+	balls.push_back(Ball({ 0.0f, 0.0f }, "res/textures/balls/ten_ball.png", false, 10, BallType::Striped));
+	balls.push_back(Ball({ 0.0f, 0.0f }, "res/textures/balls/eleven_ball.png", false, 11, BallType::Striped));
+	balls.push_back(Ball({ 0.0f, 0.0f }, "res/textures/balls/twelve_ball.png", false, 12, BallType::Striped));
+	balls.push_back(Ball({ 0.0f, 0.0f }, "res/textures/balls/thirteen_ball.png", false, 13, BallType::Striped));
+	balls.push_back(Ball({ 0.0f, 0.0f }, "res/textures/balls/fourteen_ball.png", false, 14, BallType::Striped));
+	balls.push_back(Ball({ 0.0f, 0.0f }, "res/textures/balls/fifteen_ball.png", false, 15, BallType::Striped));
 	
 	// delete
 	//balls.push_back({ 1, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/one_ball.png", false) });
@@ -295,7 +295,7 @@ void Game::setCuePos(Window* window, Input* input) {
 			cue.pos = cueBall.pos - mouseDirection * ((cue.scale.x / 2.0f) + 0.5f);
 			
 			float rotation = atan(mouseDirection.y / mouseDirection.x);
-			cue.rotationMat = PoolMath::addToRotationMat(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f));
+			cue.rotationMat = PoolMath::addToRotationMat(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, -1.0f));
 
 			if (mouseDirection.x < 0) {
 				cue.rotationMat = PoolMath::addToRotationMat(cue.rotationMat, glm::pi<float>(), glm::vec3(0.0f, 0.0f, 1.0f));

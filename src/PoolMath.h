@@ -2,6 +2,7 @@
 
 #include <vec2.hpp>
 #include <vec3.hpp>
+#include <mat4x4.hpp>
 #include <ext/matrix_transform.hpp>
 #include <Rotation.h>
 

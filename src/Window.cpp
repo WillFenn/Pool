@@ -128,10 +128,10 @@ void Window::drawFrame(std::vector<GameObject>* objects, std::vector<Line>* line
 
 	for (GameObject object : *objects) {
 		if (object.shape == Shape::Rectangle) {
-			drawRectangleTexture(object.pos, object.scale, object.rotationMat, object.texture);
+			drawRectangleTexture(object.pos, object.scale, object.rotationMat, object.texture.get());
 		}
 		else if (object.shape == Shape::Sphere) {
-			drawSphereTexture(object.scale.x / 2, object.pos, object.rotationMat, object.texture);
+			drawSphereTexture(object.scale.x / 2, object.pos, object.rotationMat, object.texture.get());
 			drawRectangleTexture(object.pos, reflectionsScale, glm::mat4(1.0f), reflectionsTexture);
 		}
 	}
@@ -150,10 +150,10 @@ void Window::drawFrame(std::vector<GameObject>* objects) {
 
 	for (GameObject object : *objects) {
 		if (object.shape == Shape::Rectangle) {
-			drawRectangleTexture(object.pos, object.scale, object.rotationMat, object.texture);
+			drawRectangleTexture(object.pos, object.scale, object.rotationMat, object.texture.get());
 		}
 		else if (object.shape == Shape::Sphere) {
-			drawSphereTexture(object.scale.x / 2, object.pos, object.rotationMat, object.texture);
+			drawSphereTexture(object.scale.x / 2, object.pos, object.rotationMat, object.texture.get());
 			drawRectangleTexture(object.pos, reflectionsScale, glm::mat4(1.0f), reflectionsTexture);
 		}
 	}
@@ -192,13 +192,13 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 
 	// draw balls
 	for (int i = 0; i < balls->size(); i++) {
-		drawSphereTexture(0.5, balls->at(i).pos, balls->at(i).rotationMat, balls->at(i).texture);
+		drawSphereTexture(0.5, balls->at(i).pos, balls->at(i).rotationMat, balls->at(i).texture.get());
 		drawRectangleTexture(balls->at(i).pos, reflectionsScale, 0.0f, reflectionsTexture);
 	}
 	std::cout << "balls drawn" << std::endl;	// delete
 
 	if (cueBall != nullptr) {
-		drawSphereTexture(0.5, cueBall->pos, cueBall->rotationMat, cueBall->texture);
+		drawSphereTexture(0.5, cueBall->pos, cueBall->rotationMat, cueBall->texture.get());
 		drawRectangleTexture(cueBall->pos, reflectionsScale, 0.0f, reflectionsTexture);
 		
 		std::cout << "cue ball drawn" << std::endl;	// delete
@@ -206,7 +206,7 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 
 	// draw cue
 	if (cue != nullptr) {
-		drawRectangleTexture(cue->pos, cue->scale, cue->rotationMat, cue->texture);
+		drawRectangleTexture(cue->pos, cue->scale, cue->rotationMat, cue->texture.get());
 		std::cout << "cue drawn" << std::endl;	// delete
 		std::cout << "cue position     x: " << cue->pos.x << "   y: " << cue->pos.y << std::endl;	// delete
 	}

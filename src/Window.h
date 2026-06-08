@@ -72,5 +72,4 @@ private:
 	Texture* solidsTexture;
 	Texture* reflectionsTexture;
 	glm::vec2 reflectionsScale;
-	glm::mat4 earthRotationMat = glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));	// delete
 };
