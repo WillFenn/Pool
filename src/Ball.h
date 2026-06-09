@@ -12,8 +12,12 @@ class Ball : public GameObject {
 public:
 	Ball(glm::vec2 pos, std::string textureFilepath, bool flipTexture, int index, BallType ballType);
 	Ball();
-	Ball(const Ball& other);
+	int getIndex();
+	BallType getBallType();
+	glm::vec2 getVelocity();
+	void setVelocity(glm::vec2 velocity);
 
+private:
 	int index;
 	BallType ballType;
 	glm::vec2 velocity;

@@ -56,7 +56,7 @@ Game::Game() {
 
 	leftClickStartPos = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
 	
-	cueStartPosition = cueBall.pos + glm::vec2(-1.0f, 0.0f) * ((10.0f / 2.0f) + 0.5f);
+	cueStartPosition = cueBall.getPos() + glm::vec2(-1.0f, 0.0f) * ((10.0f / 2.0f) + 0.5f);
 	cue = Cue(cueStartPosition, "res/textures/cue.png", true);
 
 	// delete
@@ -133,7 +133,7 @@ void Game::update(Window* window, Input* input, float deltaTime) {
 	checkPocketedBalls();
 
 	if (cueBallShouldBePlaced && !ballsMovingThisFrame && !positionOutOfBounds(window, input)) {
-		cueBall.pos = getMouseWorldPos(window, input);
+		cueBall.setPos(getMouseWorldPos(window, input));
 		
 		if (input->leftMousePressed()) {
 			leftMouseWasPressed = true;
@@ -159,12 +159,12 @@ void Game::update(Window* window, Input* input, float deltaTime) {
 }
 
 bool Game::ballsAreMoving() {
-	if (glm::length(cueBall.velocity) != 0.0f) {
+	if (glm::length(cueBall.getVelocity()) != 0.0f) {
 		return true;
 	}
 
 	for (int i = 0; i < balls.size(); i++) {
-		if (glm::length(balls.at(i).velocity) != 0.0f) {
+		if (glm::length(balls.at(i).getVelocity()) != 0.0f) {
 			return true;
 		}
 	}
@@ -213,15 +213,15 @@ bool Game::cueShouldBeDrawn() {
 }
 
 bool Game::trajectory(glm::vec2* pointA, glm::vec2* pointB) {
-	glm::vec2 pathPos = cueBall.pos;
-	glm::vec2 pathIncrement = 0.01f * glm::normalize(cueBall.pos - cue.pos);
+	glm::vec2 pathPos = cueBall.getPos();
+	glm::vec2 pathIncrement = 0.01f * glm::normalize(cueBall.getPos() - cue.getPos());
 	glm::vec2 collisionNormal;
 
 	while (pathPos.x > -23.5f && pathPos.x < 23.5f && pathPos.y > -13.0f && pathPos.y < 13.0f) {
 		for (int i = 0; i < balls.size(); i++) {
-			if (detectBallCollision(&pathPos, &balls.at(i).pos, &collisionNormal)) {
-				*pointA = balls.at(i).pos;
-				*pointB = balls.at(i).pos + 3.0f * collisionNormal;
+			if (detectBallCollision(pathPos, balls.at(i).getPos(), &collisionNormal)) {
+				*pointA = balls.at(i).getPos();
+				*pointB = balls.at(i).getPos() + 3.0f * collisionNormal;
 				
 				return true;
 			}
@@ -251,7 +251,7 @@ void Game::setPositions() {
 
 	for (int i = 0; i < balls.size(); i++) {
 		int randIndex = rand() % positions.size();
-		balls.at(i).pos = positions.at(randIndex);
+		balls.at(i).setPos(positions.at(randIndex));
 		positions.erase(positions.begin() + randIndex);
 	}
 
@@ -272,33 +272,33 @@ void Game::setCuePos(Window* window, Input* input) {
 			leftClickStartPos = mouseWorldPos;
 		}
 
-		glm::vec2 cueDirection = glm::normalize(cue.pos - cueBall.pos);
+		glm::vec2 cueDirection = glm::normalize(cue.getPos() - cueBall.getPos());
 		glm::vec2 leftClickStartToMouse = mouseWorldPos - leftClickStartPos;
-		cue.pos = cueBall.pos + cueDirection * glm::clamp((((cue.scale.x / 2) + 0.5f) + PoolMath::projection(leftClickStartToMouse, cueDirection)), ((cue.scale.x / 2) + 0.5f), maxCueDistance);
-		cue.wasPulledBack = true;
+		cue.setPos(cueBall.getPos() + cueDirection * glm::clamp((((cue.getScale().x / 2) + 0.5f) + PoolMath::projection(leftClickStartToMouse, cueDirection)), ((cue.getScale().x / 2) + 0.5f), maxCueDistance));
+		cue.setWasPulledBack(true);
 	}
 	else {
-		if (cue.wasPulledBack) {
-			cue.speed = 3 * (glm::distance(cueBall.pos, cue.pos) - ((cue.scale.x / 2) + 0.5f));
-			cue.wasPulledBack = false;
+		if (cue.getWasPulledBack()) {
+			cue.setSpeed(3 * (glm::distance(cueBall.getPos(), cue.getPos()) - ((cue.getScale().x / 2) + 0.5f)));
+			cue.setWasPulledBack(false);
 			leftClickStartPos = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
 		}
-		else if (cue.speed == 0.0f) {
+		else if (cue.getSpeed() == 0.0f) {
 			glm::vec2 mouseDirection;
-			if (!PoolMath::approximatelyEqual(mouseWorldPos, cueBall.pos, 0.0001f)) {
-				mouseDirection = glm::normalize(mouseWorldPos - cueBall.pos);
+			if (!PoolMath::approximatelyEqual(mouseWorldPos, cueBall.getPos(), 0.0001f)) {
+				mouseDirection = glm::normalize(mouseWorldPos - cueBall.getPos());
 			}
 			else {
 				mouseDirection = glm::vec2(-1.0f, 0.0f);
 			}
 			
-			cue.pos = cueBall.pos - mouseDirection * ((cue.scale.x / 2.0f) + 0.5f);
+			cue.setPos(cueBall.getPos() - mouseDirection * ((cue.getScale().x / 2.0f) + 0.5f));
 			
 			float rotation = atan(mouseDirection.y / mouseDirection.x);
-			cue.rotationMat = PoolMath::addToRotationMat(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, -1.0f));
+			cue.setRotationMat(PoolMath::addToRotationMat(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, -1.0f)));
 
 			if (mouseDirection.x < 0) {
-				cue.rotationMat = PoolMath::addToRotationMat(cue.rotationMat, glm::pi<float>(), glm::vec3(0.0f, 0.0f, 1.0f));
+				cue.setRotationMat(PoolMath::addToRotationMat(cue.getRotationMat(), glm::pi<float>(), glm::vec3(0.0f, 0.0f, 1.0f)));
 			}
 		}
 	}
@@ -318,9 +318,9 @@ void Game::checkPocketedBalls() {
 	// check object balls
 	for (int j = 0; j < 6; j++) {
 		for (int i = 0; i < balls.size(); i++) {
-			if (glm::distance(pocketPositions[j], balls.at(i).pos) < 1.0f) {
+			if (glm::distance(pocketPositions[j], balls.at(i).getPos()) < 1.0f) {
 				// check the ball type of the pocketed ball
-				if (balls.at(i).ballType == Striped) {
+				if (balls.at(i).getBallType() == Striped) {
 					stripedPocketed = true;
 				}
 				else {
@@ -328,7 +328,7 @@ void Game::checkPocketedBalls() {
 				}
 
 				// check if pocketed ball is eight ball
-				if (balls.at(i).index == 8) {
+				if (balls.at(i).getIndex() == 8) {
 					eightBallPocketed = true;
 				}
 				
@@ -349,8 +349,8 @@ void Game::checkPocketedBalls() {
 		}
 
 		// check cue ball
-		if (glm::distance(pocketPositions[j], cueBall.pos) < 1.0f) {
-			cueBall.velocity = glm::vec2(0.0f, 0.0f);
+		if (glm::distance(pocketPositions[j], cueBall.getPos()) < 1.0f) {
+			cueBall.setVelocity(glm::vec2(0.0f, 0.0f));
 			cueBallPocketed = true;
 			cueBallShouldBePlaced = true;
 		}
@@ -385,7 +385,7 @@ bool Game::positionOutOfBounds(Window* window, Input* input) {
 	glm::vec2 mouseWorldPos = getMouseWorldPos(window, input);
 
 	for (int i = 0; i < balls.size(); i++) {
-		if (glm::distance(balls.at(i).pos, mouseWorldPos) < 1.0f) {
+		if (glm::distance(balls.at(i).getPos(), mouseWorldPos) < 1.0f) {
 			return true;
 		}
 	}
@@ -403,9 +403,9 @@ bool Game::positionOutOfBounds(Window* window, Input* input) {
 	return false;
 }
 
-bool Game::detectBallCollision(glm::vec2* ball1Pos, glm::vec2* ball2Pos, glm::vec2* outCollisionNormal) {
-	if (glm::length(*ball1Pos - *ball2Pos) <= 1.0f) {
-		*outCollisionNormal = glm::normalize(*ball2Pos - *ball1Pos);
+bool Game::detectBallCollision(glm::vec2 ball1Pos, glm::vec2 ball2Pos, glm::vec2* outCollisionNormal) {
+	if (glm::length(ball1Pos - ball2Pos) <= 1.0f) {
+		*outCollisionNormal = glm::normalize(ball2Pos - ball1Pos);
 
 		return true;
 	}
@@ -415,7 +415,7 @@ bool Game::detectBallCollision(glm::vec2* ball1Pos, glm::vec2* ball2Pos, glm::ve
 
 bool Game:: allBallsPocketed(BallType ballType) {
 	for (int i = 0; i < balls.size(); i++) {
-		if (balls.at(i).ballType == ballType) {
+		if (balls.at(i).getBallType() == ballType) {
 			return false;
 		}
 	}

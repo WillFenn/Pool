@@ -127,12 +127,12 @@ void Window::drawFrame(std::vector<GameObject>* objects, std::vector<Line>* line
 	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
 
 	for (GameObject object : *objects) {
-		if (object.shape == Shape::Rectangle) {
-			drawRectangleTexture(object.pos, object.scale, object.rotationMat, object.texture.get());
+		if (object.getShape() == Shape::Rectangle) {
+			drawRectangleTexture(object.getPos(), object.getScale(), object.getRotationMat(), object.getTexture());
 		}
-		else if (object.shape == Shape::Sphere) {
-			drawSphereTexture(object.scale.x / 2, object.pos, object.rotationMat, object.texture.get());
-			drawRectangleTexture(object.pos, reflectionsScale, glm::mat4(1.0f), reflectionsTexture);
+		else if (object.getShape() == Shape::Sphere) {
+			drawSphereTexture(object.getScale().x / 2, object.getPos(), object.getRotationMat(), object.getTexture());
+			drawRectangleTexture(object.getPos(), reflectionsScale, glm::mat4(1.0f), reflectionsTexture);
 		}
 	}
 
@@ -149,12 +149,12 @@ void Window::drawFrame(std::vector<GameObject>* objects) {
 	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
 
 	for (GameObject object : *objects) {
-		if (object.shape == Shape::Rectangle) {
-			drawRectangleTexture(object.pos, object.scale, object.rotationMat, object.texture.get());
+		if (object.getShape() == Shape::Rectangle) {
+			drawRectangleTexture(object.getPos(), object.getScale(), object.getRotationMat(), object.getTexture());
 		}
-		else if (object.shape == Shape::Sphere) {
-			drawSphereTexture(object.scale.x / 2, object.pos, object.rotationMat, object.texture.get());
-			drawRectangleTexture(object.pos, reflectionsScale, glm::mat4(1.0f), reflectionsTexture);
+		else if (object.getShape() == Shape::Sphere) {
+			drawSphereTexture(object.getScale().x / 2, object.getPos(), object.getRotationMat(), object.getTexture());
+			drawRectangleTexture(object.getPos(), reflectionsScale, glm::mat4(1.0f), reflectionsTexture);
 		}
 	}
 
@@ -192,23 +192,23 @@ void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ba
 
 	// draw balls
 	for (int i = 0; i < balls->size(); i++) {
-		drawSphereTexture(0.5, balls->at(i).pos, balls->at(i).rotationMat, balls->at(i).texture.get());
-		drawRectangleTexture(balls->at(i).pos, reflectionsScale, 0.0f, reflectionsTexture);
+		drawSphereTexture(0.5, balls->at(i).getPos(), balls->at(i).getRotationMat(), balls->at(i).getTexture());
+		drawRectangleTexture(balls->at(i).getPos(), reflectionsScale, 0.0f, reflectionsTexture);
 	}
 	std::cout << "balls drawn" << std::endl;	// delete
 
 	if (cueBall != nullptr) {
-		drawSphereTexture(0.5, cueBall->pos, cueBall->rotationMat, cueBall->texture.get());
-		drawRectangleTexture(cueBall->pos, reflectionsScale, 0.0f, reflectionsTexture);
+		drawSphereTexture(0.5, cueBall->getPos(), cueBall->getRotationMat(), cueBall->getTexture());
+		drawRectangleTexture(cueBall->getPos(), reflectionsScale, 0.0f, reflectionsTexture);
 		
 		std::cout << "cue ball drawn" << std::endl;	// delete
 	}
 
 	// draw cue
 	if (cue != nullptr) {
-		drawRectangleTexture(cue->pos, cue->scale, cue->rotationMat, cue->texture.get());
+		drawRectangleTexture(cue->getPos(), cue->getScale(), cue->getRotationMat(), cue->getTexture());
 		std::cout << "cue drawn" << std::endl;	// delete
-		std::cout << "cue position     x: " << cue->pos.x << "   y: " << cue->pos.y << std::endl;	// delete
+		std::cout << "cue position     x: " << cue->getPos().x << "   y: " << cue->getPos().y << std::endl;	// delete
 	}
 
 	// draw shot trajectory

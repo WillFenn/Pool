@@ -41,7 +41,7 @@ private:
 	void checkPocketedBalls();
 	bool foul();
 	bool positionOutOfBounds(Window* window, Input* input);
-	bool detectBallCollision(glm::vec2* ball1Pos, glm::vec2* ball2Pos, glm::vec2* outCollisionNormal);
+	bool detectBallCollision(glm::vec2 ball1Pos, glm::vec2 ball2Pos, glm::vec2* outCollisionNormal);
 	bool allBallsPocketed(BallType ballType);
 
 private:

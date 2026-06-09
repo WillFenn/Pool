@@ -11,8 +11,15 @@ class GameObject {
 public:
 	GameObject(Shape shape, glm::vec2 pos, glm::vec2 scale, glm::mat4 rotationMat, std::string textureFilepath, bool flipTexture);
 	GameObject();
-	GameObject(const GameObject& other);
+	Shape getShape();
+	glm::vec2 getPos();
+	void setPos(glm::vec2 pos);
+	glm::vec2 getScale();
+	glm::mat4 getRotationMat();
+	void setRotationMat(glm::mat4 rotationMat);
+	Texture* getTexture();
 
+private:
 	Shape shape;
 	glm::vec2 pos;
 	glm::vec2 scale;

@@ -17,6 +17,7 @@ public:
 	void update(Side sides[], std::vector<Ball>* balls, Ball* cueBall, Cue* cue, float deltaTime);
 
 private:
+	float pointLineSegmentDistance(glm::vec2 p, glm::vec2 a, glm::vec2 b);
 	bool ballsAreSeparating(Ball* ball1, Ball* ball2);
 	bool detectBallCollision(Ball* ball1, Ball* ball2, glm::vec2* outCollisionNormal);
 	bool detectBallSideCollision(Side sides[], Ball* ball, glm::vec2* outCollisionNormal);
