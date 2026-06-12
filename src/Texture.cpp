@@ -1,7 +1,6 @@
 #include <Texture.h>
 
-Texture::Texture(std::string filepath, bool flipOnLoad) {
-	this->filepath = filepath;
+Texture::Texture(std::string filepath, bool isCharTexture, bool flipOnLoad) {
 	localBuffer = nullptr;
 	width = 0;
 	height = 0;
@@ -20,10 +19,42 @@ Texture::Texture(std::string filepath, bool flipOnLoad) {
 	GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
 	GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
 
-	GLCALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, localBuffer));
+	if (isCharTexture) {
+		GLCALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, localBuffer));
+		GLCALL(glPixelStorei(GL_UNPACK_ALIGNMENT, 1));
+	}
+	else {
+		GLCALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, localBuffer));
+	}
+
 	GLCALL(glBindTexture(GL_TEXTURE_2D, 0));
 
 	stbi_image_free(localBuffer);
+}
+
+Texture::Texture(unsigned char* buffer, int width, int height, bool isCharTexture) {
+	localBuffer = buffer;
+	this->width = width;
+	this->height = height;
+
+	GLCALL(glGenTextures(1, &textureID));
+	GLCALL(glBindTexture(GL_TEXTURE_2D, textureID));
+
+	GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+	GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+
+	GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
+	GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
+
+	if (isCharTexture) {
+		GLCALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, localBuffer));
+		GLCALL(glPixelStorei(GL_UNPACK_ALIGNMENT, 1));
+	}
+	else {
+		GLCALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, localBuffer));
+	}
+	
+	GLCALL(glBindTexture(GL_TEXTURE_2D, 0));
 }
 
 Texture::~Texture() {

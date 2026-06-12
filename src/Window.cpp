@@ -91,20 +91,45 @@ Window::Window() {
 	rectangleTextureShader = new Shader("res/shaders/RectangleTextureVertex.glsl", "res/shaders/RectangleTextureFragment.glsl");
 	lineShader = new Shader("res/shaders/CircleRectangleLineVertex.glsl", "res/shaders/LineRectangleFragment.glsl");
 
-	texture = new Texture("res/textures/container.jpg", true);
-	player1Texture = new Texture("res/textures/player1.png", true);
-	player2Texture = new Texture("res/textures/player2.png", true);
-	stripesTexture = new Texture("res/textures/stripes.png", true);
-	solidsTexture = new Texture("res/textures/solids.png", true);
-	reflectionsTexture = new Texture("res/textures/balls/reflections.png", true);
+	texture = new Texture("res/textures/container.jpg", false, true);
+	player1Texture = new Texture("res/textures/player1.png", false, true);
+	player2Texture = new Texture("res/textures/player2.png", false, true);
+	stripesTexture = new Texture("res/textures/stripes.png", false, true);
+	solidsTexture = new Texture("res/textures/solids.png", false, true);
+	reflectionsTexture = new Texture("res/textures/balls/reflections.png", false, true);
 
 	reflectionsScale = glm::vec2(1.0f, 1.0f);
+
+	if (FT_Init_FreeType(&freetype)) {
+		std::cout << "Failed to initialize freetype library" << std::endl;
+	}
+
+	if (FT_New_Face(freetype, "res/fonts/BAUHS93.TTF", 0, &face)) {
+		std::cout << "Failed to load font" << std::endl;
+	}
+
+	FT_Set_Pixel_Sizes(face, 0, 50);
+
+	//if (FT_Load_Char(face, 'A', FT_LOAD_RENDER)) {
+	//	std::cout << "Failed to load character" << std::endl;
+	//}
+
+	std::map<char, Character> Characters;
+
+	for (unsigned char c = 0; c < 128; c++) {
+		if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
+			std::cout << "Failed to load character" << std::endl;
+		}
+	}
 
 	glm::vec4 backgroundColor = PoolColors::gray();
 	GLCALL(glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a));
 }
 
 Window::~Window() {
+	FT_Done_Face(face);
+	FT_Done_FreeType(freetype);
+
 	delete circleShader;
 	delete sphereTextureShader;
 	delete rectangleShader;

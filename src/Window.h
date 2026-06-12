@@ -8,8 +8,11 @@
 
 #include <iostream>
 #include <vector>
+#include <map>
 #include <glew.h>
 #include <glfw3.h>
+#include <ft2build.h>
+#include FT_FREETYPE_H
 #include <vec2.hpp>
 #include <vec3.hpp>
 #include <mat4x4.hpp>
@@ -17,6 +20,7 @@
 #include <ext/matrix_transform.hpp>
 #include <PoolColors.h>
 #include <PoolMath.h>	// delete
+#include <Character.h>
 #include <GameObject.h>
 #include <Line.h>
 #include <Shader.h>
@@ -72,4 +76,6 @@ private:
 	Texture* solidsTexture;
 	Texture* reflectionsTexture;
 	glm::vec2 reflectionsScale;
+	FT_Library freetype;
+	FT_Face face;
 };

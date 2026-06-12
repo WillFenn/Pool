@@ -12,7 +12,8 @@
 
 class Texture {
 public:
-	Texture(std::string filepath, bool flipOnLoad);
+	Texture(std::string filepath, bool isCharTexture, bool flipOnLoad);
+	Texture(unsigned char* buffer, int width, int height, bool isCharTexture);
 	~Texture();
 	void bind(unsigned int slot = 0);
 	void unbind();
@@ -23,7 +24,6 @@ private:
 	bool GLLogErrors();
 
 private:
-	std::string filepath;
 	unsigned int textureID;
 	unsigned int slot = 0;
 	unsigned char* localBuffer;

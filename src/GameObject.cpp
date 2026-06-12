@@ -5,7 +5,7 @@ GameObject::GameObject(Shape shape, glm::vec2 pos, glm::vec2 scale, glm::mat4 ro
 	this->pos = pos;
 	this->scale = scale;
 	this->rotationMat = rotationMat;
-	this->texture = std::make_shared<Texture>(textureFilepath, flipTexture);
+	texture = std::make_shared<Texture>(textureFilepath, false, flipTexture);
 }
 
 GameObject::GameObject() {}
