@@ -8,3 +8,19 @@ Character::Character(glm::ivec2 size, glm::ivec2 bearing, unsigned int advance, 
 }
 
 Character::Character() {}
+
+glm::ivec2 Character::getSize() {
+	return size;
+}
+
+glm::ivec2 Character::getBearing() {
+	return bearing;
+}
+
+unsigned int Character::getAdvance() {
+	return advance;
+}
+
+Texture* Character::getTexture() {
+	return texture.get();
+}

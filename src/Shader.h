@@ -25,6 +25,7 @@ public:
 	void setUniformFloat(float value, const char* name);
 	void setUniformVec2(glm::vec2 vec2, const char* name);
 	void setUniformIVec2(glm::ivec2 ivec2, const char* name);
+	void setUniformVec3(glm::vec3 vec3, const char* name);
 	void setUniformVec4(glm::vec4 vec4, const char* name);
 	void setUniformMat4(glm::mat4 mat4, const char* name);
 	void GLClearErrors();

@@ -9,6 +9,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <string>
 #include <glew.h>
 #include <glfw3.h>
 #include <ft2build.h>
@@ -48,6 +49,7 @@ private:
 	void drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::vec4 color);
 	void drawRectangleTexture(glm::vec2 pos, glm::vec2 scale, glm::mat4 rotationMat, Texture* texture);
 	void drawLine(glm::vec2 a, glm::vec2 b);
+	void drawText(float xStart, float yBaseline, Font font, FontSize fontSize, glm::vec4 color, std::string text);
 	void GLClearErrors();
 	bool GLLogErrors();
 
@@ -69,6 +71,7 @@ private:
 	Shader* rectangleShader;
 	Shader* rectangleTextureShader;
 	Shader* lineShader;
+	Shader* characterShader;
 	Texture* texture;
 	Texture* player1Texture;
 	Texture* player2Texture;
@@ -78,4 +81,5 @@ private:
 	glm::vec2 reflectionsScale;
 	FT_Library freetype;
 	FT_Face face;
+	std::map<char, Character> monotonCharacters[4];
 };

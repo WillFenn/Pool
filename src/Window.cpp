@@ -90,6 +90,7 @@ Window::Window() {
 	rectangleShader = new Shader("res/shaders/CircleRectangleLineVertex.glsl", "res/shaders/LineRectangleFragment.glsl");
 	rectangleTextureShader = new Shader("res/shaders/RectangleTextureVertex.glsl", "res/shaders/RectangleTextureFragment.glsl");
 	lineShader = new Shader("res/shaders/CircleRectangleLineVertex.glsl", "res/shaders/LineRectangleFragment.glsl");
+	characterShader = new Shader("res/shaders/CircleRectangleLineVertex.glsl", "res/shaders/CharacterFragment.glsl");
 
 	texture = new Texture("res/textures/container.jpg", false, true);
 	player1Texture = new Texture("res/textures/player1.png", false, true);
@@ -104,22 +105,21 @@ Window::Window() {
 		std::cout << "Failed to initialize freetype library" << std::endl;
 	}
 
-	if (FT_New_Face(freetype, "res/fonts/BAUHS93.TTF", 0, &face)) {
+	if (FT_New_Face(freetype, "res/fonts/Monoton/Monoton-Regular.ttf", 0, &face)) {
 		std::cout << "Failed to load font" << std::endl;
 	}
 
-	FT_Set_Pixel_Sizes(face, 0, 50);
-
-	//if (FT_Load_Char(face, 'A', FT_LOAD_RENDER)) {
-	//	std::cout << "Failed to load character" << std::endl;
-	//}
-
-	std::map<char, Character> Characters;
+	FT_Set_Pixel_Sizes(face, 0, (resolution.y / worldScale.y) / 16);
 
 	for (unsigned char c = 0; c < 128; c++) {
 		if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
 			std::cout << "Failed to load character" << std::endl;
+			continue;
 		}
+
+		Character character({ face->glyph->bitmap.width, face->glyph->bitmap.rows }, { face->glyph->bitmap_left, face->glyph->bitmap_top }, face->glyph->advance.x, face->glyph->bitmap.buffer);
+
+		monotonCharacters[FontSize::OneSixteenth].insert(std::pair<char, Character>(c, character));
 	}
 
 	glm::vec4 backgroundColor = PoolColors::gray();
@@ -135,6 +135,7 @@ Window::~Window() {
 	delete rectangleShader;
 	delete rectangleTextureShader;
 	delete lineShader;
+	delete characterShader;
 
 	delete texture;
 	delete player1Texture;
@@ -164,6 +165,9 @@ void Window::drawFrame(std::vector<GameObject>* objects, std::vector<Line>* line
 	for (Line line : *lines) {
 		drawLine(line.a, line.b);
 	}
+
+	// delete
+	drawText(0, 0, Font::Monoton, FontSize::OneEighth, PoolColors::black(), "hello world");
 
 	glfwSwapBuffers(glfwwindow);
 
@@ -270,8 +274,8 @@ void Window::drawCircle(float radius, glm::vec2 pos, glm::vec4 color, BallType b
 	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos, 0.0f));
 	model = glm::scale(model, glm::vec3(radius * 2, radius * 2, 1.0f));
-
 	glm::mat4 mvp = projection * view * model;
+	
 	circleShader->setUniformMat4(mvp, "uMVP");
 	circleShader->setUniformIVec2(resolution, "uResolution");
 	circleShader->setUniformFloat(radius, "uRadius");
@@ -294,7 +298,6 @@ void Window::drawSphereTexture(float radius, glm::vec2 pos, glm::mat4 rotationMa
 	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos, 0.0f));
 	model = glm::scale(model, glm::vec3(radius * 2, radius * 2, 1.0f));
-
 	glm::mat4 mvp = projection * view * model;
 
 	sphereTextureShader->setUniformMat4(mvp, "uMVP");
@@ -319,8 +322,8 @@ void Window::drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::
 	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos, 0.0f));
 	model = glm::rotate(model, rotation, glm::vec3(0.0f, 0.0f, 1.0f));
 	model = glm::scale(model, glm::vec3(scale.x, scale.y, 1.0f));
-
 	glm::mat4 mvp = projection * view * model;
+	
 	rectangleShader->setUniformMat4(mvp, "uMVP");
 	rectangleShader->setUniformVec4(color, "uColor");
 
@@ -340,8 +343,8 @@ void Window::drawRectangleTexture(glm::vec2 pos, glm::vec2 scale, glm::mat4 rota
 	// = glm::rotate(model, rotation, glm::vec3(0, 0, 1));
 	model *= rotationMat;
 	model = glm::scale(model, glm::vec3(scale.x, scale.y, 1.0f));
-
 	glm::mat4 mvp = projection * view * model;
+	
 	rectangleTextureShader->setUniformMat4(mvp, "uMVP");
 	rectangleTextureShader->setUniformInt(texture->getSlot(), "uTexture");
 
@@ -358,12 +361,55 @@ void Window::drawLine(glm::vec2 a, glm::vec2 b) {
 
 	glm::mat4 projection = glm::ortho(-(worldScale.x / 2.0f), worldScale.x / 2.0f, -(worldScale.y / 2.0f), worldScale.y / 2.0f, -1.0f, 1.0f);
 	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-
 	glm::mat4 mvp = projection * view;
+	
 	rectangleShader->setUniformMat4(mvp, "uMVP");
 	lineShader->setUniformVec4(PoolColors::black(), "uColor");
 
 	GLCALL(glDrawArrays(GL_LINES, 0, 2));
+}
+
+void Window::drawText(float xStart, float yBaseline, Font font, FontSize fontSize, glm::vec4 color, std::string text) {
+	GLCALL(glBindVertexArray(rectTexturevao));
+	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectTexturevbo));
+	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
+	characterShader->bind();
+
+	std::map<char, Character>* characters;
+
+	//if (font == Font::Monoton) {
+		characters = monotonCharacters;
+	//}
+
+	for (char c : text) {
+		Character* character = &characters[fontSize].at(c);
+
+		character->getTexture()->bind();
+
+		glm::vec2 pos;
+		pos.x = character->getBearing().x + character->getSize().x / 2;
+		pos.y = character->getBearing().y - character->getSize().y / 2;
+		pos /= resolution;
+		pos *= worldScale;
+		pos.x += xStart;
+		pos.y += yBaseline;
+
+		glm::vec2 scale = ((glm::vec2)character->getSize() / resolution) * worldScale;
+
+		glm::mat4 projection = glm::ortho(-(worldScale.x / 2.0f), worldScale.x / 2.0f, -(worldScale.y / 2.0f), worldScale.y / 2.0f, -1.0f, 1.0f);
+		glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos, 0.0f));
+		model = glm::scale(model, glm::vec3(scale.x, scale.y, 1.0f));
+		glm::mat4 mvp = projection * view * model;
+
+		characterShader->setUniformMat4(mvp, "uMVP");
+		characterShader->setUniformInt(character->getTexture()->getSlot(), "uTexture");
+		characterShader->setUniformVec4(color, "uColor");
+
+		GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+
+		xStart += ((character->getAdvance() >> 6) / resolution.x) * worldScale.x;
+	}
 }
 
 bool Window::shouldClose() {

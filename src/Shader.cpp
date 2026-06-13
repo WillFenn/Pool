@@ -85,6 +85,12 @@ void Shader::setUniformVec2(glm::vec2 vec2, const char* name) {
 	GLCALL(glUniform2f(location, vec2[0], vec2[1]));
 }
 
+void Shader::setUniformVec3(glm::vec3 vec3, const char* name) {
+	GLCALL(int location = glGetUniformLocation(programID, name));
+
+	GLCALL(glUniform3f(location, vec3[0], vec3[1], vec3[2]));
+}
+
 void Shader::setUniformIVec2(glm::ivec2 ivec2, const char* name) {
 	GLCALL(int location = glGetUniformLocation(programID, name));
 
