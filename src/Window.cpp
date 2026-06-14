@@ -90,7 +90,7 @@ Window::Window() {
 	rectangleShader = new Shader("res/shaders/CircleRectangleLineVertex.glsl", "res/shaders/LineRectangleFragment.glsl");
 	rectangleTextureShader = new Shader("res/shaders/RectangleTextureVertex.glsl", "res/shaders/RectangleTextureFragment.glsl");
 	lineShader = new Shader("res/shaders/CircleRectangleLineVertex.glsl", "res/shaders/LineRectangleFragment.glsl");
-	characterShader = new Shader("res/shaders/CircleRectangleLineVertex.glsl", "res/shaders/CharacterFragment.glsl");
+	characterShader = new Shader("res/shaders/RectangleTextureVertex.glsl", "res/shaders/CharacterFragment.glsl");
 
 	texture = new Texture("res/textures/container.jpg", false, true);
 	player1Texture = new Texture("res/textures/player1.png", false, true);
@@ -109,7 +109,7 @@ Window::Window() {
 		std::cout << "Failed to load font" << std::endl;
 	}
 
-	FT_Set_Pixel_Sizes(face, 0, (resolution.y / worldScale.y) / 16);
+	FT_Set_Pixel_Sizes(face, 0, (resolution.y / worldScale.y) / 1);
 
 	for (unsigned char c = 0; c < 128; c++) {
 		if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
@@ -167,7 +167,7 @@ void Window::drawFrame(std::vector<GameObject>* objects, std::vector<Line>* line
 	}
 
 	// delete
-	drawText(0, 0, Font::Monoton, FontSize::OneEighth, PoolColors::black(), "hello world");
+	drawText(0, 0, Font::Monoton, FontSize::OneSixteenth, PoolColors::black(), "hello world");
 
 	glfwSwapBuffers(glfwwindow);
 
