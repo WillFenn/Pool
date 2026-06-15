@@ -1,10 +1,10 @@
 #pragma once
+
+#include <memory>
 #include <vec2.hpp>
+#include <Font.h>
+#include <FontSize.h>
 #include <Texture.h>
-
-enum Font { Monoton };
-
-enum FontSize { OneSixteenth, OneEighth, OneFourth, OneHalf };
 
 class Character {
 public:

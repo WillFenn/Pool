@@ -65,6 +65,10 @@ int main() {
 		std::vector<Line> lines;
 		lines.push_back({ trajectoryA, trajectoryB });
 
-		window.drawFrame(&objects, &lines);
+		std::vector<Panel> panels;
+		panels.push_back(*game.getPlayer1Panel());
+		panels.push_back(*game.getPlayer2Panel());
+
+		window.drawFrame(&objects, &lines, &panels);
 	}
 }

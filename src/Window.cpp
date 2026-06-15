@@ -52,10 +52,15 @@ Window::Window() {
 	GLCALL(glCreateBuffers(1, &rectTexturevbo));
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectTexturevbo));
 
-	glm::vec2 rectTextureVertices[8] = { { -0.5f, 0.5f }, { 0.0f, 1.0f },
-										{ 0.5f, 0.5f }, { 1.0f, 1.0f },
-										{ 0.5f, -0.5f }, { 1.0f, 0.0f },
-										{ -0.5f, -0.5f }, { 0.0f, 0.0f } };
+	//glm::vec2 rectTextureVertices[8] = { { -0.5f, 0.5f }, { 0.0f, 1.0f },
+	//					   				 { 0.5f, 0.5f }, { 1.0f, 1.0f },
+	//									 { 0.5f, -0.5f }, { 1.0f, 0.0f },
+	//									 { -0.5f, -0.5f }, { 0.0f, 0.0f } };
+
+	glm::vec2 rectTextureVertices[8] = { { -0.5f, 0.5f }, { 0.0f, 0.0f },
+										 { 0.5f, 0.5f }, { 1.0f, 0.0f },
+										 { 0.5f, -0.5f }, { 1.0f, 1.0f },
+										 { -0.5f, -0.5f }, { 0.0f, 1.0f } };
 	
 	GLCALL(glBufferData(GL_ARRAY_BUFFER, sizeof(rectTextureVertices), rectTextureVertices, GL_STREAM_DRAW));
 
@@ -109,27 +114,29 @@ Window::Window() {
 		std::cout << "Failed to load font" << std::endl;
 	}
 
-	FT_Set_Pixel_Sizes(face, 0, (resolution.y / worldScale.y) / 1);
+	for (int i = 0; i < 5; i++) {
+		FT_Set_Pixel_Sizes(face, 0, (resolution.y / worldScale.y) * (i + 1));
 
-	for (unsigned char c = 0; c < 128; c++) {
-		if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
-			std::cout << "Failed to load character" << std::endl;
-			continue;
+		for (unsigned char c = 0; c < 128; c++) {
+			if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
+				std::cout << "Failed to load character" << std::endl;
+				continue;
+			}
+
+			Character character({ face->glyph->bitmap.width, face->glyph->bitmap.rows }, { face->glyph->bitmap_left, face->glyph->bitmap_top }, face->glyph->advance.x, face->glyph->bitmap.buffer);
+
+			monotonCharacters[i].insert(std::pair<char, Character>(c, character));
 		}
-
-		Character character({ face->glyph->bitmap.width, face->glyph->bitmap.rows }, { face->glyph->bitmap_left, face->glyph->bitmap_top }, face->glyph->advance.x, face->glyph->bitmap.buffer);
-
-		monotonCharacters[FontSize::OneSixteenth].insert(std::pair<char, Character>(c, character));
 	}
+
+	FT_Done_Face(face);
+	FT_Done_FreeType(freetype);
 
 	glm::vec4 backgroundColor = PoolColors::gray();
 	GLCALL(glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a));
 }
 
 Window::~Window() {
-	FT_Done_Face(face);
-	FT_Done_FreeType(freetype);
-
 	delete circleShader;
 	delete sphereTextureShader;
 	delete rectangleShader;
@@ -147,9 +154,12 @@ Window::~Window() {
 	glfwSetWindowShouldClose(glfwwindow, true);
 
 	glfwTerminate();
+
+	// delete
+	std::cout << "Window deconstructor called" << std::endl;
 }
 
-void Window::drawFrame(std::vector<GameObject>* objects, std::vector<Line>* lines) {
+void Window::drawFrame(std::vector<GameObject>* objects, std::vector<Line>* lines, std::vector<Panel>* panels) {
 	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
 
 	for (GameObject object : *objects) {
@@ -166,8 +176,23 @@ void Window::drawFrame(std::vector<GameObject>* objects, std::vector<Line>* line
 		drawLine(line.a, line.b);
 	}
 
+	for (Panel panel : *panels) {
+		if (panel.getTexture() != nullptr) {
+			drawRectangleTexture(panel.getPos(), panel.getScale(), glm::mat4(1.0f), panel.getTexture());
+		}
+
+		for (TextLabel textLabel : *panel.getTextLabels()) {
+			drawText(panel.getPos().x + textLabel.getxStart(), panel.getPos().y + textLabel.getyBaseline(), textLabel.getFont(), textLabel.getFontSize(), textLabel.getColor(), textLabel.getText());
+		}
+	}
+
 	// delete
-	drawText(0, 0, Font::Monoton, FontSize::OneSixteenth, PoolColors::black(), "hello world");
+	drawText(0, 0, Font::Monoton, FontSize::One, PoolColors::black(), "font size: 1");
+	drawText(0, 1, Font::Monoton, FontSize::Two, PoolColors::black(), "font size: 2");
+	drawText(0, 3, Font::Monoton, FontSize::Three, PoolColors::black(), "font size: 3");
+	drawText(0, 6, Font::Monoton, FontSize::Four, PoolColors::black(), "font size: 4");
+	drawText(0, 10, Font::Monoton, FontSize::Five, PoolColors::transparentBlack(), "font size: 5");
+	drawText(0, 15, Font::Monoton, FontSize::Five, PoolColors::transparentWhite(), "font size: 5");
 
 	glfwSwapBuffers(glfwwindow);
 

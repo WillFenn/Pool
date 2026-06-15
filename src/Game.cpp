@@ -1,7 +1,7 @@
 #include <Game.h>
 
 Game::Game() {
-	table = GameObject(Shape::Rectangle, glm::vec2(0.0f, 0.0f), glm::vec2(52.0f, 31.0f), glm::mat4(1.0f), "res/textures/table.png", true);
+	table = GameObject(Shape::Rectangle, glm::vec2(0.0f, 0.0f), glm::vec2(52.0f, 31.0f), glm::mat4(1.0f), "res/textures/table.png", false);
 
 	sides[0] = Side({ -24.0f, 13.5f - glm::sqrt(2) }, { -24.0f - glm::sqrt(2), 13.5f }, { 1 / glm::sqrt(2), 1 / glm::sqrt(2) });
 	sides[1] = Side({ -24.0f, 13.5f + glm::sqrt(2) }, { -24.0f + glm::sqrt(2), 13.5f }, { -(1 / glm::sqrt(2)), -(1 / glm::sqrt(2)) });
@@ -57,7 +57,7 @@ Game::Game() {
 	leftClickStartPos = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
 	
 	cueStartPosition = cueBall.getPos() + glm::vec2(-1.0f, 0.0f) * ((10.0f / 2.0f) + 0.5f);
-	cue = Cue(cueStartPosition, "res/textures/cue.png", true);
+	cue = Cue(cueStartPosition, "res/textures/cue.png", false);
 
 	// delete
 	//cue = { cueStartPosition, { 10.0f, 0.2f }, 0.0f, 0.0f, new Texture("res/textures/cue.png", true), false};
@@ -99,6 +99,11 @@ Game::Game() {
 
 	players[0] = {1, Unassigned};
 	players[1] = {2, Unassigned};
+
+	player1Panel = Panel({ -21.0f, 18.0f }, { 10.0f, 5.0f }, "res/textures/balls/one_ball.png", false);
+	player1Panel.addTextLabel("Player 1", -5.0f, 1.5f, PoolColors::black(), Font::Monoton, FontSize::One);
+	player2Panel = Panel({ 21.0f, 18.0f }, { 10.0f, 5.0f }, "res/textures/balls/one_ball.png", false);
+	player2Panel.addTextLabel("Player 2", -5.0f, 1.5f, PoolColors::black(), Font::Monoton, FontSize::One);
 
 	currentPlayerIndex = 0;
 }
@@ -154,6 +159,8 @@ void Game::update(Window* window, Input* input, float deltaTime) {
 			winner = ((currentPlayerIndex + 1) % 2) + 1;
 		}
 	}
+
+	updatePlayerPanels();
 
 	ballsMovedLastFrame = ballsMovingThisFrame;
 }
@@ -231,6 +238,14 @@ bool Game::trajectory(glm::vec2* pointA, glm::vec2* pointB) {
 	}
 
 	return false;
+}
+
+Panel* Game::getPlayer1Panel() {
+	return &player1Panel;
+}
+
+Panel* Game::getPlayer2Panel() {
+	return &player2Panel;
 }
 
 void Game::setPositions() {
@@ -342,6 +357,9 @@ void Game::checkPocketedBalls() {
 						players[currentPlayerIndex].ballType = Solid;
 						players[(currentPlayerIndex + 1) % 2].ballType = Striped;
 					}
+
+					player1Panel.addTextLabel(players[0].ballType == Striped ? "Stripes" : "Solids", -5.0f, 3.0f, PoolColors::black(), Font::Monoton, FontSize::One);
+					player2Panel.addTextLabel(players[1].ballType == Solid ? "Solids" : "Stripes", -5.0f, 3.0f, PoolColors::black(), Font::Monoton, FontSize::One);
 				}
 
 				balls.erase(balls.begin() + i);
@@ -413,7 +431,7 @@ bool Game::detectBallCollision(glm::vec2 ball1Pos, glm::vec2 ball2Pos, glm::vec2
 	return false;
 }
 
-bool Game:: allBallsPocketed(BallType ballType) {
+bool Game::allBallsPocketed(BallType ballType) {
 	for (int i = 0; i < balls.size(); i++) {
 		if (balls.at(i).getBallType() == ballType) {
 			return false;
@@ -421,6 +439,10 @@ bool Game:: allBallsPocketed(BallType ballType) {
 	}
 
 	return true;
+}
+
+void Game::updatePlayerPanels() {
+
 }
 
 bool Game::getGameDone() {

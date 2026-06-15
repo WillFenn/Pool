@@ -46,5 +46,13 @@ glm::vec4 PoolColors::lightBrown() {
 }
 
 glm::vec4 PoolColors::darkBrown() {
-	return{ 150.0f / 255.0f, 80.0f / 255.0f, 0.0f / 255.0f, 1.0f };
+	return { 150.0f / 255.0f, 80.0f / 255.0f, 0.0f / 255.0f, 1.0f };
+}
+
+glm::vec4 PoolColors::transparentWhite() {
+	return { 255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f, 0.5f };
+}
+
+glm::vec4 PoolColors::transparentBlack() {
+	return { 0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 0.5f };
 }

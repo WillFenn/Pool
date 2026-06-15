@@ -5,6 +5,7 @@
 #include <PoolMath.h>
 #include <PoolColors.h>
 #include <GameObject.h>
+#include <Panel.h>
 #include <Texture.h>
 #include <Window.h>
 #include <Input.h>
@@ -31,6 +32,8 @@ public:
 	bool cueBallShouldBeDrawn();
 	bool cueShouldBeDrawn();
 	bool trajectory(glm::vec2* pointA, glm::vec2* pointB);
+	Panel* getPlayer1Panel();
+	Panel* getPlayer2Panel();
 	bool getGameDone();
 	int getWinner();
 
@@ -43,6 +46,7 @@ private:
 	bool positionOutOfBounds(Window* window, Input* input);
 	bool detectBallCollision(glm::vec2 ball1Pos, glm::vec2 ball2Pos, glm::vec2* outCollisionNormal);
 	bool allBallsPocketed(BallType ballType);
+	void updatePlayerPanels();
 
 private:
 	GameObject table;
@@ -62,6 +66,8 @@ private:
 	Cue cue;
 	std::vector<Ball> balls;
 	Player players[2];
+	Panel player1Panel;
+	Panel player2Panel;
 	int currentPlayerIndex;
 	bool gameDone = false;
 	int winner;

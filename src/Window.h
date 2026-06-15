@@ -24,6 +24,7 @@
 #include <Character.h>
 #include <GameObject.h>
 #include <Line.h>
+#include <Panel.h>
 #include <Shader.h>
 #include <Texture.h>
 #include <Player.h>
@@ -35,7 +36,7 @@ class Window {
 public:
 	Window();
 	~Window();
-	void drawFrame(std::vector<GameObject>* objects, std::vector<Line>* lines);
+	void drawFrame(std::vector<GameObject>* objects, std::vector<Line>* lines, std::vector<Panel>* panels);
 	void drawFrame(std::vector<GameObject>* objects);
 	void drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball* cueBall, Cue* cue, glm::vec2* trajectoryA, glm::vec2* trajectoryB, Player* currentPlayer, bool gameDone, int winner);
 	GLFWwindow* getglfwwindow();
@@ -81,5 +82,5 @@ private:
 	glm::vec2 reflectionsScale;
 	FT_Library freetype;
 	FT_Face face;
-	std::map<char, Character> monotonCharacters[4];
+	std::map<char, Character> monotonCharacters[5];
 };

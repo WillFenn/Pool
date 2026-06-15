@@ -15,4 +15,6 @@ namespace PoolColors {
 	glm::vec4 purple();
 	glm::vec4 lightBrown();
 	glm::vec4 darkBrown();
+	glm::vec4 transparentWhite();
+	glm::vec4 transparentBlack();
 };

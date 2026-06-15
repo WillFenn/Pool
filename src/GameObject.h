@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vec2.hpp>
 #include <mat4x4.hpp>
 #include <string>
