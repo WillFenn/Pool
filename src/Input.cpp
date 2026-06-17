@@ -1,7 +1,9 @@
 #include <Input.h>
 
-Input::Input(GLFWwindow* glfwwindow) {
+Input::Input(GLFWwindow* glfwwindow, glm::vec2 resolution, glm::vec2 worldScale) {
 	this->glfwwindow = glfwwindow;
+	this->resolution = resolution;
+	this->worldScale = worldScale;
 	deltaTimeCalled = false;
 }
 
@@ -36,6 +38,13 @@ glm::vec2 Input::getMousePos() {
 	glfwGetCursorPos(glfwwindow, &xPos, &yPos);
 
 	return glm::vec2(xPos, yPos);
+}
+
+glm::vec2 Input::getMouseWorldPos() {
+	glm::vec2 mouseWorldPos = ((getMousePos() - resolution / 2.0f) / (resolution / 2.0f)) * (worldScale / 2.0f);
+	mouseWorldPos.y *= -1;
+
+	return mouseWorldPos;
 }
 
 bool Input::leftMousePressed() {

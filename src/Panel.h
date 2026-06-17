@@ -8,18 +8,18 @@
 
 class Panel {
 public:
-	Panel(glm::vec2 pos, glm::vec2 scale, std::string textureFilepath, bool flipTexture);
-	Panel(glm::vec2 pos, glm::vec2 scale);
+	Panel(glm::vec2 pos, std::string textureFilepath, glm::vec2 textureScale, bool flipTexture);
+	Panel(glm::vec2 pos);
 	Panel();
 	void addTextLabel(std::string text, float xStart, float yBaseline, glm::vec4 color, Font font, FontSize fontSize);
 	glm::vec2 getPos();
-	glm::vec2 getScale();
+	glm::vec2 getTextureScale();
 	Texture* getTexture();
 	std::vector<TextLabel>* getTextLabels();
 
 private:
 	glm::vec2 pos;
-	glm::vec2 scale;
 	std::shared_ptr<Texture> texture;
+	glm::vec2 textureScale;
 	std::vector<TextLabel> textLabels;
 };

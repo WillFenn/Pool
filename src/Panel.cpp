@@ -1,14 +1,13 @@
 #include <Panel.h>
 
-Panel::Panel(glm::vec2 pos, glm::vec2 scale, std::string textureFilepath, bool flipTexture) {
+Panel::Panel(glm::vec2 pos, std::string textureFilepath, glm::vec2 textureScale, bool flipTexture) {
 	this->pos = pos;
-	this->scale = scale;
 	texture = std::make_shared<Texture>(textureFilepath, false, flipTexture);
+	this->textureScale = textureScale;
 }
 
-Panel::Panel(glm::vec2 pos, glm::vec2 scale) {
+Panel::Panel(glm::vec2 pos) {
 	this->pos = pos;
-	this->scale = scale;
 }
 
 Panel::Panel() {}
@@ -21,8 +20,8 @@ glm::vec2 Panel::getPos() {
 	return pos;
 }
 
-glm::vec2 Panel::getScale() {
-	return scale;
+glm::vec2 Panel::getTextureScale() {
+	return textureScale;
 }
 
 Texture* Panel::getTexture() {

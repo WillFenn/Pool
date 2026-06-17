@@ -40,7 +40,6 @@ public:
 private:
 	void setPositions();
 	void setCuePos(Window* window, Input* input);
-	glm::vec2 getMouseWorldPos(Window* window, Input* input);
 	void checkPocketedBalls();
 	bool foul();
 	bool positionOutOfBounds(Window* window, Input* input);

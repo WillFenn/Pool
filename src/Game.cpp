@@ -138,7 +138,7 @@ void Game::update(Window* window, Input* input, float deltaTime) {
 	checkPocketedBalls();
 
 	if (cueBallShouldBePlaced && !ballsMovingThisFrame && !positionOutOfBounds(window, input)) {
-		cueBall.setPos(getMouseWorldPos(window, input));
+		cueBall.setPos(input->getMouseWorldPos());
 		
 		if (input->leftMousePressed()) {
 			leftMouseWasPressed = true;
@@ -280,7 +280,7 @@ void Game::setPositions() {
 }
 
 void Game::setCuePos(Window* window, Input* input) {
-	glm::vec2 mouseWorldPos = getMouseWorldPos(window, input);
+	glm::vec2 mouseWorldPos = input->getMouseWorldPos();
 
 	if (input->leftMousePressed()) {
 		if (leftClickStartPos.x == std::numeric_limits<float>::max()) {
@@ -320,13 +320,6 @@ void Game::setCuePos(Window* window, Input* input) {
 
 	//std::cout << "mouse position: " << "(" << mouseWorldPos.x << ", " << mouseWorldPos.y << ")" << std::endl;	// delete
 	std::cout << std::endl;	// delete
-}
-
-glm::vec2 Game::getMouseWorldPos(Window* window, Input* input) {
-	glm::vec2 mouseWorldPos = ((input->getMousePos() - window->getResolution() / 2.0f) / (window->getResolution() / 2.0f)) * (window->getWorldScale() / 2.0f);
-	mouseWorldPos.y *= -1;
-	
-	return mouseWorldPos;
 }
 
 void Game::checkPocketedBalls() {
@@ -400,7 +393,7 @@ bool Game::foul() {
 }
 
 bool Game::positionOutOfBounds(Window* window, Input* input) {
-	glm::vec2 mouseWorldPos = getMouseWorldPos(window, input);
+	glm::vec2 mouseWorldPos = input->getMouseWorldPos();
 
 	for (int i = 0; i < balls.size(); i++) {
 		if (glm::distance(balls.at(i).getPos(), mouseWorldPos) < 1.0f) {
