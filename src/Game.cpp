@@ -1,6 +1,13 @@
 #include <Game.h>
 
-Game::Game() {
+Game::Game(Input* input) {
+	this->input = input;
+
+	startMenu = Menu({ 0.0f, 0.0f }, input);
+	TextLabel playLabel("Play", -2.5f, 1, PoolColors::black(), Font::Monoton, FontSize::One);
+	MenuOption playMenuOption(playLabel, MenuOptionType::Play, { 0.0f, 0.5f }, { 2.0f, 1.0f });
+	startMenu.addMenuOption(playMenuOption);
+
 	table = GameObject(Shape::Rectangle, glm::vec2(0.0f, 0.0f), glm::vec2(52.0f, 31.0f), glm::mat4(1.0f), "res/textures/table.png", false);
 
 	sides[0] = Side({ -24.0f, 13.5f - glm::sqrt(2) }, { -24.0f - glm::sqrt(2), 13.5f }, { 1 / glm::sqrt(2), 1 / glm::sqrt(2) });
@@ -100,9 +107,9 @@ Game::Game() {
 	players[0] = {1, Unassigned};
 	players[1] = {2, Unassigned};
 
-	player1Panel = Panel({ -21.0f, 18.0f }, { 10.0f, 5.0f }, "res/textures/balls/one_ball.png", false);
+	player1Panel = Panel({ -21.0f, 18.0f }, "res/textures/balls/one_ball.png", { 10.0f, 5.0f }, false);
 	player1Panel.addTextLabel("Player 1", -5.0f, 1.5f, PoolColors::black(), Font::Monoton, FontSize::One);
-	player2Panel = Panel({ 21.0f, 18.0f }, { 10.0f, 5.0f }, "res/textures/balls/one_ball.png", false);
+	player2Panel = Panel({ 21.0f, 18.0f }, "res/textures/balls/one_ball.png", { 10.0f, 5.0f }, false);
 	player2Panel.addTextLabel("Player 2", -5.0f, 1.5f, PoolColors::black(), Font::Monoton, FontSize::One);
 
 	currentPlayerIndex = 0;
@@ -112,7 +119,7 @@ Game::~Game() {
 
 }
 
-void Game::update(Window* window, Input* input, float deltaTime) {
+void Game::update(Window* window, float deltaTime) {
 	bool ballsMovingThisFrame = ballsAreMoving();
 
 	if (!ballsMovingThisFrame && ballsMovedLastFrame) {
@@ -132,12 +139,12 @@ void Game::update(Window* window, Input* input, float deltaTime) {
 	//std::cout << "ballsAreMoving(): " << ballsAreMoving() << std::endl;	// delete
 	//std::cout << "cueBallShouldBePlaced: " << cueBallShouldBePlaced << std::endl;	// delete
 	if (!ballsMovingThisFrame && !cueBallShouldBePlaced) {
-		setCuePos(window, input);
+		setCuePos(window);
 	}
 
 	checkPocketedBalls();
 
-	if (cueBallShouldBePlaced && !ballsMovingThisFrame && !positionOutOfBounds(window, input)) {
+	if (cueBallShouldBePlaced && !ballsMovingThisFrame && !positionOutOfBounds(window)) {
 		cueBall.setPos(input->getMouseWorldPos());
 		
 		if (input->leftMousePressed()) {
@@ -279,7 +286,7 @@ void Game::setPositions() {
 	//}																															//
 }
 
-void Game::setCuePos(Window* window, Input* input) {
+void Game::setCuePos(Window* window) {
 	glm::vec2 mouseWorldPos = input->getMouseWorldPos();
 
 	if (input->leftMousePressed()) {
@@ -392,7 +399,7 @@ bool Game::foul() {
 	return false;
 }
 
-bool Game::positionOutOfBounds(Window* window, Input* input) {
+bool Game::positionOutOfBounds(Window* window) {
 	glm::vec2 mouseWorldPos = input->getMouseWorldPos();
 
 	for (int i = 0; i < balls.size(); i++) {

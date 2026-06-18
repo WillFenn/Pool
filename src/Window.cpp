@@ -178,7 +178,7 @@ void Window::drawFrame(std::vector<GameObject>* objects, std::vector<Line>* line
 
 	for (Panel panel : *panels) {
 		if (panel.getTexture() != nullptr) {
-			drawRectangleTexture(panel.getPos(), panel.getScale(), glm::mat4(1.0f), panel.getTexture());
+			drawRectangleTexture(panel.getPos(), panel.getTextureScale(), glm::mat4(1.0f), panel.getTexture());
 		}
 
 		for (TextLabel textLabel : *panel.getTextLabels()) {

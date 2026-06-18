@@ -10,8 +10,9 @@
 
 class TextLabel {
 public:
-	TextLabel(std::string text, float xStart, float yBaseline, glm::vec4 color, Font font, FontSize fontSize, std::string textureFilepath, bool flipTexture, glm::vec2 scale);
-	TextLabel(std::string text, float xStart, float yBaseline, glm::vec4 color, Font font, FontSize fontSize, glm::vec2 scale = { 0.0f, 0.0f });
+	TextLabel(std::string text, float xStart, float yBaseline, glm::vec4 color, Font font, FontSize fontSize, std::string textureFilepath, bool flipTexture, glm::vec2 texturePos, glm::vec2 textureScale);
+	TextLabel(std::string text, float xStart, float yBaseline, glm::vec4 color, Font font, FontSize fontSize);
+	TextLabel();
 	std::string getText();
 	float getxStart();
 	float getyBaseline();
@@ -28,5 +29,6 @@ private:
 	Font font;
 	FontSize fontSize;
 	std::shared_ptr<Texture> texture;
-	glm::vec2 scale;
+	glm::vec2 texturePos;
+	glm::vec2 textureScale;
 };

@@ -16,14 +16,29 @@ Menu::Menu(glm::vec2 pos, Input* input)
 
 Menu::Menu() {}
 
+void Menu::addMenuOption(MenuOption menuOption) {
+	menuOptions.push_back(menuOption);
+}
+
 void Menu::Update() {
 	glm::vec2 mouseWorldPos = input->getMouseWorldPos();
 
 	for (MenuOption menuOption : menuOptions) {
-		if (mouseWorldPos.x >= menuOption.pos)
+		if (mouseWorldPos.x >= menuOption.getPos().x - menuOption.getScale().x / 2 && mouseWorldPos.x <= menuOption.getPos().x + menuOption.getScale().x / 2
+			&& mouseWorldPos.y >= menuOption.getPos().y - menuOption.getScale().y / 2 && mouseWorldPos.y <= menuOption.getPos().y + menuOption.getScale().y / 2) {
+			highlightedOption = menuOption.getMenuOptionType();
+
+			if (input->leftMouseReleased()) {
+				selectedOption = highlightedOption;
+			}
+
+			return;
+		}
 	}
+
+	highlightedOption = MenuOptionType::None;
 }
 
 MenuOptionType Menu::optionSelected() {
-
+	return selectedOption;
 }

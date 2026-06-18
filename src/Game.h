@@ -4,6 +4,7 @@
 #include <limits>
 #include <PoolMath.h>
 #include <PoolColors.h>
+#include <Menu.h>
 #include <GameObject.h>
 #include <Panel.h>
 #include <Texture.h>
@@ -17,9 +18,9 @@
 
 class Game {
 public:
-	Game();
+	Game(Input* input);
 	~Game();
-	void update(Window* window, Input* input, float deltaTime);
+	void update(Window* window, float deltaTime);
 	bool ballsAreMoving();
 	GameObject* getTable();
 	Side* getSides();
@@ -39,15 +40,17 @@ public:
 
 private:
 	void setPositions();
-	void setCuePos(Window* window, Input* input);
+	void setCuePos(Window* window);
 	void checkPocketedBalls();
 	bool foul();
-	bool positionOutOfBounds(Window* window, Input* input);
+	bool positionOutOfBounds(Window* window);
 	bool detectBallCollision(glm::vec2 ball1Pos, glm::vec2 ball2Pos, glm::vec2* outCollisionNormal);
 	bool allBallsPocketed(BallType ballType);
 	void updatePlayerPanels();
 
 private:
+	Input* input;
+	Menu startMenu;
 	GameObject table;
 	Side sides[18];
 	glm::vec2 pocketPositions[6];

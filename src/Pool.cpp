@@ -17,11 +17,11 @@
 int main() {
 	Window window;
 
-	Input input(window.getglfwwindow());
+	Input input(window.getglfwwindow(), window.getResolution(), window.getWorldScale());
 
 	Physics physics;
 
-	Game game;
+	Game game(&input);
 	
 	int numFrames = 0;
 
@@ -35,7 +35,7 @@ int main() {
 
 		double deltaTime = input.getDeltaTime();
 
-		game.update(&window, &input, deltaTime);
+		game.update(&window, deltaTime);
 
 		physics.update(game.getSides(), game.getBalls(), game.getCueBall(), game.getCue(), deltaTime);
 

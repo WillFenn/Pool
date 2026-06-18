@@ -1,11 +1,26 @@
 #include <MenuOption.h>
 
-MenuOption::MenuOption(std::string text, float xStart, float yBaseline, glm::vec4 color, Font font, FontSize fontSize, std::string textureFilepath, bool flipTexture, glm::vec2 scale, MenuOptionType menuOptionType) {
-
-}
-
-MenuOption::MenuOption(std::string text, float xStart, float yBaseline, glm::vec4 color, Font font, FontSize fontSize, glm::vec2 scale, MenuOptionType menuOptionType) {
-
+MenuOption::MenuOption(TextLabel textLabel, MenuOptionType menuOptionType, glm::vec2 pos, glm::vec2 scale) {
+	this->textLabel = textLabel;
+	this->menuOptionType = menuOptionType;
+	this->pos = pos;
+	this->scale = scale;
 }
 
 MenuOption::MenuOption() {}
+
+TextLabel* MenuOption::getTextLabel() {
+	return &textLabel;
+}
+
+MenuOptionType MenuOption::getMenuOptionType() {
+	return menuOptionType;
+}
+
+glm::vec2 MenuOption::getPos() {
+	return pos;
+}
+
+glm::vec2 MenuOption::getScale() {
+	return scale;
+}
