@@ -3,7 +3,7 @@
 Game::Game(Input* input) {
 	this->input = input;
 
-	startMenu = Menu({ 5.0f, 5.0f }, "res/textures/balls/one_ball.png", { 30.0f, 15.0f }, false, input);
+	startMenu = Menu({ 0.0f, 0.0f }, "res/textures/balls/one_ball.png", { 30.0f, 15.0f }, false, input);
 	TextLabel playLabel("Play", -2.5f, 0.0f, PoolColors::black(), Font::Monoton, FontSize::One, "res/textures/table.png", false, { 0.0f, 0.5f }, { 5.0f, 1.0f });
 	MenuOption playMenuOption(MenuOptionType::Play, { 0.0f, 0.5f }, { 5.0f, 1.0f });
 	startMenu.addMenuOption(playMenuOption, playLabel);
