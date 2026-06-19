@@ -52,11 +52,6 @@ Window::Window() {
 	GLCALL(glCreateBuffers(1, &rectTexturevbo));
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectTexturevbo));
 
-	//glm::vec2 rectTextureVertices[8] = { { -0.5f, 0.5f }, { 0.0f, 1.0f },
-	//					   				 { 0.5f, 0.5f }, { 1.0f, 1.0f },
-	//									 { 0.5f, -0.5f }, { 1.0f, 0.0f },
-	//									 { -0.5f, -0.5f }, { 0.0f, 0.0f } };
-
 	glm::vec2 rectTextureVertices[8] = { { -0.5f, 0.5f }, { 0.0f, 0.0f },
 										 { 0.5f, 0.5f }, { 1.0f, 0.0f },
 										 { 0.5f, -0.5f }, { 1.0f, 1.0f },
@@ -177,22 +172,32 @@ void Window::drawFrame(std::vector<GameObject>* objects, std::vector<Line>* line
 	}
 
 	for (Panel panel : *panels) {
+		std::cout << "panel being drawn" << std::endl;	// delete
 		if (panel.getTexture() != nullptr) {
 			drawRectangleTexture(panel.getPos(), panel.getTextureScale(), glm::mat4(1.0f), panel.getTexture());
 		}
 
 		for (TextLabel textLabel : *panel.getTextLabels()) {
+			std::cout << textLabel.getText() << std::endl;	// delete
+			if (textLabel.getTexture() != nullptr) {
+				std::cout << "text label texture being drawn" << std::endl;	// delete
+				drawRectangleTexture(panel.getPos() + textLabel.getTexturePos(), textLabel.getTextureScale(), glm::mat4(1.0f), textLabel.getTexture());
+			}
+			else if (textLabel.getTexture() == nullptr) {	// delete
+				std::cout << "text label texture pointer == nullptr" << std::endl;
+			}
+
 			drawText(panel.getPos().x + textLabel.getxStart(), panel.getPos().y + textLabel.getyBaseline(), textLabel.getFont(), textLabel.getFontSize(), textLabel.getColor(), textLabel.getText());
 		}
 	}
 
 	// delete
-	drawText(0, 0, Font::Monoton, FontSize::One, PoolColors::black(), "font size: 1");
-	drawText(0, 1, Font::Monoton, FontSize::Two, PoolColors::black(), "font size: 2");
-	drawText(0, 3, Font::Monoton, FontSize::Three, PoolColors::black(), "font size: 3");
-	drawText(0, 6, Font::Monoton, FontSize::Four, PoolColors::black(), "font size: 4");
-	drawText(0, 10, Font::Monoton, FontSize::Five, PoolColors::transparentBlack(), "font size: 5");
-	drawText(0, 15, Font::Monoton, FontSize::Five, PoolColors::transparentWhite(), "font size: 5");
+	//drawText(0, 0, Font::Monoton, FontSize::One, PoolColors::black(), "font size: 1");
+	//drawText(0, 1, Font::Monoton, FontSize::Two, PoolColors::black(), "font size: 2");
+	//drawText(0, 3, Font::Monoton, FontSize::Three, PoolColors::black(), "font size: 3");
+	//drawText(0, 6, Font::Monoton, FontSize::Four, PoolColors::black(), "font size: 4");
+	//drawText(0, 10, Font::Monoton, FontSize::Five, PoolColors::transparentBlack(), "font size: 5");
+	//drawText(0, 15, Font::Monoton, FontSize::Five, PoolColors::transparentWhite(), "font size: 5");
 
 	glfwSwapBuffers(glfwwindow);
 

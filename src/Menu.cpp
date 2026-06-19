@@ -16,29 +16,38 @@ Menu::Menu(glm::vec2 pos, Input* input)
 
 Menu::Menu() {}
 
-void Menu::addMenuOption(MenuOption menuOption) {
+void Menu::addMenuOption(MenuOption menuOption, TextLabel textLabel) {
 	menuOptions.push_back(menuOption);
+	textLabels.push_back(textLabel);
 }
 
-void Menu::Update() {
+void Menu::update() {
+	bool optionSelected = false;
+
 	glm::vec2 mouseWorldPos = input->getMouseWorldPos();
 
-	for (MenuOption menuOption : menuOptions) {
-		if (mouseWorldPos.x >= menuOption.getPos().x - menuOption.getScale().x / 2 && mouseWorldPos.x <= menuOption.getPos().x + menuOption.getScale().x / 2
-			&& mouseWorldPos.y >= menuOption.getPos().y - menuOption.getScale().y / 2 && mouseWorldPos.y <= menuOption.getPos().y + menuOption.getScale().y / 2) {
-			highlightedOption = menuOption.getMenuOptionType();
+	for (int i = 0; i < menuOptions.size(); i++) {
+		if (mouseWorldPos.x >= pos.x + menuOptions.at(i).getPos().x - menuOptions.at(i).getScale().x / 2 && mouseWorldPos.x <= pos.x + menuOptions.at(i).getPos().x + menuOptions.at(i).getScale().x / 2
+			&& mouseWorldPos.y >= pos.y + menuOptions.at(i).getPos().y - menuOptions.at(i).getScale().y / 2 && mouseWorldPos.y <= pos.y + menuOptions.at(i).getPos().y + menuOptions.at(i).getScale().y / 2) {
+			highlightedOption = menuOptions.at(i).getMenuOptionType();
+			textLabels.at(i).setColor(PoolColors::white());
 
 			if (input->leftMouseReleased()) {
 				selectedOption = highlightedOption;
 			}
 
-			return;
+			
+		}
+		else {
+			textLabels.at(i).setColor(PoolColors::black());
 		}
 	}
 
-	highlightedOption = MenuOptionType::None;
+	if (!optionSelected) {
+		highlightedOption = MenuOptionType::None;
+	}
 }
 
-MenuOptionType Menu::optionSelected() {
+MenuOptionType Menu::getSelectedOption() {
 	return selectedOption;
 }

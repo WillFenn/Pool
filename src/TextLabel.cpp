@@ -7,7 +7,7 @@ TextLabel::TextLabel(std::string text, float xStart, float yBaseline, glm::vec4 
 	this->color = color;
 	this->font = font;
 	this->fontSize = fontSize;
-	std::make_shared<Texture>(textureFilepath, false, flipTexture);
+	texture = std::make_shared<Texture>(textureFilepath, false, flipTexture);
 	this->texturePos = texturePos;
 	this->textureScale = textureScale;
 }
@@ -41,6 +41,10 @@ glm::vec4 TextLabel::getColor() {
 	return color;
 }
 
+void TextLabel::setColor(glm::vec4 color) {
+	this->color = color;
+}
+
 Font TextLabel::getFont() {
 	return font;
 }
@@ -49,6 +53,14 @@ FontSize TextLabel::getFontSize() {
 	return fontSize;
 }
 
-glm::vec2 TextLabel::getScale() {
+Texture* TextLabel::getTexture() {
+	return texture.get();
+}
+
+glm::vec2 TextLabel::getTexturePos() {
+	return texturePos;
+}
+
+glm::vec2 TextLabel::getTextureScale() {
 	return textureScale;
 }

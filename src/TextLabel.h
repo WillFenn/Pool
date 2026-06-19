@@ -17,9 +17,12 @@ public:
 	float getxStart();
 	float getyBaseline();
 	glm::vec4 getColor();
+	void setColor(glm::vec4 color);
 	Font getFont();
 	FontSize getFontSize();
-	glm::vec2 getScale();
+	Texture* getTexture();
+	glm::vec2 getTexturePos();
+	glm::vec2 getTextureScale();
 
 private:
 	std::string text;

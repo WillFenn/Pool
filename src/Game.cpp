@@ -3,10 +3,13 @@
 Game::Game(Input* input) {
 	this->input = input;
 
-	startMenu = Menu({ 0.0f, 0.0f }, input);
-	TextLabel playLabel("Play", -2.5f, 1, PoolColors::black(), Font::Monoton, FontSize::One);
-	MenuOption playMenuOption(playLabel, MenuOptionType::Play, { 0.0f, 0.5f }, { 2.0f, 1.0f });
-	startMenu.addMenuOption(playMenuOption);
+	startMenu = Menu({ 5.0f, 5.0f }, "res/textures/balls/one_ball.png", { 30.0f, 15.0f }, false, input);
+	TextLabel playLabel("Play", -2.5f, 0.0f, PoolColors::black(), Font::Monoton, FontSize::One, "res/textures/table.png", false, { 0.0f, 0.5f }, { 5.0f, 1.0f });
+	MenuOption playMenuOption(MenuOptionType::Play, { 0.0f, 0.5f }, { 5.0f, 1.0f });
+	startMenu.addMenuOption(playMenuOption, playLabel);
+	TextLabel quitLabel("Quit", -2.5f, -1.0f, PoolColors::black(), Font::Monoton, FontSize::One, "res/textures/table.png", false, { 0.0f, -0.5f }, { 5.0f, 1.0f });
+	MenuOption quitMenuOption(MenuOptionType::Quit, { 0.0f, -0.5f }, { 5.0f, 1.0f });
+	startMenu.addMenuOption(quitMenuOption, quitLabel);
 
 	table = GameObject(Shape::Rectangle, glm::vec2(0.0f, 0.0f), glm::vec2(52.0f, 31.0f), glm::mat4(1.0f), "res/textures/table.png", false);
 
@@ -120,6 +123,8 @@ Game::~Game() {
 }
 
 void Game::update(Window* window, float deltaTime) {
+	startMenu.update();
+
 	bool ballsMovingThisFrame = ballsAreMoving();
 
 	if (!ballsMovingThisFrame && ballsMovedLastFrame) {
@@ -170,6 +175,10 @@ void Game::update(Window* window, float deltaTime) {
 	updatePlayerPanels();
 
 	ballsMovedLastFrame = ballsMovingThisFrame;
+}
+
+Menu* Game::getStartMenu() {
+	return &startMenu;
 }
 
 bool Game::ballsAreMoving() {

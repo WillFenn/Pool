@@ -68,6 +68,7 @@ int main() {
 		std::vector<Panel> panels;
 		panels.push_back(*game.getPlayer1Panel());
 		panels.push_back(*game.getPlayer2Panel());
+		panels.push_back(*game.getStartMenu());
 
 		window.drawFrame(&objects, &lines, &panels);
 	}

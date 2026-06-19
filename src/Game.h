@@ -21,6 +21,7 @@ public:
 	Game(Input* input);
 	~Game();
 	void update(Window* window, float deltaTime);
+	Menu* getStartMenu();
 	bool ballsAreMoving();
 	GameObject* getTable();
 	Side* getSides();

@@ -1,17 +1,12 @@
 #include <MenuOption.h>
 
-MenuOption::MenuOption(TextLabel textLabel, MenuOptionType menuOptionType, glm::vec2 pos, glm::vec2 scale) {
-	this->textLabel = textLabel;
+MenuOption::MenuOption(MenuOptionType menuOptionType, glm::vec2 pos, glm::vec2 scale) {
 	this->menuOptionType = menuOptionType;
 	this->pos = pos;
 	this->scale = scale;
 }
 
 MenuOption::MenuOption() {}
-
-TextLabel* MenuOption::getTextLabel() {
-	return &textLabel;
-}
 
 MenuOptionType MenuOption::getMenuOptionType() {
 	return menuOptionType;

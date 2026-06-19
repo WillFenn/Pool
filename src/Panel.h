@@ -17,9 +17,11 @@ public:
 	Texture* getTexture();
 	std::vector<TextLabel>* getTextLabels();
 
-private:
+protected:
+	std::vector<TextLabel> textLabels;
 	glm::vec2 pos;
+
+private:
 	std::shared_ptr<Texture> texture;
 	glm::vec2 textureScale;
-	std::vector<TextLabel> textLabels;
 };
