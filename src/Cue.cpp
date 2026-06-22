@@ -1,7 +1,7 @@
 #include <Cue.h>
 
-Cue::Cue(glm::vec2 pos, std::string textureFilepath, bool flipTexture)
-: GameObject(Shape::Rectangle, pos, { 10.0f, 0.2f }, glm::mat4(1.0f), textureFilepath, flipTexture) {
+Cue::Cue(glm::vec2 pos, std::string textureFilepath, bool flipTexture, bool active)
+: GameObject(Shape::Rectangle, pos, { 10.0f, 0.2f }, glm::mat4(1.0f), textureFilepath, flipTexture, active) {
 	speed = 0.0f;
 	wasPulledBack = false;
 }

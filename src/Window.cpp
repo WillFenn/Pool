@@ -158,12 +158,14 @@ void Window::drawFrame(std::vector<GameObject>* objects, std::vector<Line>* line
 	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
 
 	for (GameObject object : *objects) {
-		if (object.getShape() == Shape::Rectangle) {
-			drawRectangleTexture(object.getPos(), object.getScale(), object.getRotationMat(), object.getTexture());
-		}
-		else if (object.getShape() == Shape::Sphere) {
-			drawSphereTexture(object.getScale().x / 2, object.getPos(), object.getRotationMat(), object.getTexture());
-			drawRectangleTexture(object.getPos(), reflectionsScale, glm::mat4(1.0f), reflectionsTexture);
+		if (object.getActive()) {
+			if (object.getShape() == Shape::Rectangle) {
+				drawRectangleTexture(object.getPos(), object.getScale(), object.getRotationMat(), object.getTexture());
+			}
+			else if (object.getShape() == Shape::Sphere) {
+				drawSphereTexture(object.getScale().x / 2, object.getPos(), object.getRotationMat(), object.getTexture());
+				drawRectangleTexture(object.getPos(), reflectionsScale, glm::mat4(1.0f), reflectionsTexture);
+			}
 		}
 	}
 
@@ -172,22 +174,24 @@ void Window::drawFrame(std::vector<GameObject>* objects, std::vector<Line>* line
 	}
 
 	for (Panel panel : *panels) {
-		std::cout << "panel being drawn" << std::endl;	// delete
-		if (panel.getTexture() != nullptr) {
-			drawRectangleTexture(panel.getPos(), panel.getTextureScale(), glm::mat4(1.0f), panel.getTexture());
-		}
-
-		for (TextLabel textLabel : *panel.getTextLabels()) {
-			std::cout << textLabel.getText() << std::endl;	// delete
-			if (textLabel.getTexture() != nullptr) {
-				std::cout << "text label texture being drawn" << std::endl;	// delete
-				drawRectangleTexture(panel.getPos() + textLabel.getTexturePos(), textLabel.getTextureScale(), glm::mat4(1.0f), textLabel.getTexture());
-			}
-			else if (textLabel.getTexture() == nullptr) {	// delete
-				std::cout << "text label texture pointer == nullptr" << std::endl;
+		if (panel.getActive()) {
+			std::cout << "panel being drawn" << std::endl;	// delete
+			if (panel.getTexture() != nullptr) {
+				drawRectangleTexture(panel.getPos(), panel.getTextureScale(), glm::mat4(1.0f), panel.getTexture());
 			}
 
-			drawText(panel.getPos().x + textLabel.getxStart(), panel.getPos().y + textLabel.getyBaseline(), textLabel.getFont(), textLabel.getFontSize(), textLabel.getColor(), textLabel.getText());
+			for (TextLabel textLabel : *panel.getTextLabels()) {
+				std::cout << textLabel.getText() << std::endl;	// delete
+				if (textLabel.getTexture() != nullptr) {
+					std::cout << "text label texture being drawn" << std::endl;	// delete
+					drawRectangleTexture(panel.getPos() + textLabel.getTexturePos(), textLabel.getTextureScale(), glm::mat4(1.0f), textLabel.getTexture());
+				}
+				else if (textLabel.getTexture() == nullptr) {	// delete
+					std::cout << "text label texture pointer == nullptr" << std::endl;
+				}
+
+				drawText(panel.getPos().x + textLabel.getxStart(), panel.getPos().y + textLabel.getyBaseline(), textLabel.getFont(), textLabel.getFontSize(), textLabel.getColor(), textLabel.getText());
+			}
 		}
 	}
 

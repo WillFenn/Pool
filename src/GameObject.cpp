@@ -1,11 +1,12 @@
 #include <GameObject.h>
 
-GameObject::GameObject(Shape shape, glm::vec2 pos, glm::vec2 scale, glm::mat4 rotationMat, std::string textureFilepath, bool flipTexture) {
+GameObject::GameObject(Shape shape, glm::vec2 pos, glm::vec2 scale, glm::mat4 rotationMat, std::string textureFilepath, bool flipTexture, bool active) {
 	this->shape = shape;
 	this->pos = pos;
 	this->scale = scale;
 	this->rotationMat = rotationMat;
 	texture = std::make_shared<Texture>(textureFilepath, false, flipTexture);
+	this->active = active;
 }
 
 GameObject::GameObject() {}
@@ -37,4 +38,12 @@ void GameObject::setRotationMat(glm::mat4 rotationMat) {
 
 Texture* GameObject::getTexture() {
 	return texture.get();
+}
+
+bool GameObject::getActive() {
+	return active;
+}
+
+void GameObject::setActive(bool active) {
+	this->active = active;
 }

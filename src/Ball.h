@@ -10,7 +10,7 @@ enum BallType { Unassigned, Striped, Solid };
 
 class Ball : public GameObject {
 public:
-	Ball(glm::vec2 pos, std::string textureFilepath, bool flipTexture, int index, BallType ballType);
+	Ball(glm::vec2 pos, std::string textureFilepath, bool flipTexture, bool active, int index, BallType ballType);
 	Ball();
 	int getIndex();
 	BallType getBallType();

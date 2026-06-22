@@ -10,7 +10,7 @@ enum Shape { Rectangle, Sphere };
 
 class GameObject {
 public:
-	GameObject(Shape shape, glm::vec2 pos, glm::vec2 scale, glm::mat4 rotationMat, std::string textureFilepath, bool flipTexture);
+	GameObject(Shape shape, glm::vec2 pos, glm::vec2 scale, glm::mat4 rotationMat, std::string textureFilepath, bool flipTexture, bool active);
 	GameObject();
 	Shape getShape();
 	glm::vec2 getPos();
@@ -19,6 +19,8 @@ public:
 	glm::mat4 getRotationMat();
 	void setRotationMat(glm::mat4 rotationMat);
 	Texture* getTexture();
+	bool getActive();
+	void setActive(bool active);
 
 private:
 	Shape shape;
@@ -26,4 +28,5 @@ private:
 	glm::vec2 scale;
 	glm::mat4 rotationMat;
 	std::shared_ptr<Texture> texture;
+	bool active;
 };

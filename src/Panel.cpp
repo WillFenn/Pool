@@ -1,9 +1,10 @@
 #include <Panel.h>
 
-Panel::Panel(glm::vec2 pos, std::string textureFilepath, glm::vec2 textureScale, bool flipTexture) {
+Panel::Panel(glm::vec2 pos, std::string textureFilepath, glm::vec2 textureScale, bool flipTexture, bool active) {
 	this->pos = pos;
 	texture = std::make_shared<Texture>(textureFilepath, false, flipTexture);
 	this->textureScale = textureScale;
+	this->active = active;
 }
 
 Panel::Panel(glm::vec2 pos) {
@@ -12,8 +13,8 @@ Panel::Panel(glm::vec2 pos) {
 
 Panel::Panel() {}
 
-void Panel::addTextLabel(std::string text, float xStart, float yBaseline, glm::vec4 color, Font font, FontSize fontSize) {
-	textLabels.push_back(TextLabel(text, xStart, yBaseline, color, font, fontSize));
+void Panel::addTextLabel(TextLabel textLabel) {
+	textLabels.push_back(textLabel);
 }
 
 glm::vec2 Panel::getPos() {
@@ -30,4 +31,12 @@ Texture* Panel::getTexture() {
 
 std::vector<TextLabel>* Panel::getTextLabels() {
 	return &textLabels;
+}
+
+bool Panel::getActive() {
+	return active;
+}
+
+void Panel::setActive(bool active) {
+	this->active = active;
 }

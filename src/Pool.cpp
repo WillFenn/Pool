@@ -27,7 +27,7 @@ int main() {
 
 	double timeToFirstFrame = input.getTime();	
 
-	while (!(input.escKeyPressed() || window.shouldClose())) {
+	while (!(game.shouldClose() || window.shouldClose())) {
 		numFrames++;
 
 		std::cout << std::endl << std::endl;

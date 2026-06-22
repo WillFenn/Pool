@@ -16,11 +16,14 @@
 #include <Ball.h>
 #include <ext/matrix_transform.hpp>
 
+enum GameState { ShowStartMenu, PlayGame, ShowGameOver, Quit };
+
 class Game {
 public:
 	Game(Input* input);
 	~Game();
 	void update(Window* window, float deltaTime);
+	bool shouldClose();
 	Menu* getStartMenu();
 	bool ballsAreMoving();
 	GameObject* getTable();
@@ -36,8 +39,6 @@ public:
 	bool trajectory(glm::vec2* pointA, glm::vec2* pointB);
 	Panel* getPlayer1Panel();
 	Panel* getPlayer2Panel();
-	bool getGameDone();
-	int getWinner();
 
 private:
 	void setPositions();
@@ -51,7 +52,9 @@ private:
 
 private:
 	Input* input;
+	GameState currentState;
 	Menu startMenu;
+	Menu gameOverMenu;
 	GameObject table;
 	Side sides[18];
 	glm::vec2 pocketPositions[6];
@@ -72,6 +75,4 @@ private:
 	Panel player1Panel;
 	Panel player2Panel;
 	int currentPlayerIndex;
-	bool gameDone = false;
-	int winner;
 };

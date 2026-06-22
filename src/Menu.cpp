@@ -1,7 +1,7 @@
 #include <Menu.h>
 
-Menu::Menu(glm::vec2 pos, std::string textureFilepath, glm::vec2 textureScale, bool flipTexture, Input* input)
-: Panel(pos, textureFilepath, textureScale, flipTexture) {
+Menu::Menu(glm::vec2 pos, std::string textureFilepath, glm::vec2 textureScale, bool flipTexture, bool active, Input* input)
+: Panel(pos, textureFilepath, textureScale, flipTexture, active) {
 	this->input = input;
 	highlightedOption = MenuOptionType::None;
 	selectedOption = MenuOptionType::None;
