@@ -16,4 +16,4 @@ private:
 	MenuOptionType menuOptionType;
 	glm::vec2 pos;
 	glm::vec2 scale;
-};
+} ;

@@ -27,6 +27,8 @@ int main() {
 
 	double timeToFirstFrame = input.getTime();	
 
+	std::cout << "game.shouldClose(): " << game.shouldClose() << std::endl;		// delete
+	std::cout << "window.shouldClose(): " << window.shouldClose() << std::endl;	// delete
 	while (!(game.shouldClose() || window.shouldClose())) {
 		numFrames++;
 
@@ -66,9 +68,9 @@ int main() {
 		lines.push_back({ trajectoryA, trajectoryB });
 
 		std::vector<Panel> panels;
-		panels.push_back(*game.getPlayer1Panel());
-		panels.push_back(*game.getPlayer2Panel());
 		panels.push_back(*game.getStartMenu());
+		panels.push_back(*game.getGameOverMenu());
+		panels.insert(panels.end(), game.getPlayerPanels()->begin(), game.getPlayerPanels()->end());
 
 		window.drawFrame(&objects, &lines, &panels);
 	}

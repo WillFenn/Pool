@@ -16,7 +16,7 @@
 #include <Ball.h>
 #include <ext/matrix_transform.hpp>
 
-enum GameState { ShowStartMenu, PlayGame, ShowGameOver, Quit };
+enum GameState { ShowStartMenu, PlayGame, ShowGameOver, Close };
 
 class Game {
 public:
@@ -25,6 +25,7 @@ public:
 	void update(Window* window, float deltaTime);
 	bool shouldClose();
 	Menu* getStartMenu();
+	Menu* getGameOverMenu();
 	bool ballsAreMoving();
 	GameObject* getTable();
 	Side* getSides();
@@ -37,8 +38,7 @@ public:
 	bool cueBallShouldBeDrawn();
 	bool cueShouldBeDrawn();
 	bool trajectory(glm::vec2* pointA, glm::vec2* pointB);
-	Panel* getPlayer1Panel();
-	Panel* getPlayer2Panel();
+	std::vector<Panel>* getPlayerPanels();
 
 private:
 	void setPositions();
@@ -48,7 +48,6 @@ private:
 	bool positionOutOfBounds(Window* window);
 	bool detectBallCollision(glm::vec2 ball1Pos, glm::vec2 ball2Pos, glm::vec2* outCollisionNormal);
 	bool allBallsPocketed(BallType ballType);
-	void updatePlayerPanels();
 
 private:
 	Input* input;
@@ -72,7 +71,6 @@ private:
 	Cue cue;
 	std::vector<Ball> balls;
 	Player players[2];
-	Panel player1Panel;
-	Panel player2Panel;
+	std::vector<Panel> playerPanels;
 	int currentPlayerIndex;
 };

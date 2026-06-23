@@ -5,7 +5,7 @@ Game::Game(Input* input) {
 
 	currentState = GameState::ShowStartMenu;
 
-	startMenu = Menu({ 0.0f, 0.0f }, "res/textures/balls/one_ball.png", { 30.0f, 15.0f }, true, false, input);
+	startMenu = Menu({ 0.0f, 0.0f }, "res/textures/balls/one_ball.png", { 30.0f, 15.0f }, false, true, input);
 	TextLabel playLabel("Play", -2.5f, 0.0f, PoolColors::black(), Font::Monoton, FontSize::One, "res/textures/table.png", false, { 0.0f, 0.5f }, { 5.0f, 1.0f });
 	MenuOption playMenuOption(MenuOptionType::Play, { 0.0f, 0.5f }, { 5.0f, 1.0f });
 	startMenu.addMenuOption(playMenuOption, playLabel);
@@ -16,8 +16,8 @@ Game::Game(Input* input) {
 	gameOverMenu = Menu({ 0.0f, 0.0f }, "res/textures/balls/one_ball.png", { 30.0f, 15.0f }, false, false, input);
 	TextLabel playAgainLabel("Play Again", -2.5f, 0.0f, PoolColors::black(), Font::Monoton, FontSize::One, "res/textures/table.png", false, { 0.0f, 0.5f }, { 5.0f, 1.0f });
 	MenuOption playAgainMenuOption(MenuOptionType::Play, { 0.0f, 0.5f }, { 5.0f, 1.0f });
-	startMenu.addMenuOption(playAgainMenuOption, playAgainLabel);
-	startMenu.addMenuOption(quitMenuOption, quitLabel);
+	gameOverMenu.addMenuOption(playAgainMenuOption, playAgainLabel);
+	gameOverMenu.addMenuOption(quitMenuOption, quitLabel);
 
 	table = GameObject(Shape::Rectangle, glm::vec2(0.0f, 0.0f), glm::vec2(52.0f, 31.0f), glm::mat4(1.0f), "res/textures/table.png", false, false);
 
@@ -39,26 +39,6 @@ Game::Game(Input* input) {
 	sides[15] = Side({ -24.0f + glm::sqrt(2), -13.5 }, { -24.0f, -13.5f - glm::sqrt(2) }, { PoolMath::normal(glm::vec2(-24.0f, -13.5f - glm::sqrt(2)) - glm::vec2(-24.0f + glm::sqrt(2), -13.5f)) });
 	sides[16] = Side({ -24.0f - glm::sqrt(2), -13.5f }, { -24.0f, -13.5f + glm::sqrt(2) }, { PoolMath::normal(glm::vec2(-24.0f, -13.5f + glm::sqrt(2)) - glm::vec2(-24.0f - glm::sqrt(2), -13.5f)) });
 	sides[17] = Side({ -24.0f, -13.5f + glm::sqrt(2) }, { -24.0f, 13.5f - glm::sqrt(2) }, { 1.0f, 0.0f });
-	
-	// delete
-	//sides[0] = { { { -24.0f, 13.5f - glm::sqrt(2) }, { -24.0f - glm::sqrt(2), 13.5f } }, { 1 / glm::sqrt(2), 1 / glm::sqrt(2)} };
-	//sides[1] = { { { -24.0f, 13.5f + glm::sqrt(2) }, { -24.0f + glm::sqrt(2), 13.5f } }, { -(1 / glm::sqrt(2)), -(1 / glm::sqrt(2))} };
-	//sides[2] = { { { -24.0f + glm::sqrt(2), 13.5f }, { -1.2f, 13.5f } }, { 0.0f, -1.0f } };
-	//sides[3] = { { { -1.2f, 13.5f }, { -1.0f, 14.5f } }, { PoolMath::normal(glm::vec2(-1.0f, 14.5f) - glm::vec2(-1.2f, 13.5f)) } };
-	//sides[4] = { { { 1.0f, 14.5f }, { 1.2f, 13.5f } }, { PoolMath::normal(glm::vec2(1.2f, 13.5f) - glm::vec2(1.0f, 14.5f)) } };
-	//sides[5] = { { { 1.2f, 13.5f }, { 24.0f - glm::sqrt(2), 13.5f } }, { 0.0f, -1.0f } };
-	//sides[6] = { { { 24.0f - glm::sqrt(2), 13.5f }, { 24.0f, 13.5f + glm::sqrt(2) } }, { 1 / glm::sqrt(2), -(1 / glm::sqrt(2)) } };
-	//sides[7] = { { { 24.0f + glm::sqrt(2), 13.5f }, { 24.0f, 13.5f - glm::sqrt(2) } }, { -(1 / glm::sqrt(2)), 1 / glm::sqrt(2) } };
-	//sides[8] = { { { 24.0f, 13.5f - glm::sqrt(2) }, { 24.0f, -13.5f + glm::sqrt(2) } }, { -1.0f, 0.0f } };
-	//sides[9] = { { { 24.0f, -13.5f + glm::sqrt(2) }, { 24.0f + glm::sqrt(2), -13.5f } }, { -(1 / glm::sqrt(2)), -(1 / glm::sqrt(2)) } };
-	//sides[10] = { { { 24.0f, -13.5f - glm::sqrt(2) }, { 24.0f - glm::sqrt(2), -13.5f } }, { 1 / glm::sqrt(2), 1 / glm::sqrt(2) } };
-	//sides[11] = { { { 24.0f - glm::sqrt(2), -13.5f }, { 1.2f, -13.5f } }, { 0.0f, 1.0f } };
-	//sides[12] = { { { 1.2f, -13.5f }, { 1.0f, -14.5 } }, { PoolMath::normal(glm::vec2(1.0f, -14.5) - glm::vec2(1.2f, -13.5f)) } };
-	//sides[13] = { { { -1.0f, -14.5f }, { -1.2, -13.5f } }, { PoolMath::normal(glm::vec2(-1.2, -13.5f) - glm::vec2(-1.0f, -14.5f)) } };
-	//sides[14] = { { { -1.2, -13.5f }, { -24.0f + glm::sqrt(2), -13.5 } }, { 0.0f, 1.0f } };
-	//sides[15] = { { { -24.0f + glm::sqrt(2), -13.5 }, { -24.0f, -13.5f - glm::sqrt(2) } }, { PoolMath::normal(glm::vec2(-24.0f, -13.5f - glm::sqrt(2)) - glm::vec2(-24.0f + glm::sqrt(2), -13.5f)) } };
-	//sides[16] = { { { -24.0f - glm::sqrt(2), -13.5f }, { -24.0f, -13.5f + glm::sqrt(2) } }, { PoolMath::normal(glm::vec2(-24.0f, -13.5f + glm::sqrt(2)) - glm::vec2(-24.0f - glm::sqrt(2), -13.5f)) } };
-	//sides[17] = { { { -24.0f, -13.5f + glm::sqrt(2) }, { -24.0f, 13.5f - glm::sqrt(2) } }, { 1.0f, 0.0f } };
 
 	pocketPositions[0] = { -24.0f - (1 / glm::sqrt(2)), 13.5f + (1 / glm::sqrt(2)) };
 	pocketPositions[1] = { 0.0f, 13.5f + 1.0f };
@@ -69,16 +49,10 @@ Game::Game(Input* input) {
 	
 	cueBall = Ball({ 5.0f, 0.0f }, "res/textures/balls/cue_ball.png", false, false,  0, BallType::Unassigned);
 
-	// delete
-	//cueBall = { 0, { 5.0f, 0.0f }, glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(1.0f, 0.0f, 0.0f)), {0.0f, 0.0f}, Solid, new Texture("res/textures/balls/cue_ball.png", false) };
-
 	leftClickStartPos = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
 	
 	cueStartPosition = cueBall.getPos() + glm::vec2(-1.0f, 0.0f) * ((10.0f / 2.0f) + 0.5f);
 	cue = Cue(cueStartPosition, "res/textures/cue.png", false, false);
-
-	// delete
-	//cue = { cueStartPosition, { 10.0f, 0.2f }, 0.0f, 0.0f, new Texture("res/textures/cue.png", true), false};
 
 	balls.push_back(Ball({ 0.0f, 0.0f }, "res/textures/balls/one_ball.png", false, false, 1, BallType::Solid));
 	balls.push_back(Ball({ 0.0f, 0.0f }, "res/textures/balls/two_ball.png", false, false, 2, BallType::Solid));
@@ -96,34 +70,19 @@ Game::Game(Input* input) {
 	balls.push_back(Ball({ 0.0f, 0.0f }, "res/textures/balls/fourteen_ball.png", false, false, 14, BallType::Striped));
 	balls.push_back(Ball({ 0.0f, 0.0f }, "res/textures/balls/fifteen_ball.png", false, false, 15, BallType::Striped));
 	
-	// delete
-	//balls.push_back({ 1, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/one_ball.png", false) });
-	//balls.push_back({ 2, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/two_ball.png", false) });
-	//balls.push_back({ 3, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/three_ball.png", false) });
-	//balls.push_back({ 4, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/four_ball.png", false) });
-	//balls.push_back({ 5, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/five_ball.png", false) });
-	//balls.push_back({ 6, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/six_ball.png", false) });
-	//balls.push_back({ 7, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/seven_ball.png", false) });
-	//balls.push_back({ 8, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Solid, new Texture("res/textures/balls/eight_ball.png", false) });
-	//balls.push_back({ 9, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/nine_ball.png", false) });
-	//balls.push_back({ 10, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/ten_ball.png", false) });
-	//balls.push_back({ 11, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/eleven_ball.png", false) });
-	//balls.push_back({ 12, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/twelve_ball.png", false) });
-	//balls.push_back({ 13, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/thirteen_ball.png", false) });
-	//balls.push_back({ 14, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/fourteen_ball.png", false) });
-	//balls.push_back({ 15, { 0.0f, 0.0f }, initialRotation, { 0.0f, 0.0f }, Striped, new Texture("res/textures/balls/fifteen_ball.png", false) });
-	
 	setPositions();
 
 	players[0] = {1, Unassigned};
 	players[1] = {2, Unassigned};
 
-	player1Panel = Panel({ -21.0f, 18.0f }, "res/textures/balls/one_ball.png", { 10.0f, 5.0f }, false, false);
-	TextLabel player1Label("Player 1", -5.0f, 1.5f, PoolColors::black(), Font::Monoton, FontSize::One);
+	Panel player1Panel({ -21.0f, 18.0f }, "res/textures/balls/one_ball.png", { 10.0f, 5.0f }, false, false);
+	TextLabel player1Label("Player 1", -5.0f, 1.5f, PoolColors::white(), Font::Monoton, FontSize::One);
 	player1Panel.addTextLabel(player1Label);
-	player2Panel = Panel({ 21.0f, 18.0f }, "res/textures/balls/one_ball.png", { 10.0f, 5.0f }, false, false);
+	playerPanels.push_back(player1Panel);
+	Panel player2Panel({ 21.0f, 18.0f }, "res/textures/balls/one_ball.png", { 10.0f, 5.0f }, false, false);
 	TextLabel player2Label("Player 2", -5.0f, 1.5f, PoolColors::black(), Font::Monoton, FontSize::One);
 	player2Panel.addTextLabel(player2Label);
+	playerPanels.push_back(player2Panel);
 
 	currentPlayerIndex = 0;
 }
@@ -133,35 +92,46 @@ Game::~Game() {
 }
 
 void Game::update(Window* window, float deltaTime) {
-	if (currentState == GameState::ShowStartMenu) {
+	if (input->escKeyPressed()) {
+		std::cout << "1" << std::endl;	// delete
+		currentState = GameState::Close;
+	}
+	else if (currentState == GameState::ShowStartMenu) {
+		std::cout << "2" << std::endl;	// delete
 		startMenu.update();
 
 		if (startMenu.getSelectedOption() == MenuOptionType::Play) {
-			currentState == GameState::PlayGame;
+			currentState = GameState::PlayGame;
 
 			startMenu.setActive(false);
 			table.setActive(true);
 			cueBall.setActive(true);
 			cue.setActive(true);
+			playerPanels[0].setActive(true);
+			playerPanels[1].setActive(true);
 
 			for (Ball& ball : balls) {
 				ball.setActive(true);
 			}
 		}
-		else if (startMenu.getSelectedOption() == MenuOptionType::Quit || input->escKeyPressed()) {
-			currentState == GameState::Quit;
+		else if (startMenu.getSelectedOption() == MenuOptionType::Quit) {
+			currentState = GameState::Close;
 		}
 	}
 	else if (currentState == GameState::PlayGame) {
+		std::cout << "3" << std::endl;	// delete
 		bool ballsMovingThisFrame = ballsAreMoving();
 
 		if (!ballsMovingThisFrame && ballsMovedLastFrame) {
 			// beginning of turn
-			std::cout << "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" << std::endl;	// delete
 
 			if (foul()) {
 				// change current player
 				currentPlayerIndex = (currentPlayerIndex + 1) % 2;
+
+				// update player panels to show current player
+				playerPanels[(currentPlayerIndex + 1) % 2].getTextLabels()->front().setColor(PoolColors::black());
+				playerPanels[currentPlayerIndex].getTextLabels()->front().setColor(PoolColors::white());
 			}
 
 			cueBallPocketed = false;
@@ -169,9 +139,14 @@ void Game::update(Window* window, float deltaTime) {
 			solidPocketed = false;
 		}
 
-		//std::cout << "ballsAreMoving(): " << ballsAreMoving() << std::endl;	// delete
-		//std::cout << "cueBallShouldBePlaced: " << cueBallShouldBePlaced << std::endl;	// delete
-		if (!ballsMovingThisFrame && !cueBallShouldBePlaced) {
+		if (ballsMovingThisFrame || cueBallShouldBePlaced) {
+			cue.setActive(false);
+		}
+		else {
+			cue.setActive(true);
+		}
+
+		if (cue.getActive()) {
 			setCuePos(window);
 		}
 
@@ -190,7 +165,7 @@ void Game::update(Window* window, float deltaTime) {
 		} 
 
 		if (eightBallPocketed) {
-			currentState == GameState::ShowGameOver;
+			currentState = GameState::ShowGameOver;
 
 			int winner;
 
@@ -213,6 +188,8 @@ void Game::update(Window* window, float deltaTime) {
 			TextLabel winnerLabel(winnerLabelText, -2.5, 3.0f, PoolColors::black(), Font::Monoton, FontSize::One);
 			gameOverMenu.addTextLabel(winnerLabel);
 
+			playerPanels[0].setActive(false);
+			playerPanels[1].setActive(false);
 			table.setActive(false);
 			cueBall.setActive(false);
 			cue.setActive(false);
@@ -220,31 +197,35 @@ void Game::update(Window* window, float deltaTime) {
 			for (Ball& ball : balls) {
 				ball.setActive(false);
 			}
+
 			gameOverMenu.setActive(true);
 		}
-
-		updatePlayerPanels();
 
 		ballsMovedLastFrame = ballsMovingThisFrame;
 	}
 	else if (currentState == GameState::ShowGameOver) {
+		std::cout << "4" << std::endl;	// delete
 		gameOverMenu.update();
 
 		if (gameOverMenu.getSelectedOption() == MenuOptionType::Play) {
-			currentState == GameState::PlayGame;
+			currentState = GameState::PlayGame;
 		}
 		else if (gameOverMenu.getSelectedOption() == MenuOptionType::Quit || input->escKeyPressed()) {
-			currentState == GameState::Quit;
+			currentState = GameState::Close;
 		}
 	}
 }
 
 bool Game::shouldClose() {
-	return currentState == GameState::Quit;
+	return currentState == GameState::Close;
 }
 
 Menu* Game::getStartMenu() {
 	return &startMenu;
+}
+
+Menu* Game::getGameOverMenu() {
+	return &gameOverMenu;
 }
 
 bool Game::ballsAreMoving() {
@@ -322,12 +303,8 @@ bool Game::trajectory(glm::vec2* pointA, glm::vec2* pointB) {
 	return false;
 }
 
-Panel* Game::getPlayer1Panel() {
-	return &player1Panel;
-}
-
-Panel* Game::getPlayer2Panel() {
-	return &player2Panel;
+std::vector<Panel>* Game::getPlayerPanels() {
+	return &playerPanels;
 }
 
 void Game::setPositions() {
@@ -433,10 +410,10 @@ void Game::checkPocketedBalls() {
 						players[(currentPlayerIndex + 1) % 2].ballType = Striped;
 					}
 
-					TextLabel player1BallTypeLabel(players[0].ballType == Striped ? "Stripes" : "Solids", -5.0f, 3.0f, PoolColors::black(), Font::Monoton, FontSize::One);
-					player1Panel.addTextLabel(player1BallTypeLabel);
-					TextLabel player2BallTypeLabel(players[1].ballType == Solid ? "Solids" : "Stripes", -5.0f, 3.0f, PoolColors::black(), Font::Monoton, FontSize::One);
-					player2Panel.addTextLabel(player2BallTypeLabel);
+					TextLabel player1BallTypeLabel(players[0].ballType == Striped ? "Stripes" : "Solids", -5.0f, 0.5f, PoolColors::black(), Font::Monoton, FontSize::One);
+					playerPanels[0].addTextLabel(player1BallTypeLabel);
+					TextLabel player2BallTypeLabel(players[1].ballType == Solid ? "Solids" : "Stripes", -5.0f, 0.5f, PoolColors::black(), Font::Monoton, FontSize::One);
+					playerPanels[1].addTextLabel(player2BallTypeLabel);
 				}
 
 				balls.erase(balls.begin() + i);
@@ -454,22 +431,18 @@ void Game::checkPocketedBalls() {
 
 bool Game::foul() {
 	if (cueBallPocketed) {
-		std::cout << "foul() 111111111111111111111111111111111111111111111111111111111111111111111111111111111111" << std::endl;	// delete
 		return true;
 	}
 
 	if (players[currentPlayerIndex].ballType == Striped && !stripedPocketed) {
-		std::cout << "foul() 222222222222222222222222222222222222222222222222222222222222222222222222222222222222" << std::endl;	// delete
 		return true;
 	}
 
 	if (players[currentPlayerIndex].ballType == Solid && !solidPocketed) {
-		std::cout << "foul() 333333333333333333333333333333333333333333333333333333333333333333333333333333333333" << std::endl;	// delete
 		return true;
 	}
 
 	if (players[currentPlayerIndex].ballType == Unassigned && !solidPocketed && !stripedPocketed) {
-		std::cout << "foul() 444444444444444444444444444444444444444444444444444444444444444444444444444444444444" << std::endl;	// delete
 		return true;
 	}
 
@@ -516,8 +489,4 @@ bool Game::allBallsPocketed(BallType ballType) {
 	}
 
 	return true;
-}
-
-void Game::updatePlayerPanels() {
-
 }

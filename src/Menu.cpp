@@ -32,7 +32,8 @@ void Menu::update() {
 			highlightedOption = menuOptions.at(i).getMenuOptionType();
 			textLabels.at(i).setColor(PoolColors::white());
 
-			if (input->leftMouseReleased()) {
+			if (input->leftMousePressed()) {
+				std::cout << "left mouse button pressed" << std::endl;	// delete
 				selectedOption = highlightedOption;
 			}
 
@@ -49,5 +50,6 @@ void Menu::update() {
 }
 
 MenuOptionType Menu::getSelectedOption() {
+	std::cout << "selectedOption: " << selectedOption << std::endl;	// delete
 	return selectedOption;
 }
