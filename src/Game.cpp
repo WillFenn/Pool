@@ -6,15 +6,15 @@ Game::Game(Input* input) {
 	currentState = GameState::ShowStartMenu;
 
 	startMenu = Menu({ 0.0f, 0.0f }, "res/textures/balls/one_ball.png", { 30.0f, 15.0f }, false, true, input);
-	TextLabel playLabel("Play", -2.5f, 0.0f, PoolColors::black(), Font::Monoton, FontSize::One, "res/textures/table.png", false, { 0.0f, 0.5f }, { 5.0f, 1.0f });
+	TextLabel playLabel("Play", -2.5f, 0.0f, PoolColors::black(), Font::Notable, FontSize::One, "res/textures/table.png", false, { 0.0f, 0.5f }, { 5.0f, 1.0f });
 	MenuOption playMenuOption(MenuOptionType::Play, { 0.0f, 0.5f }, { 5.0f, 1.0f });
 	startMenu.addMenuOption(playMenuOption, playLabel);
-	TextLabel quitLabel("Quit", -2.5f, -1.0f, PoolColors::black(), Font::Monoton, FontSize::One, "res/textures/table.png", false, { 0.0f, -0.5f }, { 5.0f, 1.0f });
+	TextLabel quitLabel("Quit", -2.5f, -1.0f, PoolColors::black(), Font::Notable, FontSize::One, "res/textures/table.png", false, { 0.0f, -0.5f }, { 5.0f, 1.0f });
 	MenuOption quitMenuOption(MenuOptionType::Quit, { 0.0f, -0.5f }, { 5.0f, 1.0f });
 	startMenu.addMenuOption(quitMenuOption, quitLabel);
 
 	gameOverMenu = Menu({ 0.0f, 0.0f }, "res/textures/balls/one_ball.png", { 30.0f, 15.0f }, false, false, input);
-	TextLabel playAgainLabel("Play Again", -2.5f, 0.0f, PoolColors::black(), Font::Monoton, FontSize::One, "res/textures/table.png", false, { 0.0f, 0.5f }, { 5.0f, 1.0f });
+	TextLabel playAgainLabel("Play Again", -2.5f, 0.0f, PoolColors::black(), Font::Notable, FontSize::One, "res/textures/table.png", false, { 0.0f, 0.5f }, { 5.0f, 1.0f });
 	MenuOption playAgainMenuOption(MenuOptionType::Play, { 0.0f, 0.5f }, { 5.0f, 1.0f });
 	gameOverMenu.addMenuOption(playAgainMenuOption, playAgainLabel);
 	gameOverMenu.addMenuOption(quitMenuOption, quitLabel);
@@ -70,17 +70,17 @@ Game::Game(Input* input) {
 	balls.push_back(Ball({ 0.0f, 0.0f }, "res/textures/balls/fourteen_ball.png", false, false, 14, BallType::Striped));
 	balls.push_back(Ball({ 0.0f, 0.0f }, "res/textures/balls/fifteen_ball.png", false, false, 15, BallType::Striped));
 	
-	setPositions();
+	setBallPositions();
 
 	players[0] = {1, Unassigned};
 	players[1] = {2, Unassigned};
 
 	Panel player1Panel({ -21.0f, 18.0f }, "res/textures/balls/one_ball.png", { 10.0f, 5.0f }, false, false);
-	TextLabel player1Label("Player 1", -5.0f, 1.5f, PoolColors::white(), Font::Monoton, FontSize::One);
+	TextLabel player1Label("Player 1", -5.0f, 1.5f, PoolColors::white(), Font::Notable, FontSize::One);
 	player1Panel.addTextLabel(player1Label);
 	playerPanels.push_back(player1Panel);
 	Panel player2Panel({ 21.0f, 18.0f }, "res/textures/balls/one_ball.png", { 10.0f, 5.0f }, false, false);
-	TextLabel player2Label("Player 2", -5.0f, 1.5f, PoolColors::black(), Font::Monoton, FontSize::One);
+	TextLabel player2Label("Player 2", -5.0f, 1.5f, PoolColors::black(), Font::Notable, FontSize::One);
 	player2Panel.addTextLabel(player2Label);
 	playerPanels.push_back(player2Panel);
 
@@ -185,7 +185,7 @@ void Game::update(Window* window, float deltaTime) {
 				winnerLabelText = "Player 2 wins";
 			}
 
-			TextLabel winnerLabel(winnerLabelText, -2.5, 3.0f, PoolColors::black(), Font::Monoton, FontSize::One);
+			TextLabel winnerLabel(winnerLabelText, -2.5, 3.0f, PoolColors::black(), Font::Notable, FontSize::One);
 			gameOverMenu.addTextLabel(winnerLabel);
 
 			playerPanels[0].setActive(false);
@@ -307,7 +307,7 @@ std::vector<Panel>* Game::getPlayerPanels() {
 	return &playerPanels;
 }
 
-void Game::setPositions() {
+void Game::setBallPositions() {
 	glm::vec2 frontPos = { 7.0f, 0.0f };
 	float gapLength = 0.05;
 	std::vector<glm::vec2> positions;
@@ -410,9 +410,9 @@ void Game::checkPocketedBalls() {
 						players[(currentPlayerIndex + 1) % 2].ballType = Striped;
 					}
 
-					TextLabel player1BallTypeLabel(players[0].ballType == Striped ? "Stripes" : "Solids", -5.0f, 0.5f, PoolColors::black(), Font::Monoton, FontSize::One);
+					TextLabel player1BallTypeLabel(players[0].ballType == Striped ? "Stripes" : "Solids", -5.0f, 0.5f, PoolColors::black(), Font::Notable, FontSize::One);
 					playerPanels[0].addTextLabel(player1BallTypeLabel);
-					TextLabel player2BallTypeLabel(players[1].ballType == Solid ? "Solids" : "Stripes", -5.0f, 0.5f, PoolColors::black(), Font::Monoton, FontSize::One);
+					TextLabel player2BallTypeLabel(players[1].ballType == Solid ? "Solids" : "Stripes", -5.0f, 0.5f, PoolColors::black(), Font::Notable, FontSize::One);
 					playerPanels[1].addTextLabel(player2BallTypeLabel);
 				}
 

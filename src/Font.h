@@ -1,5 +1,6 @@
 #pragma once
 
 enum Font {
-	Monoton
+	Monoton,
+	Notable
 };

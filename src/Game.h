@@ -41,7 +41,7 @@ public:
 	std::vector<Panel>* getPlayerPanels();
 
 private:
-	void setPositions();
+	void setBallPositions();
 	void setCuePos(Window* window);
 	void checkPocketedBalls();
 	bool foul();

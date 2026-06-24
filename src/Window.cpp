@@ -105,6 +105,7 @@ Window::Window() {
 		std::cout << "Failed to initialize freetype library" << std::endl;
 	}
 
+	// initialize Monoton font characters
 	if (FT_New_Face(freetype, "res/fonts/Monoton/Monoton-Regular.ttf", 0, &face)) {
 		std::cout << "Failed to load font" << std::endl;
 	}
@@ -121,6 +122,27 @@ Window::Window() {
 			Character character({ face->glyph->bitmap.width, face->glyph->bitmap.rows }, { face->glyph->bitmap_left, face->glyph->bitmap_top }, face->glyph->advance.x, face->glyph->bitmap.buffer);
 
 			monotonCharacters[i].insert(std::pair<char, Character>(c, character));
+		}
+	}
+
+
+	// initialize Notable font characters
+	if (FT_New_Face(freetype, "res/fonts/Notable/Notable-Regular.ttf", 0, &face)) {
+		std::cout << "Failed to load font" << std::endl;
+	}
+
+	for (int i = 0; i < 5; i++) {
+		FT_Set_Pixel_Sizes(face, 0, (resolution.y / worldScale.y) * (i + 1));
+
+		for (unsigned char c = 0; c < 128; c++) {
+			if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
+				std::cout << "Failed to load character" << std::endl;
+				continue;
+			}
+
+			Character character({ face->glyph->bitmap.width, face->glyph->bitmap.rows }, { face->glyph->bitmap_left, face->glyph->bitmap_top }, face->glyph->advance.x, face->glyph->bitmap.buffer);
+
+			notableCharacters[i].insert(std::pair<char, Character>(c, character));
 		}
 	}
 
@@ -409,11 +431,11 @@ void Window::drawText(float xStart, float yBaseline, Font font, FontSize fontSiz
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
 	characterShader->bind();
 
-	std::map<char, Character>* characters;
+	std::map<char, Character>* characters = notableCharacters;
 
-	//if (font == Font::Monoton) {
+	if (font == Font::Monoton) {
 		characters = monotonCharacters;
-	//}
+	}
 
 	for (char c : text) {
 		Character* character = &characters[fontSize].at(c);

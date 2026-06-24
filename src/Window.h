@@ -83,4 +83,5 @@ private:
 	FT_Library freetype;
 	FT_Face face;
 	std::map<char, Character> monotonCharacters[5];
+	std::map<char, Character> notableCharacters[5];
 };
