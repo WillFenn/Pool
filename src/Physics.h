@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <ranges>
 #include <vec2.hpp>
 #include <vec3.hpp>
 #include <ext/matrix_transform.hpp>

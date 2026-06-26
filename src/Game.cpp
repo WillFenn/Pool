@@ -233,8 +233,8 @@ bool Game::ballsAreMoving() {
 		return true;
 	}
 
-	for (int i = 0; i < balls.size(); i++) {
-		if (glm::length(balls.at(i).getVelocity()) != 0.0f) {
+	for (Ball& ball : balls | std::ranges::views::filter([](Ball& ball) { return ball.getActive(); })) {
+		if (glm::length(ball.getVelocity()) != 0.0f) {
 			return true;
 		}
 	}
@@ -287,11 +287,13 @@ bool Game::trajectory(glm::vec2* pointA, glm::vec2* pointB) {
 	glm::vec2 pathIncrement = 0.01f * glm::normalize(cueBall.getPos() - cue.getPos());
 	glm::vec2 collisionNormal;
 
+	auto activeBalls = balls | std::ranges::views::filter([](Ball& ball) { return ball.getActive(); });
+
 	while (pathPos.x > -23.5f && pathPos.x < 23.5f && pathPos.y > -13.0f && pathPos.y < 13.0f) {
-		for (int i = 0; i < balls.size(); i++) {
-			if (detectBallCollision(pathPos, balls.at(i).getPos(), &collisionNormal)) {
-				*pointA = balls.at(i).getPos();
-				*pointB = balls.at(i).getPos() + 3.0f * collisionNormal;
+		for (Ball& ball : activeBalls) {
+			if (detectBallCollision(pathPos, ball.getPos(), &collisionNormal)) {
+				*pointA = ball.getPos();
+				*pointB = ball.getPos() + 3.0f * collisionNormal;
 				
 				return true;
 			}
@@ -321,21 +323,11 @@ void Game::setBallPositions() {
 
 	srand(time(0));
 
-	std::cout << "balls->size(): " << balls.size() << std::endl;	// delete
-
-	for (int i = 0; i < balls.size(); i++) {
+	for (Ball& ball : balls) {
 		int randIndex = rand() % positions.size();
-		balls.at(i).setPos(positions.at(randIndex));
+		ball.setPos(positions.at(randIndex));
 		positions.erase(positions.begin() + randIndex);
 	}
-
-	//for (int i = 0; i < positions.size(); i++) {																		// delete
-	//	std::cout << "position " << i << "     x: " << positions.at(i).x << "  y: " << positions.at(i).y << std::endl;	//
-	//}																													//
-
-	//for (int i = 0; i < balls->size(); i++) {																					// delete
-	//	std::cout << "ball " << i << " position     x: " << balls->at(i).pos.x << "  y: " << balls->at(i).pos.y << std::endl;	//
-	//}																															//
 }
 
 void Game::setCuePos(Window* window) {
@@ -385,7 +377,7 @@ void Game::checkPocketedBalls() {
 	// check object balls
 	for (int j = 0; j < 6; j++) {
 		for (int i = 0; i < balls.size(); i++) {
-			if (glm::distance(pocketPositions[j], balls.at(i).getPos()) < 1.0f) {
+			if (balls.at(i).getActive() && glm::distance(pocketPositions[j], balls.at(i).getPos()) < 1.0f) {
 				// check the ball type of the pocketed ball
 				if (balls.at(i).getBallType() == Striped) {
 					stripedPocketed = true;
@@ -416,7 +408,7 @@ void Game::checkPocketedBalls() {
 					playerPanels[1].addTextLabel(player2BallTypeLabel);
 				}
 
-				balls.erase(balls.begin() + i);
+				balls.at(i).setActive(false);
 			}
 		}
 
@@ -452,8 +444,8 @@ bool Game::foul() {
 bool Game::positionOutOfBounds(Window* window) {
 	glm::vec2 mouseWorldPos = input->getMouseWorldPos();
 
-	for (int i = 0; i < balls.size(); i++) {
-		if (glm::distance(balls.at(i).getPos(), mouseWorldPos) < 1.0f) {
+	for (Ball& ball : balls | std::ranges::views::filter([](Ball& ball) { return ball.getActive(); })) {
+		if (glm::distance(ball.getPos(), mouseWorldPos) < 1.0f) {
 			return true;
 		}
 	}
@@ -482,8 +474,8 @@ bool Game::detectBallCollision(glm::vec2 ball1Pos, glm::vec2 ball2Pos, glm::vec2
 }
 
 bool Game::allBallsPocketed(BallType ballType) {
-	for (int i = 0; i < balls.size(); i++) {
-		if (balls.at(i).getBallType() == ballType) {
+	for (Ball& ball : balls | std::ranges::views::filter([](Ball& ball) { return ball.getActive(); })) {
+		if (ball.getBallType() == ballType) {
 			return false;
 		}
 	}

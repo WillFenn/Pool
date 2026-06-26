@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <limits>
+#include <ranges>
 #include <PoolMath.h>
 #include <PoolColors.h>
 #include <Menu.h>

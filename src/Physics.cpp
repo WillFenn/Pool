@@ -14,9 +14,16 @@ void Physics::update(Side sides[], std::vector<Ball>* balls, Ball* cueBall, Cue*
 		cueBall->setVelocity({ 0.0f, 0.0f });
 	}
 
-	for (int i = 0; i < balls->size(); i++) {
-		if (glm::length(balls->at(i).getVelocity()) < 0.05f) {
-			balls->at(i).setVelocity({ 0.0f, 0.0f });
+	//for (int i = 0; i < balls->size(); i++) {
+	//	if (glm::length(balls->at(i).getVelocity()) < 0.05f) {
+	//		balls->at(i).setVelocity({ 0.0f, 0.0f });
+	//	}
+	//}
+
+	for (Ball& ball : *balls | std::ranges::views::filter([](Ball& ball) { return ball.getActive(); })) {
+		std::cout << "ball: " << ball.getIndex() << std::endl;	// delete
+		if (glm::length(ball.getVelocity()) < 0.05f) {
+			ball.setVelocity({ 0.0f, 0.0f });
 		}
 	}
 	
@@ -32,15 +39,15 @@ void Physics::update(Side sides[], std::vector<Ball>* balls, Ball* cueBall, Cue*
 		}
 	}
 
-	for (int i = 0; i < balls->size(); i++) {
-		if (glm::length(balls->at(i).getVelocity()) > 0) {
-			glm::vec2 newVelocity = balls->at(i).getVelocity() - glm::normalize(balls->at(i).getVelocity()) * frictionAcceleration * deltaTime;
+	for (Ball& ball : *balls | std::ranges::views::filter([](Ball& ball) { return ball.getActive(); })) {
+		if (glm::length(ball.getVelocity()) > 0) {
+			glm::vec2 newVelocity = ball.getVelocity() - glm::normalize(ball.getVelocity()) * frictionAcceleration * deltaTime;
 
-			if (glm::dot(balls->at(i).getVelocity(), newVelocity) > 0) {
-				balls->at(i).setVelocity(newVelocity);
+			if (glm::dot(ball.getVelocity(), newVelocity) > 0) {
+				ball.setVelocity(newVelocity);
 			}
 			else {
-				balls->at(i).setVelocity({ 0.0f, 0.0f });
+				ball.setVelocity({ 0.0f, 0.0f });
 			}
 		}
 	}
@@ -51,12 +58,12 @@ void Physics::update(Side sides[], std::vector<Ball>* balls, Ball* cueBall, Cue*
 	
 	cue->setPos(cue->getPos() + glm::normalize(cueBall->getPos() - cue->getPos()) * cue->getSpeed() * deltaTime);
 
-	for (int i = 0; i < balls->size(); i++) {
-		glm::vec2 deltaPos = balls->at(i).getVelocity() * deltaTime;
-		balls->at(i).setPos(balls->at(i).getPos() + deltaPos);
+	for (Ball& ball : *balls | std::ranges::views::filter([](Ball& ball) { return ball.getActive(); })) {
+		glm::vec2 deltaPos = ball.getVelocity() * deltaTime;
+		ball.setPos(ball.getPos() + deltaPos);
 
 		if (glm::length(deltaPos) != 0.0f) {
-			balls->at(i).setRotationMat(PoolMath::addToRotationMat(balls->at(i).getRotationMat(), glm::length(deltaPos) / 0.5f, glm::cross(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(deltaPos, 0.0f))));
+			ball.setRotationMat(PoolMath::addToRotationMat(ball.getRotationMat(), glm::length(deltaPos) / 0.5f, glm::cross(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(deltaPos, 0.0f))));
 		}
 	}
 
@@ -82,26 +89,16 @@ void Physics::update(Side sides[], std::vector<Ball>* balls, Ball* cueBall, Cue*
 	// collisions between balls
 	glm::vec2 collisionNormal(0.0f, 0.0f);
 
-	for (int i = 0; i < balls->size(); i++) {
-		if (detectBallCollision(cueBall, &balls->at(i), &collisionNormal)) {
-			//std::cout << "collision between ball and cue ball" << std::endl;	// delete
-			//std::cout << "ball speed before collision: " << glm::length(balls->at(i).velocity) << "     cue ball speed before collision: " << glm::length(cueBall->velocity) << std::endl;	// delete
-
-			resolveBallCollision(cueBall, &balls->at(i), &collisionNormal);
-
-			//std::cout << "ball speed after collision: " << glm::length(balls->at(i).velocity) << "     cue ball speed after collision: " << glm::length(cueBall->velocity) << std::endl;	// delete
+	for (Ball& ball : *balls | std::ranges::views::filter([](Ball& ball) { return ball.getActive(); })) {
+		if (detectBallCollision(cueBall, &ball, &collisionNormal)) {
+			resolveBallCollision(cueBall, &ball, &collisionNormal);
 		}
 	}
 
-	for (int i = 0; i < balls->size(); i++) {
-		for (int j = i + 1; j < balls->size(); j++) {
-			if (detectBallCollision(&balls->at(i), &balls->at(j), &collisionNormal)) {
-				//std::cout << "collision between balls" << std::endl;	// delete
-				//std::cout << "ball1 speed before collision: " << glm::length(balls->at(i).velocity) << "     ball2 speed before collision: " << glm::length(balls->at(j).velocity) << std::endl;	// delete
-
-				resolveBallCollision(&balls->at(i), &balls->at(j), &collisionNormal);
-
-				//std::cout << "ball1 speed after collision: " << glm::length(balls->at(i).velocity) << "     ball2 speed after collision: " << glm::length(balls->at(j).velocity) << std::endl;	// delete
+	for (Ball& ball1 : *balls | std::ranges::views::filter([](Ball& ball) { return ball.getActive(); })) {
+		for (Ball& ball2 : *balls | std::ranges::views::drop(ball1.getIndex()) | std::ranges::views::filter([](Ball& ball) { return ball.getActive(); })) {
+			if (detectBallCollision(&ball1, &ball2, &collisionNormal)) {
+				resolveBallCollision(&ball1, &ball2, &collisionNormal);
 			}
 		}
 	}
@@ -113,11 +110,11 @@ void Physics::update(Side sides[], std::vector<Ball>* balls, Ball* cueBall, Cue*
 		resolveBallSideCollision(cueBall, &collisionNormal);
 	}
 
-	for (int i = 0; i < balls->size(); i++) {
-		if (detectBallSideCollision(sides, &balls->at(i), &collisionNormal)) {
+	for (Ball& ball : *balls | std::ranges::views::filter([](Ball& ball) { return ball.getActive(); })) {
+		if (detectBallSideCollision(sides, &ball, &collisionNormal)) {
 			//std::cout << "collision between ball and side" << std::endl;	// delete
 
-			resolveBallSideCollision(&balls->at(i), &collisionNormal);
+			resolveBallSideCollision(&ball, &collisionNormal);
 		}
 	}
 }
