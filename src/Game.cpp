@@ -1,6 +1,6 @@
 #include <Game.h>
 
-Game::Game(Input* input) {
+Game::Game(Input* input, glm::vec2 worldScale) {
 	this->input = input;
 
 	currentState = GameState::ShowStartMenu;
@@ -18,6 +18,10 @@ Game::Game(Input* input) {
 	MenuOption playAgainMenuOption(MenuOptionType::Play, { 0.0f, 0.5f }, { 5.0f, 1.0f });
 	gameOverMenu.addMenuOption(playAgainMenuOption, playAgainLabel);
 	gameOverMenu.addMenuOption(quitMenuOption, quitLabel);
+
+	frameRatePanel = Panel({ -(worldScale.x / 2) + 1, (worldScale.y / 2) - 1 }, true);
+	TextLabel frameRateLabel("framerate:", 0, 0, PoolColors::black(), Font::Notable, FontSize::One);
+	frameRatePanel.addTextLabel(frameRateLabel);
 
 	table = GameObject(Shape::Rectangle, glm::vec2(0.0f, 0.0f), glm::vec2(52.0f, 31.0f), glm::mat4(1.0f), "res/textures/table.png", false, false);
 
@@ -91,7 +95,7 @@ Game::~Game() {
 
 }
 
-void Game::update(Window* window, float deltaTime) {
+void Game::update(float deltaTime) {
 	if (input->escKeyPressed()) {
 		std::cout << "1" << std::endl;	// delete
 		currentState = GameState::Close;
@@ -147,12 +151,12 @@ void Game::update(Window* window, float deltaTime) {
 		}
 
 		if (cue.getActive()) {
-			setCuePos(window);
+			setCuePos();
 		}
 
 		checkPocketedBalls();
 
-		if (cueBallShouldBePlaced && !ballsMovingThisFrame && !positionOutOfBounds(window)) {
+		if (cueBallShouldBePlaced && !ballsMovingThisFrame && !positionOutOfBounds()) {
 			cueBall.setPos(input->getMouseWorldPos());
 
 			if (input->leftMousePressed()) {
@@ -228,6 +232,15 @@ Menu* Game::getGameOverMenu() {
 	return &gameOverMenu;
 }
 
+Panel* Game::getFrameRatePanel() {
+	return &frameRatePanel;
+}
+
+void Game::setCurrentFrameRate(int currentFrameRate) {
+	std::cout << "framerate: " + currentFrameRate << std::endl;
+	frameRatePanel.getTextLabels()->front().setText(std::string("framerate: ") + std::to_string(currentFrameRate));
+}
+
 bool Game::ballsAreMoving() {
 	if (glm::length(cueBall.getVelocity()) != 0.0f) {
 		return true;
@@ -282,27 +295,42 @@ bool Game::cueShouldBeDrawn() {
 	return !ballsAreMoving() && !cueBallShouldBePlaced;
 }
 
-bool Game::trajectory(glm::vec2* pointA, glm::vec2* pointB) {
-	glm::vec2 pathPos = cueBall.getPos();
-	glm::vec2 pathIncrement = 0.01f * glm::normalize(cueBall.getPos() - cue.getPos());
-	glm::vec2 collisionNormal;
+Line* Game::trajectory() {
+	//glm::vec2 pathPos = cueBall.getPos();
+	//glm::vec2 pathIncrement = 0.01f * glm::normalize(cueBall.getPos() - cue.getPos());
+	//glm::vec2 collisionNormal;
 
-	auto activeBalls = balls | std::ranges::views::filter([](Ball& ball) { return ball.getActive(); });
+	//auto activeBalls = balls | std::ranges::views::filter([](Ball& ball) { return ball.getActive(); });
 
-	while (pathPos.x > -23.5f && pathPos.x < 23.5f && pathPos.y > -13.0f && pathPos.y < 13.0f) {
-		for (Ball& ball : activeBalls) {
-			if (detectBallCollision(pathPos, ball.getPos(), &collisionNormal)) {
-				*pointA = ball.getPos();
-				*pointB = ball.getPos() + 3.0f * collisionNormal;
-				
-				return true;
-			}
+	//while (pathPos.x > -23.5f && pathPos.x < 23.5f && pathPos.y > -13.0f && pathPos.y < 13.0f) {
+	//	for (Ball& ball : activeBalls) {
+	//		if (detectBallCollision(pathPos, ball.getPos(), &collisionNormal)) {
+	//			*pointA = ball.getPos();
+	//			*pointB = ball.getPos() + 3.0f * collisionNormal;
+	//			
+	//			return true;
+	//		}
+	//	}
+
+	//	pathPos += pathIncrement;
+	//}
+
+	//return false;
+
+	glm::vec2 cueBallPathStart = cueBall.getPos();
+	glm::vec2 cueBallPathEnd = cueBallPathStart + 30.0f * glm::normalize(cueBallPathStart - cue.getPos());
+
+	std::vector<glm::vec2> collisionPositions;
+
+	for (Ball& ball : balls | std::ranges::views::filter([](Ball& ball) { return ball.getActive(); })) {
+		glm::vec2 closestPoint;
+		float pathBallDistance = PoolMath::pointLineSegmentDistance(ball.getPos(), cueBallPathStart, cueBallPathEnd, &closestPoint);
+
+		if (pathBallDistance <= 1.0f) {
+			glm::vec2 collisionPos;
+			collisionPositions.push_back(collisionPos);
 		}
-
-		pathPos += pathIncrement;
 	}
-
-	return false;
 }
 
 std::vector<Panel>* Game::getPlayerPanels() {
@@ -330,7 +358,7 @@ void Game::setBallPositions() {
 	}
 }
 
-void Game::setCuePos(Window* window) {
+void Game::setCuePos() {
 	glm::vec2 mouseWorldPos = input->getMouseWorldPos();
 
 	if (input->leftMousePressed()) {
@@ -441,7 +469,7 @@ bool Game::foul() {
 	return false;
 }
 
-bool Game::positionOutOfBounds(Window* window) {
+bool Game::positionOutOfBounds() {
 	glm::vec2 mouseWorldPos = input->getMouseWorldPos();
 
 	for (Ball& ball : balls | std::ranges::views::filter([](Ball& ball) { return ball.getActive(); })) {

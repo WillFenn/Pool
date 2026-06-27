@@ -92,11 +92,6 @@ Window::Window() {
 	lineShader = new Shader("res/shaders/CircleRectangleLineVertex.glsl", "res/shaders/LineRectangleFragment.glsl");
 	characterShader = new Shader("res/shaders/RectangleTextureVertex.glsl", "res/shaders/CharacterFragment.glsl");
 
-	texture = new Texture("res/textures/container.jpg", false, true);
-	player1Texture = new Texture("res/textures/player1.png", false, true);
-	player2Texture = new Texture("res/textures/player2.png", false, true);
-	stripesTexture = new Texture("res/textures/stripes.png", false, true);
-	solidsTexture = new Texture("res/textures/solids.png", false, true);
 	reflectionsTexture = new Texture("res/textures/balls/reflections.png", false, true);
 
 	reflectionsScale = glm::vec2(1.0f, 1.0f);
@@ -161,11 +156,6 @@ Window::~Window() {
 	delete lineShader;
 	delete characterShader;
 
-	delete texture;
-	delete player1Texture;
-	delete player2Texture;
-	delete stripesTexture;
-	delete solidsTexture;
 	delete reflectionsTexture;
 
 	glfwSetWindowShouldClose(glfwwindow, true);
@@ -179,15 +169,13 @@ Window::~Window() {
 void Window::drawFrame(std::vector<GameObject>* objects, std::vector<Line>* lines, std::vector<Panel>* panels) {
 	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
 
-	for (GameObject object : *objects) {
-		if (object.getActive()) {
-			if (object.getShape() == Shape::Rectangle) {
-				drawRectangleTexture(object.getPos(), object.getScale(), object.getRotationMat(), object.getTexture());
-			}
-			else if (object.getShape() == Shape::Sphere) {
-				drawSphereTexture(object.getScale().x / 2, object.getPos(), object.getRotationMat(), object.getTexture());
-				drawRectangleTexture(object.getPos(), reflectionsScale, glm::mat4(1.0f), reflectionsTexture);
-			}
+	for (GameObject& object : *objects | std::ranges::views::filter([](GameObject& object) { return object.getActive(); })) {
+		if (object.getShape() == Shape::Rectangle) {
+			drawRectangleTexture(object.getPos(), object.getScale(), object.getRotationMat(), object.getTexture());
+		}
+		else if (object.getShape() == Shape::Sphere) {
+			drawSphereTexture(object.getScale().x / 2, object.getPos(), object.getRotationMat(), object.getTexture());
+			drawRectangleTexture(object.getPos(), reflectionsScale, glm::mat4(1.0f), reflectionsTexture);
 		}
 	}
 
@@ -195,35 +183,25 @@ void Window::drawFrame(std::vector<GameObject>* objects, std::vector<Line>* line
 		drawLine(line.a, line.b);
 	}
 
-	for (Panel panel : *panels) {
-		if (panel.getActive()) {
-			std::cout << "panel being drawn" << std::endl;	// delete
-			if (panel.getTexture() != nullptr) {
-				drawRectangleTexture(panel.getPos(), panel.getTextureScale(), glm::mat4(1.0f), panel.getTexture());
+	for (Panel& panel : *panels | std::ranges::views::filter([](Panel& panel) { return panel.getActive(); })) {
+		std::cout << "panel being drawn" << std::endl;	// delete
+		if (panel.getTexture() != nullptr) {
+			drawRectangleTexture(panel.getPos(), panel.getTextureScale(), glm::mat4(1.0f), panel.getTexture());
+		}
+
+		for (TextLabel textLabel : *panel.getTextLabels()) {
+			std::cout << textLabel.getText() << std::endl;	// delete
+			if (textLabel.getTexture() != nullptr) {
+				std::cout << "text label texture being drawn" << std::endl;	// delete
+				drawRectangleTexture(panel.getPos() + textLabel.getTexturePos(), textLabel.getTextureScale(), glm::mat4(1.0f), textLabel.getTexture());
+			}
+			else if (textLabel.getTexture() == nullptr) {	// delete
+				std::cout << "text label texture pointer == nullptr" << std::endl;
 			}
 
-			for (TextLabel textLabel : *panel.getTextLabels()) {
-				std::cout << textLabel.getText() << std::endl;	// delete
-				if (textLabel.getTexture() != nullptr) {
-					std::cout << "text label texture being drawn" << std::endl;	// delete
-					drawRectangleTexture(panel.getPos() + textLabel.getTexturePos(), textLabel.getTextureScale(), glm::mat4(1.0f), textLabel.getTexture());
-				}
-				else if (textLabel.getTexture() == nullptr) {	// delete
-					std::cout << "text label texture pointer == nullptr" << std::endl;
-				}
-
-				drawText(panel.getPos().x + textLabel.getxStart(), panel.getPos().y + textLabel.getyBaseline(), textLabel.getFont(), textLabel.getFontSize(), textLabel.getColor(), textLabel.getText());
-			}
+			drawText(panel.getPos().x + textLabel.getxStart(), panel.getPos().y + textLabel.getyBaseline(), textLabel.getFont(), textLabel.getFontSize(), textLabel.getColor(), textLabel.getText());
 		}
 	}
-
-	// delete
-	//drawText(0, 0, Font::Monoton, FontSize::One, PoolColors::black(), "font size: 1");
-	//drawText(0, 1, Font::Monoton, FontSize::Two, PoolColors::black(), "font size: 2");
-	//drawText(0, 3, Font::Monoton, FontSize::Three, PoolColors::black(), "font size: 3");
-	//drawText(0, 6, Font::Monoton, FontSize::Four, PoolColors::black(), "font size: 4");
-	//drawText(0, 10, Font::Monoton, FontSize::Five, PoolColors::transparentBlack(), "font size: 5");
-	//drawText(0, 15, Font::Monoton, FontSize::Five, PoolColors::transparentWhite(), "font size: 5");
 
 	glfwSwapBuffers(glfwwindow);
 
@@ -245,78 +223,6 @@ void Window::drawFrame(std::vector<GameObject>* objects) {
 
 	glfwSwapBuffers(glfwwindow);
 
-	glfwPollEvents();
-}
-
-void Window::drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball* cueBall, Cue* cue, glm::vec2* trajectoryA, glm::vec2* trajectoryB, Player* currentPlayer, bool gameDone, int winner) {
-	//std::cout << "balls->size(): " << balls->size() << std::endl;	//delete
-	
-	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
-
-	// draw table
-	//drawRectangle(glm::vec2(0.0f, 0.0f), glm::vec2(48.0f, 27.0f), 0.0f, PoolColors::darkGreen());
-	//drawRectangle(glm::vec2(0.0f, 14.5f), glm::vec2(52.0f, 2.0f), 0.0f, PoolColors::darkBrown());
-	//drawRectangle(glm::vec2(25.0f, 0.0f), glm::vec2(2.0f, 27.0f), 0.0f, PoolColors::darkBrown());
-	//drawRectangle(glm::vec2(0.0f, -14.5f), glm::vec2(52.0f, 2.0f), 0.0f, PoolColors::darkBrown());
-	//drawRectangle(glm::vec2(-25.0f, 0.0f), glm::vec2(2.0f, 27.0f), 0.0f, PoolColors::darkBrown());
-	//drawRectangleTexture(glm::vec2(0.0f, 0.0f), glm::vec2(52.0f, 31.0f), 0.0f, tableTexture);
-	//std::cout << "table drawn" << std::endl;	// delete
-
-	//drawRectangleTexture(glm::vec2(0.0f, 0.0f), glm::vec2(10.0f, 10.0f), 0.0f, texture);	// delete
-
-	for (int i = 0; i < 18; i++) {
-		drawLine(sides[i].a, sides[i].b);
-	}
-	std::cout << "sides drawn" << std::endl;	// delete
-
-	glm::vec4 black = { 0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 1.0f };
-	for (int i = 0; i < 6; i++) {
-		drawCircle(1.0f, pocketPositions[i], black, Solid);
-	}
-	std::cout << "pockets drawn" << std::endl;	// delete
-
-	// draw balls
-	for (int i = 0; i < balls->size(); i++) {
-		drawSphereTexture(0.5, balls->at(i).getPos(), balls->at(i).getRotationMat(), balls->at(i).getTexture());
-		drawRectangleTexture(balls->at(i).getPos(), reflectionsScale, 0.0f, reflectionsTexture);
-	}
-	std::cout << "balls drawn" << std::endl;	// delete
-
-	if (cueBall != nullptr) {
-		drawSphereTexture(0.5, cueBall->getPos(), cueBall->getRotationMat(), cueBall->getTexture());
-		drawRectangleTexture(cueBall->getPos(), reflectionsScale, 0.0f, reflectionsTexture);
-		
-		std::cout << "cue ball drawn" << std::endl;	// delete
-	}
-
-	// draw cue
-	if (cue != nullptr) {
-		drawRectangleTexture(cue->getPos(), cue->getScale(), cue->getRotationMat(), cue->getTexture());
-		std::cout << "cue drawn" << std::endl;	// delete
-		std::cout << "cue position     x: " << cue->getPos().x << "   y: " << cue->getPos().y << std::endl;	// delete
-	}
-
-	// draw shot trajectory
-	if (trajectoryA != nullptr) {
-		drawLine(*trajectoryA, *trajectoryB);
-	}
-
-	if (!gameDone) {
-		drawRectangleTexture(glm::vec2(-45.5f, 26.0f), glm::vec2(5.0f, 2.0f), 0.0f, currentPlayer->playerNumber == 1 ? player1Texture : player2Texture);
-
-		if (currentPlayer->ballType != Unassigned) {
-			drawRectangleTexture(glm::vec2(-45.5f, 24.0f), glm::vec2(5.0f, 2.0f), 0.0f, currentPlayer->ballType == Striped ? stripesTexture : solidsTexture);
-		}
-	}
-	else {
-		drawRectangleTexture(glm::vec2(0.0f, 0.0f), glm::vec2(48.0f, 27.0f), 0.0f, winner == 1 ? player1Texture : player2Texture);
-	}
-
-	//drawSphereTexture(0.5, glm::vec2(0.0f, 0.0f), balls->at(5).rotationMat, balls->at(5).texture);	// delete
-	//drawRectangleTexture(glm::vec2(0.0f, 0.0f), glm::vec2(1.1f, 1.1f), 0.0f, reflections);	// delete
-
-	glfwSwapBuffers(glfwwindow);
-	
 	glfwPollEvents();
 }
 

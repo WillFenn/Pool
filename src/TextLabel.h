@@ -14,6 +14,7 @@ public:
 	TextLabel(std::string text, float xStart, float yBaseline, glm::vec4 color, Font font, FontSize fontSize);
 	TextLabel();
 	std::string getText();
+	void setText(std::string text);
 	float getxStart();
 	float getyBaseline();
 	glm::vec4 getColor();

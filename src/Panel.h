@@ -9,7 +9,7 @@
 class Panel {
 public:
 	Panel(glm::vec2 pos, std::string textureFilepath, glm::vec2 textureScale, bool flipTexture, bool active);
-	Panel(glm::vec2 pos);
+	Panel(glm::vec2 pos, bool active);
 	Panel();
 	void addTextLabel(TextLabel textLabel);
 	glm::vec2 getPos();

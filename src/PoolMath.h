@@ -15,4 +15,6 @@ namespace PoolMath {
 	bool approximatelyEqual(glm::vec2 a, glm::vec2 b, float error);
 	glm::vec2 normal(glm::vec2 a);
 	glm::mat4 addToRotationMat(glm::mat4 rotationMat, float rotationAngle, glm::vec3 rotationAxis);
+	float pointLineSegmentDistance(glm::vec2 p, glm::vec2 a, glm::vec2 b, glm::vec2* outClosestPoint);
+	float pointLineSegmentDistance(glm::vec2 p, glm::vec2 a, glm::vec2 b);
 }

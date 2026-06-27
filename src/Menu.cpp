@@ -7,8 +7,8 @@ Menu::Menu(glm::vec2 pos, std::string textureFilepath, glm::vec2 textureScale, b
 	selectedOption = MenuOptionType::None;
 }
 
-Menu::Menu(glm::vec2 pos, Input* input)
-: Panel(pos) {
+Menu::Menu(glm::vec2 pos, bool active, Input* input)
+: Panel(pos, active) {
 	this->input = input;
 	highlightedOption = MenuOptionType::None;
 	selectedOption = MenuOptionType::None;

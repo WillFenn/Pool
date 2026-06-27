@@ -21,29 +21,30 @@ int main() {
 
 	Physics physics;
 
-	Game game(&input);
-	
-	int numFrames = 0;
+	Game game(&input, window.getWorldScale());
 
-	double timeToFirstFrame = input.getTime();	
+	int framesThisSecond = 0;
+	double timeOfLastFrameRate = input.getTime();
 
-	std::cout << "game.shouldClose(): " << game.shouldClose() << std::endl;		// delete
-	std::cout << "window.shouldClose(): " << window.shouldClose() << std::endl;	// delete
 	while (!(game.shouldClose() || window.shouldClose())) {
-		numFrames++;
-
-		std::cout << std::endl << std::endl;
-		std::cout << "frame " << numFrames << std::endl << "average framerate: " << numFrames / (input.getTime() - timeToFirstFrame) << std::endl;
+		framesThisSecond++;
+		
+		double currentTime = input.getTime();
+		if (currentTime - timeOfLastFrameRate >= 1.0) {
+			timeOfLastFrameRate = currentTime;
+			game.setCurrentFrameRate(framesThisSecond);
+			framesThisSecond = 0;
+		}
 
 		double deltaTime = input.getDeltaTime();
 
-		game.update(&window, deltaTime);
+		game.update(deltaTime);
 
 		physics.update(game.getSides(), game.getBalls(), game.getCueBall(), game.getCue(), deltaTime);
 
 		// change
-		glm::vec2 trajectoryA = glm::vec2(0.0f, 0.0f);
-		glm::vec2 trajectoryB = glm::vec2(0.0f, 0.0f);
+		glm::vec2 trajectoryA = { 0.0f, 0.0f };
+		glm::vec2 trajectoryB = { 0.0f, 0.0f };
 
 		bool trajectoryShouldBeDrawn;
 		if (game.ballsAreMoving()) {
@@ -52,11 +53,6 @@ int main() {
 		else {
 			trajectoryShouldBeDrawn = game.trajectory(&trajectoryA, &trajectoryB);
 		}
-		std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!trajectoryShouldBeDrawn: " << trajectoryShouldBeDrawn << std::endl;	// delete
-
-		// delete
-		//window.drawFrame(game.getSides(), game.getPocketPositions(), game.getBalls(), game.cueBallShouldBeDrawn() ? game.getCueBall() : nullptr, game.cueShouldBeDrawn() ? game.getCue() : nullptr,
-		//	trajectoryShouldBeDrawn ? &trajectoryA : nullptr, trajectoryShouldBeDrawn ? &trajectoryB : nullptr, game.getCurrentPlayer(), game.getGameDone(), game.getWinner());
 
 		std::vector<GameObject> objects;
 		objects.push_back(*game.getTable());
@@ -68,6 +64,7 @@ int main() {
 		lines.push_back({ trajectoryA, trajectoryB });
 
 		std::vector<Panel> panels;
+		panels.push_back(*game.getFrameRatePanel());
 		panels.push_back(*game.getStartMenu());
 		panels.push_back(*game.getGameOverMenu());
 		panels.insert(panels.end(), game.getPlayerPanels()->begin(), game.getPlayerPanels()->end());

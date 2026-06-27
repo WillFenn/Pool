@@ -39,3 +39,43 @@ glm::vec2 PoolMath::normal(glm::vec2 a) {
 glm::mat4 PoolMath::addToRotationMat(glm::mat4 rotationMat, float rotationAngle, glm::vec3 rotationAxis) {
 	return glm::rotate(rotationMat, rotationAngle, -rotationAxis);
 }
+
+float PoolMath::pointLineSegmentDistance(glm::vec2 p, glm::vec2 a, glm::vec2 b, glm::vec2* outClosestPoint) {
+	glm::vec2 closestPoint;
+	glm::vec2 ab = b - a;
+	glm::vec2 ap = p - a;
+	float normalizedProj = dot(ab, ap) / (ab.x * ab.x + ab.y * ab.y);
+
+	if (normalizedProj <= 0) {
+		closestPoint = a;
+	}
+	else if (normalizedProj >= 1) {
+		closestPoint = b;
+	}
+	else {
+		closestPoint = a + ab * normalizedProj;
+	}
+
+	*outClosestPoint = closestPoint;
+
+	return distance(p, closestPoint);
+}
+
+float PoolMath::pointLineSegmentDistance(glm::vec2 p, glm::vec2 a, glm::vec2 b) {
+	glm::vec2 closestPoint;
+	glm::vec2 ab = b - a;
+	glm::vec2 ap = p - a;
+	float normalizedProj = dot(ab, ap) / (ab.x * ab.x + ab.y * ab.y);
+
+	if (normalizedProj <= 0) {
+		closestPoint = a;
+	}
+	else if (normalizedProj >= 1) {
+		closestPoint = b;
+	}
+	else {
+		closestPoint = a + ab * normalizedProj;
+	}
+
+	return distance(p, closestPoint);
+}

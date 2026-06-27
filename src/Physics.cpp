@@ -119,25 +119,6 @@ void Physics::update(Side sides[], std::vector<Ball>* balls, Ball* cueBall, Cue*
 	}
 }
 
-float Physics::pointLineSegmentDistance(glm::vec2 p, glm::vec2 a, glm::vec2 b) {
-	glm::vec2 closestPoint;
-	glm::vec2 ab = b - a;
-	glm::vec2 ap = p - a;
-	float normalizedProj = dot(ab, ap) / (ab.x * ab.x + ab.y * ab.y);
-
-	if (normalizedProj <= 0) {
-		closestPoint = a;
-	}
-	else if (normalizedProj >= 1) {
-		closestPoint = b;
-	}
-	else {
-		closestPoint = a + ab * normalizedProj;
-	}
-
-	return distance(p, closestPoint);
-}
-
 bool Physics::ballsAreSeparating(Ball* ball1, Ball* ball2) {
 	float newDistance = glm::distance(ball1->getPos(), ball2->getPos());
 
@@ -164,7 +145,7 @@ bool Physics::detectBallCollision(Ball* ball1, Ball* ball2, glm::vec2* outCollis
 
 bool Physics::detectBallSideCollision(Side sides[], Ball* ball, glm::vec2* outCollisionNormal) {
 	for (int i = 0; i < 18; i++) {
-		if ((pointLineSegmentDistance(ball->getPos(), sides[i].a, sides[i].b) <= 0.5f) && (glm::dot(ball->getVelocity(), sides[i].normal) < 0.0f)) {
+		if ((PoolMath::pointLineSegmentDistance(ball->getPos(), sides[i].a, sides[i].b) <= 0.5f) && (glm::dot(ball->getVelocity(), sides[i].normal) < 0.0f)) {
 			*outCollisionNormal = sides[i].normal;
 			
 			return true;

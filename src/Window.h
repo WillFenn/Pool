@@ -9,6 +9,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <ranges>
 #include <string>
 #include <glew.h>
 #include <glfw3.h>
@@ -38,7 +39,6 @@ public:
 	~Window();
 	void drawFrame(std::vector<GameObject>* objects, std::vector<Line>* lines, std::vector<Panel>* panels);
 	void drawFrame(std::vector<GameObject>* objects);
-	void drawFrame(Side sides[], glm::vec2 pocketPositions[], std::vector<Ball>* balls, Ball* cueBall, Cue* cue, glm::vec2* trajectoryA, glm::vec2* trajectoryB, Player* currentPlayer, bool gameDone, int winner);
 	GLFWwindow* getglfwwindow();
 	glm::vec2 getResolution();
 	glm::vec2 getWorldScale();
@@ -73,11 +73,6 @@ private:
 	Shader* rectangleTextureShader;
 	Shader* lineShader;
 	Shader* characterShader;
-	Texture* texture;
-	Texture* player1Texture;
-	Texture* player2Texture;
-	Texture* stripesTexture;
-	Texture* solidsTexture;
 	Texture* reflectionsTexture;
 	glm::vec2 reflectionsScale;
 	FT_Library freetype;

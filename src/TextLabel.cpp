@@ -29,6 +29,10 @@ std::string TextLabel::getText() {
 	return text;
 }
 
+void TextLabel::setText(std::string text) {
+	this->text = text;
+}
+
 float TextLabel::getxStart() {
 	return xStart;
 }

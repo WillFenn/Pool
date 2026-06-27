@@ -7,8 +7,9 @@ Panel::Panel(glm::vec2 pos, std::string textureFilepath, glm::vec2 textureScale,
 	this->active = active;
 }
 
-Panel::Panel(glm::vec2 pos) {
+Panel::Panel(glm::vec2 pos, bool active) {
 	this->pos = pos;
+	this->active = active;
 }
 
 Panel::Panel() {}

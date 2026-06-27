@@ -21,12 +21,14 @@ enum GameState { ShowStartMenu, PlayGame, ShowGameOver, Close };
 
 class Game {
 public:
-	Game(Input* input);
+	Game(Input* input, glm::vec2 worldScale);
 	~Game();
-	void update(Window* window, float deltaTime);
+	void update(float deltaTime);
 	bool shouldClose();
 	Menu* getStartMenu();
 	Menu* getGameOverMenu();
+	Panel* getFrameRatePanel();
+	void setCurrentFrameRate(int currentFrameRate);
 	bool ballsAreMoving();
 	GameObject* getTable();
 	Side* getSides();
@@ -38,15 +40,15 @@ public:
 	Player* getCurrentPlayer();
 	bool cueBallShouldBeDrawn();
 	bool cueShouldBeDrawn();
-	bool trajectory(glm::vec2* pointA, glm::vec2* pointB);
+	Line* trajectory();
 	std::vector<Panel>* getPlayerPanels();
 
 private:
 	void setBallPositions();
-	void setCuePos(Window* window);
+	void setCuePos();
 	void checkPocketedBalls();
 	bool foul();
-	bool positionOutOfBounds(Window* window);
+	bool positionOutOfBounds();
 	bool detectBallCollision(glm::vec2 ball1Pos, glm::vec2 ball2Pos, glm::vec2* outCollisionNormal);
 	bool allBallsPocketed(BallType ballType);
 
@@ -55,6 +57,7 @@ private:
 	GameState currentState;
 	Menu startMenu;
 	Menu gameOverMenu;
+	Panel frameRatePanel;
 	GameObject table;
 	Side sides[18];
 	glm::vec2 pocketPositions[6];
