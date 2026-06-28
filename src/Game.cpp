@@ -56,6 +56,7 @@ Game::Game(Input* input, glm::vec2 worldScale) {
 	leftClickStartPos = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
 	
 	cueStartPosition = cueBall.getPos() + glm::vec2(-1.0f, 0.0f) * ((10.0f / 2.0f) + 0.5f);
+	maxCueDistance = 30.0f;
 	cue = Cue(cueStartPosition, "res/textures/cue.png", false, false);
 
 	balls.push_back(Ball({ 0.0f, 0.0f }, "res/textures/balls/one_ball.png", false, false, 1, BallType::Solid));
@@ -87,6 +88,8 @@ Game::Game(Input* input, glm::vec2 worldScale) {
 	TextLabel player2Label("Player 2", -5.0f, 1.5f, PoolColors::black(), Font::Notable, FontSize::One);
 	player2Panel.addTextLabel(player2Label);
 	playerPanels.push_back(player2Panel);
+
+	trajectoryLength = 3.0f;
 
 	currentPlayerIndex = 0;
 }
@@ -295,41 +298,37 @@ bool Game::cueShouldBeDrawn() {
 	return !ballsAreMoving() && !cueBallShouldBePlaced;
 }
 
-Line* Game::trajectory() {
-	//glm::vec2 pathPos = cueBall.getPos();
-	//glm::vec2 pathIncrement = 0.01f * glm::normalize(cueBall.getPos() - cue.getPos());
-	//glm::vec2 collisionNormal;
-
-	//auto activeBalls = balls | std::ranges::views::filter([](Ball& ball) { return ball.getActive(); });
-
-	//while (pathPos.x > -23.5f && pathPos.x < 23.5f && pathPos.y > -13.0f && pathPos.y < 13.0f) {
-	//	for (Ball& ball : activeBalls) {
-	//		if (detectBallCollision(pathPos, ball.getPos(), &collisionNormal)) {
-	//			*pointA = ball.getPos();
-	//			*pointB = ball.getPos() + 3.0f * collisionNormal;
-	//			
-	//			return true;
-	//		}
-	//	}
-
-	//	pathPos += pathIncrement;
-	//}
-
-	//return false;
+std::optional<Line> Game::trajectory() {
+	if (ballsAreMoving()) {
+		return std::optional<Line>();
+	}
 
 	glm::vec2 cueBallPathStart = cueBall.getPos();
-	glm::vec2 cueBallPathEnd = cueBallPathStart + 30.0f * glm::normalize(cueBallPathStart - cue.getPos());
+	glm::vec2 cueBallPath = glm::normalize(cueBallPathStart - cue.getPos());
+	glm::vec2 cueBallPathEnd = cueBallPathStart + 60.0f * cueBallPath;
 
-	std::vector<glm::vec2> collisionPositions;
+	glm::vec2 collidingBallPos(std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+	glm::vec2 closestPointToBall;
 
 	for (Ball& ball : balls | std::ranges::views::filter([](Ball& ball) { return ball.getActive(); })) {
 		glm::vec2 closestPoint;
 		float pathBallDistance = PoolMath::pointLineSegmentDistance(ball.getPos(), cueBallPathStart, cueBallPathEnd, &closestPoint);
-
-		if (pathBallDistance <= 1.0f) {
-			glm::vec2 collisionPos;
-			collisionPositions.push_back(collisionPos);
+		
+		if (pathBallDistance <= 1.0f && glm::distance(cueBall.getPos(), ball.getPos()) < glm::distance(cueBall.getPos(), collidingBallPos)) {
+			collidingBallPos = ball.getPos();
+			closestPointToBall = closestPoint;
 		}
+	}
+
+	if (collidingBallPos != glm::vec2(std::numeric_limits<float>::max(), std::numeric_limits<float>::max())) {
+		glm::vec2 cueBallCollisionPos = closestPointToBall - (float)glm::sqrt(1.0f - glm::pow(glm::distance(collidingBallPos, closestPointToBall), 2)) * cueBallPath;
+		glm::vec2 cueBallToBall = collidingBallPos - cueBallCollisionPos;
+
+		Line line(collidingBallPos, collidingBallPos + trajectoryLength * cueBallToBall);
+		return std::optional<Line>(line);
+	}
+	else {
+		return std::optional<Line>();
 	}
 }
 

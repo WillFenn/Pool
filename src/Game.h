@@ -3,6 +3,7 @@
 #include <vector>
 #include <limits>
 #include <ranges>
+#include <optional>
 #include <PoolMath.h>
 #include <PoolColors.h>
 #include <Menu.h>
@@ -40,7 +41,7 @@ public:
 	Player* getCurrentPlayer();
 	bool cueBallShouldBeDrawn();
 	bool cueShouldBeDrawn();
-	Line* trajectory();
+	std::optional<Line> trajectory();
 	std::vector<Panel>* getPlayerPanels();
 
 private:
@@ -71,10 +72,11 @@ private:
 	bool ballsMovedLastFrame = false;
 	glm::vec2 leftClickStartPos;
 	glm::vec2 cueStartPosition;
-	float maxCueDistance = 30.0f;
+	float maxCueDistance;
 	Cue cue;
 	std::vector<Ball> balls;
 	Player players[2];
 	std::vector<Panel> playerPanels;
+	float trajectoryLength;
 	int currentPlayerIndex;
 };

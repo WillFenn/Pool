@@ -42,17 +42,16 @@ int main() {
 
 		physics.update(game.getSides(), game.getBalls(), game.getCueBall(), game.getCue(), deltaTime);
 
-		// change
-		glm::vec2 trajectoryA = { 0.0f, 0.0f };
-		glm::vec2 trajectoryB = { 0.0f, 0.0f };
+		//glm::vec2 trajectoryA = { 0.0f, 0.0f };
+		//glm::vec2 trajectoryB = { 0.0f, 0.0f };
 
-		bool trajectoryShouldBeDrawn;
-		if (game.ballsAreMoving()) {
-			trajectoryShouldBeDrawn = false;
-		}
-		else {
-			trajectoryShouldBeDrawn = game.trajectory(&trajectoryA, &trajectoryB);
-		}
+		//bool trajectoryShouldBeDrawn;
+		//if (game.ballsAreMoving()) {
+		//	trajectoryShouldBeDrawn = false;
+		//}
+		//else {
+		//	trajectoryShouldBeDrawn = game.trajectory(&trajectoryA, &trajectoryB);
+		//}
 
 		std::vector<GameObject> objects;
 		objects.push_back(*game.getTable());
@@ -61,7 +60,10 @@ int main() {
 		objects.push_back(*game.getCue());
 
 		std::vector<Line> lines;
-		lines.push_back({ trajectoryA, trajectoryB });
+		std::optional<Line> trajectory = game.trajectory();
+		if (trajectory) {
+			lines.push_back(trajectory.value());
+		}
 
 		std::vector<Panel> panels;
 		panels.push_back(*game.getFrameRatePanel());
