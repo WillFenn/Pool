@@ -12,14 +12,14 @@ class GameObject {
 public:
 	GameObject(Shape shape, glm::vec2 pos, glm::vec2 scale, glm::mat4 rotationMat, std::string textureFilepath, bool flipTexture, bool active);
 	GameObject();
-	Shape getShape();
-	glm::vec2 getPos();
+	Shape getShape() const;
+	glm::vec2 getPos() const;
 	void setPos(glm::vec2 pos);
-	glm::vec2 getScale();
-	glm::mat4 getRotationMat();
+	glm::vec2 getScale() const;
+	glm::mat4 getRotationMat() const;
 	void setRotationMat(glm::mat4 rotationMat);
-	Texture* getTexture();
-	bool getActive();
+	const Texture* getTexture() const;
+	bool getActive() const;
 	void setActive(bool active);
 
 private:

@@ -223,19 +223,19 @@ void Game::update(float deltaTime) {
 	}
 }
 
-bool Game::shouldClose() {
+bool Game::shouldClose() const {
 	return currentState == GameState::Close;
 }
 
-Menu* Game::getStartMenu() {
+const Menu* Game::getStartMenu() const {
 	return &startMenu;
 }
 
-Menu* Game::getGameOverMenu() {
+const Menu* Game::getGameOverMenu() const {
 	return &gameOverMenu;
 }
 
-Panel* Game::getFrameRatePanel() {
+const Panel* Game::getFrameRatePanel() const {
 	return &frameRatePanel;
 }
 
@@ -244,7 +244,7 @@ void Game::setCurrentFrameRate(int currentFrameRate) {
 	frameRatePanel.getTextLabels()->front().setText(std::string("framerate: ") + std::to_string(currentFrameRate));
 }
 
-bool Game::ballsAreMoving() {
+bool Game::ballsAreMoving() const {
 	if (glm::length(cueBall.getVelocity()) != 0.0f) {
 		return true;
 	}
@@ -258,47 +258,47 @@ bool Game::ballsAreMoving() {
 	return false;
 }
 
-GameObject* Game::getTable() {
+const GameObject* Game::getTable() const {
 	return &table;
 }
 
-Side* Game::getSides() {
+const Side* Game::getSides() const {
 	return sides;
 }
 
-glm::vec2* Game::getPocketPositions() {
+const glm::vec2* Game::getPocketPositions() const {
 	return pocketPositions;
 }
 
-Ball* Game::getCueBall() {
+const Ball* Game::getCueBall() const {
 	return &cueBall;
 }
 
-Cue* Game::getCue() {
+const Cue* Game::getCue() const {
 	return &cue;
 }
 
-std::vector<Ball>* Game::getBalls() {
+const std::vector<Ball>* Game::getBalls() const {
 	return &balls;
 }
 
-bool Game::getCueBallShouldBePlaced() {
+bool Game::getCueBallShouldBePlaced() const {
 	return cueBallShouldBePlaced;
 }
 
-Player* Game::getCurrentPlayer() {
+const Player* Game::getCurrentPlayer() const {
 	return &players[currentPlayerIndex];
 }
 
-bool Game::cueBallShouldBeDrawn() {
+bool Game::cueBallShouldBeDrawn() const {
 	return !cueBallShouldBePlaced || !ballsAreMoving();
 }
 
-bool Game::cueShouldBeDrawn() {
+bool Game::cueShouldBeDrawn() const {
 	return !ballsAreMoving() && !cueBallShouldBePlaced;
 }
 
-std::optional<Line> Game::trajectory() {
+std::optional<Line> Game::trajectory() const {
 	if (ballsAreMoving()) {
 		return std::optional<Line>();
 	}
@@ -332,7 +332,7 @@ std::optional<Line> Game::trajectory() {
 	}
 }
 
-std::vector<Panel>* Game::getPlayerPanels() {
+const std::vector<Panel>* Game::getPlayerPanels() const {
 	return &playerPanels;
 }
 
@@ -468,7 +468,7 @@ bool Game::foul() {
 	return false;
 }
 
-bool Game::positionOutOfBounds() {
+bool Game::positionOutOfBounds() const {
 	glm::vec2 mouseWorldPos = input->getMouseWorldPos();
 
 	for (Ball& ball : balls | std::ranges::views::filter([](Ball& ball) { return ball.getActive(); })) {
@@ -490,7 +490,7 @@ bool Game::positionOutOfBounds() {
 	return false;
 }
 
-bool Game::detectBallCollision(glm::vec2 ball1Pos, glm::vec2 ball2Pos, glm::vec2* outCollisionNormal) {
+bool Game::detectBallCollision(glm::vec2 ball1Pos, glm::vec2 ball2Pos, glm::vec2* outCollisionNormal) const {
 	if (glm::length(ball1Pos - ball2Pos) <= 1.0f) {
 		*outCollisionNormal = glm::normalize(ball2Pos - ball1Pos);
 
@@ -500,7 +500,7 @@ bool Game::detectBallCollision(glm::vec2 ball1Pos, glm::vec2 ball2Pos, glm::vec2
 	return false;
 }
 
-bool Game::allBallsPocketed(BallType ballType) {
+bool Game::allBallsPocketed(BallType ballType) const {
 	for (Ball& ball : balls | std::ranges::views::filter([](Ball& ball) { return ball.getActive(); })) {
 		if (ball.getBallType() == ballType) {
 			return false;

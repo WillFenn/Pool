@@ -49,7 +49,7 @@ void Menu::update() {
 	}
 }
 
-MenuOptionType Menu::getSelectedOption() {
+MenuOptionType Menu::getSelectedOption() const {
 	std::cout << "selectedOption: " << selectedOption << std::endl;	// delete
 	return selectedOption;
 }

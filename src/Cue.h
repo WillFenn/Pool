@@ -9,9 +9,9 @@ struct Cue : public GameObject {
 public:
 	Cue(glm::vec2 pos, std::string textureFilepath, bool flipTexture, bool active);
 	Cue();
-	float getSpeed();
+	float getSpeed() const;
 	void setSpeed(float speed);
-	bool getWasPulledBack();
+	bool getWasPulledBack() const;
 	void setWasPulledBack(bool wasPulledBack);
 
 private:

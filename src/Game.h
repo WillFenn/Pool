@@ -25,33 +25,33 @@ public:
 	Game(Input* input, glm::vec2 worldScale);
 	~Game();
 	void update(float deltaTime);
-	bool shouldClose();
-	Menu* getStartMenu();
-	Menu* getGameOverMenu();
-	Panel* getFrameRatePanel();
+	bool shouldClose() const;
+	const Menu* getStartMenu() const;
+	const Menu* getGameOverMenu() const;
+	const Panel* getFrameRatePanel() const;
 	void setCurrentFrameRate(int currentFrameRate);
-	bool ballsAreMoving();
-	GameObject* getTable();
-	Side* getSides();
-	glm::vec2* getPocketPositions();
-	Ball* getCueBall();
-	Cue* getCue();
-	std::vector<Ball>* getBalls();
-	bool getCueBallShouldBePlaced();
-	Player* getCurrentPlayer();
-	bool cueBallShouldBeDrawn();
-	bool cueShouldBeDrawn();
-	std::optional<Line> trajectory();
-	std::vector<Panel>* getPlayerPanels();
+	bool ballsAreMoving() const;
+	const GameObject* getTable() const;
+	const Side* getSides() const;
+	const glm::vec2* getPocketPositions() const;
+	const Ball* getCueBall() const;
+	const Cue* getCue() const;
+	const std::vector<Ball>* getBalls() const;
+	bool getCueBallShouldBePlaced() const;
+	const Player* getCurrentPlayer() const;
+	bool cueBallShouldBeDrawn() const;
+	bool cueShouldBeDrawn() const;
+	std::optional<Line> trajectory() const;
+	const std::vector<Panel>* getPlayerPanels() const;
 
 private:
 	void setBallPositions();
 	void setCuePos();
 	void checkPocketedBalls();
-	bool foul();
-	bool positionOutOfBounds();
-	bool detectBallCollision(glm::vec2 ball1Pos, glm::vec2 ball2Pos, glm::vec2* outCollisionNormal);
-	bool allBallsPocketed(BallType ballType);
+	bool foul() const;
+	bool positionOutOfBounds() const;
+	bool detectBallCollision(glm::vec2 ball1Pos, glm::vec2 ball2Pos, glm::vec2* outCollisionNormal) const;
+	bool allBallsPocketed(BallType ballType) const;
 
 private:
 	Input* input;

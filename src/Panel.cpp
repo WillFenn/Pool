@@ -18,23 +18,23 @@ void Panel::addTextLabel(TextLabel textLabel) {
 	textLabels.push_back(textLabel);
 }
 
-glm::vec2 Panel::getPos() {
+glm::vec2 Panel::getPos() const {
 	return pos;
 }
 
-glm::vec2 Panel::getTextureScale() {
+glm::vec2 Panel::getTextureScale() const {
 	return textureScale;
 }
 
-Texture* Panel::getTexture() {
+const Texture* Panel::getTexture() const {
 	return texture.get();
 }
 
-std::vector<TextLabel>* Panel::getTextLabels() {
+const std::vector<TextLabel>* Panel::getTextLabels() const {
 	return &textLabels;
 }
 
-bool Panel::getActive() {
+bool Panel::getActive() const{
 	return active;
 }
 

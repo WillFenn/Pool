@@ -8,7 +8,7 @@ Cue::Cue(glm::vec2 pos, std::string textureFilepath, bool flipTexture, bool acti
 
 Cue::Cue() {}
 
-float Cue::getSpeed() {
+float Cue::getSpeed() const {
 	return speed;
 }
 
@@ -16,7 +16,7 @@ void Cue::setSpeed(float speed) {
 	this->speed = speed;
 }
 
-bool Cue::getWasPulledBack() {
+bool Cue::getWasPulledBack() const {
 	return wasPulledBack;
 }
 

@@ -7,13 +7,13 @@ class Input {
 public:
 	Input(GLFWwindow* glfwwindow, glm::vec2 resolution, glm::vec2 worldScale);
 	~Input();
-	double getTime();
+	double getTime() const;
 	double getDeltaTime();
-	glm::vec2 getMousePos();
-	glm::vec2 getMouseWorldPos();
-	bool leftMousePressed();
-	bool leftMouseReleased();
-	bool escKeyPressed();
+	glm::vec2 getMousePos() const;
+	glm::vec2 getMouseWorldPos() const;
+	bool leftMousePressed() const;
+	bool leftMouseReleased() const;
+	bool escKeyPressed() const;
 
 private:
 	GLFWwindow* glfwwindow;

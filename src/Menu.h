@@ -14,7 +14,7 @@ public:
 	Menu();
 	void addMenuOption(MenuOption menuOption, TextLabel textLabel);
 	void update();
-	MenuOptionType getSelectedOption();
+	MenuOptionType getSelectedOption() const;
 
 private:
 	std::vector<MenuOption> menuOptions;

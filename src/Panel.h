@@ -12,11 +12,11 @@ public:
 	Panel(glm::vec2 pos, bool active);
 	Panel();
 	void addTextLabel(TextLabel textLabel);
-	glm::vec2 getPos();
-	glm::vec2 getTextureScale();
-	Texture* getTexture();
-	std::vector<TextLabel>* getTextLabels();
-	bool getActive();
+	glm::vec2 getPos() const;
+	glm::vec2 getTextureScale() const;
+	const Texture* getTexture() const;
+	const std::vector<TextLabel>* getTextLabels() const;
+	bool getActive() const;
 	void setActive(bool active);
 
 protected:

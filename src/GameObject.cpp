@@ -11,11 +11,11 @@ GameObject::GameObject(Shape shape, glm::vec2 pos, glm::vec2 scale, glm::mat4 ro
 
 GameObject::GameObject() {}
 
-Shape GameObject::getShape() {
+Shape GameObject::getShape() const {
 	return shape;
 }
 
-glm::vec2 GameObject::getPos() {
+glm::vec2 GameObject::getPos() const {
 	return pos;
 }
 
@@ -24,11 +24,11 @@ void GameObject::setPos(glm::vec2 pos) {
 }
 
 
-glm::vec2 GameObject::getScale() {
+glm::vec2 GameObject::getScale() const {
 	return scale;
 }
 
-glm::mat4 GameObject::getRotationMat() {
+glm::mat4 GameObject::getRotationMat() const {
 	return rotationMat;
 }
 
@@ -36,11 +36,11 @@ void GameObject::setRotationMat(glm::mat4 rotationMat) {
 	this->rotationMat = rotationMat;
 }
 
-Texture* GameObject::getTexture() {
+const Texture* GameObject::getTexture() const {
 	return texture.get();
 }
 
-bool GameObject::getActive() {
+bool GameObject::getActive() const {
 	return active;
 }
 

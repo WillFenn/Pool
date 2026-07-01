@@ -9,18 +9,18 @@ Character::Character(glm::ivec2 size, glm::ivec2 bearing, unsigned int advance, 
 
 Character::Character() {}
 
-glm::ivec2 Character::getSize() {
+glm::ivec2 Character::getSize() const {
 	return size;
 }
 
-glm::ivec2 Character::getBearing() {
+glm::ivec2 Character::getBearing() const {
 	return bearing;
 }
 
-unsigned int Character::getAdvance() {
+unsigned int Character::getAdvance() const {
 	return advance;
 }
 
-Texture* Character::getTexture() {
+Texture* Character::getTexture() const {
 	return texture.get();
 }

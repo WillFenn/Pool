@@ -9,15 +9,15 @@ Ball::Ball(glm::vec2 pos, std::string textureFilepath, bool flipTexture, bool ac
 
 Ball::Ball() {}
 
-int Ball::getIndex() {
+int Ball::getIndex() const {
 	return index;
 }
 
-BallType Ball::getBallType() {
+BallType Ball::getBallType() const {
 	return ballType;
 }
 
-glm::vec2 Ball::getVelocity() {
+glm::vec2 Ball::getVelocity() const{
 	return velocity;
 }
 

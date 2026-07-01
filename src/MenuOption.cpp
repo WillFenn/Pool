@@ -8,14 +8,14 @@ MenuOption::MenuOption(MenuOptionType menuOptionType, glm::vec2 pos, glm::vec2 s
 
 MenuOption::MenuOption() {}
 
-MenuOptionType MenuOption::getMenuOptionType() {
+MenuOptionType MenuOption::getMenuOptionType() const {
 	return menuOptionType;
 }
 
-glm::vec2 MenuOption::getPos() {
+glm::vec2 MenuOption::getPos() const {
 	return pos;
 }
 
-glm::vec2 MenuOption::getScale() {
+glm::vec2 MenuOption::getScale() const {
 	return scale;
 }

@@ -11,7 +11,7 @@ Input::~Input() {
 
 }
 
-double Input::getTime() {
+double Input::getTime() const {
 	return glfwGetTime();
 }
 
@@ -33,30 +33,30 @@ double Input::getDeltaTime() {
 	return deltaTime;
 }
 
-glm::vec2 Input::getMousePos() {
+glm::vec2 Input::getMousePos() const {
 	double xPos, yPos;
 	glfwGetCursorPos(glfwwindow, &xPos, &yPos);
 
 	return glm::vec2(xPos, yPos);
 }
 
-glm::vec2 Input::getMouseWorldPos() {
+glm::vec2 Input::getMouseWorldPos() const {
 	glm::vec2 mouseWorldPos = ((getMousePos() - resolution / 2.0f) / (resolution / 2.0f)) * (worldScale / 2.0f);
 	mouseWorldPos.y *= -1;
 
 	return mouseWorldPos;
 }
 
-bool Input::leftMousePressed() {
+bool Input::leftMousePressed() const {
 	int state = glfwGetMouseButton(glfwwindow, GLFW_MOUSE_BUTTON_LEFT);
 	return state == GLFW_PRESS;
 }
 
-bool Input::leftMouseReleased() {
+bool Input::leftMouseReleased() const {
 	int state = glfwGetMouseButton(glfwwindow, GLFW_MOUSE_BUTTON_LEFT);
 	return state == GLFW_RELEASE;
 }
 
-bool Input::escKeyPressed() {
+bool Input::escKeyPressed() const {
 	return glfwGetKey(glfwwindow, GLFW_KEY_ESCAPE) == GLFW_PRESS;
 }
