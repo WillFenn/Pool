@@ -37,22 +37,21 @@ class Window {
 public:
 	Window();
 	~Window();
-	void drawFrame(std::vector<GameObject>* objects, std::vector<Line>* lines, std::vector<Panel>* panels);
-	void drawFrame(std::vector<GameObject>* objects);
-	GLFWwindow* getglfwwindow();
-	glm::vec2 getResolution();
-	glm::vec2 getWorldScale();
-	bool shouldClose();
+	void drawFrame(std::vector<GameObject>* objects, std::vector<Line>* lines, std::vector<Panel>* panels) const;
+	const GLFWwindow* getglfwwindow() const;
+	glm::vec2 getResolution() const;
+	glm::vec2 getWorldScale() const;
+	bool shouldClose() const;
 
 private:
-	void drawCircle(float radius, glm::vec2 pos, glm::vec4 color, BallType ballType);
-	void drawSphereTexture(float radius, glm::vec2 pos, glm::mat4 rotationMat, Texture* texture);
-	void drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::vec4 color);
-	void drawRectangleTexture(glm::vec2 pos, glm::vec2 scale, glm::mat4 rotationMat, Texture* texture);
-	void drawLine(glm::vec2 a, glm::vec2 b);
-	void drawText(float xStart, float yBaseline, Font font, FontSize fontSize, glm::vec4 color, std::string text);
-	void GLClearErrors();
-	bool GLLogErrors();
+	void drawCircle(float radius, glm::vec2 pos, glm::vec4 color, BallType ballType) const;
+	void drawSphereTexture(float radius, glm::vec2 pos, glm::mat4 rotationMat, Texture* texture) const;
+	void drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::vec4 color) const;
+	void drawRectangleTexture(glm::vec2 pos, glm::vec2 scale, glm::mat4 rotationMat, Texture* texture) const;
+	void drawLine(glm::vec2 a, glm::vec2 b) const;
+	void drawText(float xStart, float yBaseline, Font font, FontSize fontSize, glm::vec4 color, std::string text) const;
+	void GLClearErrors() const;
+	bool GLLogErrors() const;
 
 private:
 	GLFWmonitor* glfwmonitor;

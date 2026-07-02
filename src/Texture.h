@@ -16,12 +16,12 @@ public:
 	Texture(unsigned char* buffer, int width, int height, bool isCharTexture);
 	~Texture();
 	void bind(unsigned int slot = 0);
-	void unbind();
-	unsigned int getSlot();
+	void unbind() const;
+	unsigned int getSlot() const;
 
 private:
-	void GLClearErrors();
-	bool GLLogErrors();
+	void GLClearErrors() const;
+	bool GLLogErrors() const;
 
 private:
 	unsigned int textureID;

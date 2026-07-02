@@ -25,7 +25,7 @@ TextLabel::TextLabel(std::string text, float xStart, float yBaseline, glm::vec4 
 
 TextLabel::TextLabel() {}
 
-std::string TextLabel::getText() {
+std::string TextLabel::getText() const {
 	return text;
 }
 
@@ -33,15 +33,15 @@ void TextLabel::setText(std::string text) {
 	this->text = text;
 }
 
-float TextLabel::getxStart() {
+float TextLabel::getxStart() const {
 	return xStart;
 }
 
-float TextLabel::getyBaseline() {
+float TextLabel::getyBaseline() const {
 	return yBaseline;
 }
 
-glm::vec4 TextLabel::getColor() {
+glm::vec4 TextLabel::getColor() const {
 	return color;
 }
 
@@ -49,22 +49,22 @@ void TextLabel::setColor(glm::vec4 color) {
 	this->color = color;
 }
 
-Font TextLabel::getFont() {
+Font TextLabel::getFont() const {
 	return font;
 }
 
-FontSize TextLabel::getFontSize() {
+FontSize TextLabel::getFontSize() const {
 	return fontSize;
 }
 
-Texture* TextLabel::getTexture() {
+const Texture* TextLabel::getTexture() const {
 	return texture.get();
 }
 
-glm::vec2 TextLabel::getTexturePos() {
+glm::vec2 TextLabel::getTexturePos() const {
 	return texturePos;
 }
 
-glm::vec2 TextLabel::getTextureScale() {
+glm::vec2 TextLabel::getTextureScale() const {
 	return textureScale;
 }

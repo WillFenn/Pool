@@ -13,17 +13,17 @@ public:
 	TextLabel(std::string text, float xStart, float yBaseline, glm::vec4 color, Font font, FontSize fontSize, std::string textureFilepath, bool flipTexture, glm::vec2 texturePos, glm::vec2 textureScale);
 	TextLabel(std::string text, float xStart, float yBaseline, glm::vec4 color, Font font, FontSize fontSize);
 	TextLabel();
-	std::string getText();
+	std::string getText() const;
 	void setText(std::string text);
-	float getxStart();
-	float getyBaseline();
-	glm::vec4 getColor();
+	float getxStart() const;
+	float getyBaseline() const;
+	glm::vec4 getColor() const;
 	void setColor(glm::vec4 color);
-	Font getFont();
-	FontSize getFontSize();
-	Texture* getTexture();
-	glm::vec2 getTexturePos();
-	glm::vec2 getTextureScale();
+	Font getFont() const;
+	FontSize getFontSize() const;
+	const Texture* getTexture() const;
+	glm::vec2 getTexturePos() const;
+	glm::vec2 getTextureScale() const;
 
 private:
 	std::string text;

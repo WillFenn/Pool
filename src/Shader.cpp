@@ -29,7 +29,7 @@ Shader::~Shader() {
 	GLCALL(glDeleteProgram(programID));
 }
 
-void Shader::compileShader(const char* source, unsigned int shaderType, unsigned int* ID) {
+void Shader::compileShader(const char* source, unsigned int shaderType, unsigned int* ID) const {
 	GLCALL(*ID = glCreateShader(shaderType));
 	GLCALL(glShaderSource(*ID, 1, &source, 0));
 	GLCALL(glCompileShader(*ID));
@@ -46,15 +46,15 @@ void Shader::compileShader(const char* source, unsigned int shaderType, unsigned
 	}
 }
 
-void Shader::bind() {
+void Shader::bind() const {
 	GLCALL(glUseProgram(programID));
 }
 
-void Shader::unbind() {
+void Shader::unbind() const {
 	GLCALL(glUseProgram(0));
 }
 
-std::string Shader::readFile(const char* filepath) {
+std::string Shader::readFile(const char* filepath) const {
 	std::ifstream stream(filepath);
 	std::string text;
 	std::string line;
@@ -67,53 +67,53 @@ std::string Shader::readFile(const char* filepath) {
 	return text;
 }
 
-void Shader::setUniformInt(int value, const char* name) {
+void Shader::setUniformInt(int value, const char* name) const {
 	GLCALL(int location = glGetUniformLocation(programID, name));
 
 	GLCALL(glUniform1i(location, value));
 }
 
-void Shader::setUniformFloat(float value, const char* name) {
+void Shader::setUniformFloat(float value, const char* name) const {
 	GLCALL(int location = glGetUniformLocation(programID, name));
 
 	GLCALL(glUniform1f(location, value));
 }
 
-void Shader::setUniformVec2(glm::vec2 vec2, const char* name) {
+void Shader::setUniformVec2(glm::vec2 vec2, const char* name) const {
 	GLCALL(int location = glGetUniformLocation(programID, name));
 
 	GLCALL(glUniform2f(location, vec2[0], vec2[1]));
 }
 
-void Shader::setUniformVec3(glm::vec3 vec3, const char* name) {
+void Shader::setUniformVec3(glm::vec3 vec3, const char* name) const {
 	GLCALL(int location = glGetUniformLocation(programID, name));
 
 	GLCALL(glUniform3f(location, vec3[0], vec3[1], vec3[2]));
 }
 
-void Shader::setUniformIVec2(glm::ivec2 ivec2, const char* name) {
+void Shader::setUniformIVec2(glm::ivec2 ivec2, const char* name) const {
 	GLCALL(int location = glGetUniformLocation(programID, name));
 
 	GLCALL(glUniform2i(location, ivec2[0], ivec2[1]));
 }
 
-void Shader::setUniformVec4(glm::vec4 vec4, const char* name) {
+void Shader::setUniformVec4(glm::vec4 vec4, const char* name) const {
 	GLCALL(int location = glGetUniformLocation(programID, name));
 
 	GLCALL(glUniform4f(location, vec4[0], vec4[1], vec4[2], vec4[3]));
 }
 
-void Shader::setUniformMat4(glm::mat4 mat4, const char* name) {
+void Shader::setUniformMat4(glm::mat4 mat4, const char* name) const {
 	GLCALL(int location = glGetUniformLocation(programID, name));
 
 	GLCALL(glUniformMatrix4fv(location, 1, false, &mat4[0][0]));
 }
 
-void Shader::GLClearErrors() {
+void Shader::GLClearErrors() const {
 	while (glGetError() != GL_NO_ERROR);
 }
 
-bool Shader::GLLogErrors() {
+bool Shader::GLLogErrors() const {
 	bool noErrors = true;
 
 	while (GLenum error = glGetError()) {

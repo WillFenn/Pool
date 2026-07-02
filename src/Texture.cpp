@@ -61,25 +61,25 @@ Texture::~Texture() {
 	GLCALL(glDeleteTextures(1, &textureID));
 }
 
-void Texture::bind(unsigned int slot) {
+void Texture::bind(unsigned int slot = 0) {
 	this->slot = slot;
 	GLCALL(glActiveTexture(GL_TEXTURE0 + slot));
 	GLCALL(glBindTexture(GL_TEXTURE_2D, textureID));
 }
 
-void Texture::unbind() {
+void Texture::unbind() const {
 	GLCALL(glBindTexture(GL_TEXTURE_2D, 0));
 }
 
-unsigned int Texture::getSlot() {
+unsigned int Texture::getSlot() const {
 	return slot;
 }
 
-void Texture::GLClearErrors() {
+void Texture::GLClearErrors() const {
 	while (glGetError() != GL_NO_ERROR);
 }
 
-bool Texture::GLLogErrors() {
+bool Texture::GLLogErrors() const {
 	bool noErrors = true;
 
 	while (GLenum error = glGetError()) {

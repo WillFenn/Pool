@@ -262,7 +262,7 @@ const GameObject* Game::getTable() const {
 	return &table;
 }
 
-const Side* Game::getSides() const {
+Side* Game::getSides() {
 	return sides;
 }
 
@@ -270,15 +270,15 @@ const glm::vec2* Game::getPocketPositions() const {
 	return pocketPositions;
 }
 
-const Ball* Game::getCueBall() const {
+Ball* Game::getCueBall() {
 	return &cueBall;
 }
 
-const Cue* Game::getCue() const {
+Cue* Game::getCue() {
 	return &cue;
 }
 
-const std::vector<Ball>* Game::getBalls() const {
+std::vector<Ball>* Game::getBalls() {
 	return &balls;
 }
 

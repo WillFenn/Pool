@@ -32,11 +32,11 @@ public:
 	void setCurrentFrameRate(int currentFrameRate);
 	bool ballsAreMoving() const;
 	const GameObject* getTable() const;
-	const Side* getSides() const;
+	Side* getSides();
 	const glm::vec2* getPocketPositions() const;
-	const Ball* getCueBall() const;
-	const Cue* getCue() const;
-	const std::vector<Ball>* getBalls() const;
+	Ball* getCueBall();
+	Cue* getCue();
+	std::vector<Ball>* getBalls();
 	bool getCueBallShouldBePlaced() const;
 	const Player* getCurrentPlayer() const;
 	bool cueBallShouldBeDrawn() const;

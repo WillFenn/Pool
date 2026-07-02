@@ -17,19 +17,19 @@ class Shader {
 public:
 	Shader(const char* vsFilepath, const char* fsFilepath);
 	~Shader();
-	void compileShader(const char* source, unsigned int shaderType, unsigned int* ID);
-	void bind();
-	void unbind();
-	std::string readFile(const char* filepath);
-	void setUniformInt(int value, const char* name);
-	void setUniformFloat(float value, const char* name);
-	void setUniformVec2(glm::vec2 vec2, const char* name);
-	void setUniformIVec2(glm::ivec2 ivec2, const char* name);
-	void setUniformVec3(glm::vec3 vec3, const char* name);
-	void setUniformVec4(glm::vec4 vec4, const char* name);
-	void setUniformMat4(glm::mat4 mat4, const char* name);
-	void GLClearErrors();
-	bool GLLogErrors();
+	void compileShader(const char* source, unsigned int shaderType, unsigned int* ID) const;
+	void bind() const;
+	void unbind() const;
+	std::string readFile(const char* filepath) const;
+	void setUniformInt(int value, const char* name) const;
+	void setUniformFloat(float value, const char* name) const;
+	void setUniformVec2(glm::vec2 vec2, const char* name) const;
+	void setUniformIVec2(glm::ivec2 ivec2, const char* name) const;
+	void setUniformVec3(glm::vec3 vec3, const char* name) const;
+	void setUniformVec4(glm::vec4 vec4, const char* name) const;
+	void setUniformMat4(glm::mat4 mat4, const char* name) const;
+	void GLClearErrors() const;
+	bool GLLogErrors() const;
 
 private:
 	unsigned int vsID;

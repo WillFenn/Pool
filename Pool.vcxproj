@@ -149,6 +149,7 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\Input.cpp" />
+    <ClCompile Include="src\Line.cpp" />
     <ClCompile Include="src\Menu.cpp" />
     <ClCompile Include="src\MenuOption.cpp" />
     <ClCompile Include="src\Panel.cpp" />
@@ -157,6 +158,7 @@
     <ClCompile Include="src\PoolColors.cpp" />
     <ClCompile Include="src\PoolMath.cpp" />
     <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\Side.cpp" />
     <ClCompile Include="src\stb_image.cpp" />
     <ClCompile Include="src\TextLabel.cpp" />
     <ClCompile Include="src\Texture.cpp" />

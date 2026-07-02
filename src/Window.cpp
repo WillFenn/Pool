@@ -166,7 +166,7 @@ Window::~Window() {
 	std::cout << "Window deconstructor called" << std::endl;
 }
 
-void Window::drawFrame(std::vector<GameObject>* objects, std::vector<Line>* lines, std::vector<Panel>* panels) {
+void Window::drawFrame(std::vector<GameObject>* objects, std::vector<Line>* lines, std::vector<Panel>* panels) const {
 	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
 
 	for (GameObject& object : *objects | std::ranges::views::filter([](GameObject& object) { return object.getActive(); })) {
@@ -180,7 +180,7 @@ void Window::drawFrame(std::vector<GameObject>* objects, std::vector<Line>* line
 	}
 
 	for (Line line : *lines) {
-		drawLine(line.a, line.b);
+		drawLine(line.getA(), line.getB());
 	}
 
 	for (Panel& panel : *panels | std::ranges::views::filter([](Panel& panel) { return panel.getActive(); })) {
@@ -208,25 +208,7 @@ void Window::drawFrame(std::vector<GameObject>* objects, std::vector<Line>* line
 	glfwPollEvents();
 }
 
-void Window::drawFrame(std::vector<GameObject>* objects) {
-	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
-
-	for (GameObject object : *objects) {
-		if (object.getShape() == Shape::Rectangle) {
-			drawRectangleTexture(object.getPos(), object.getScale(), object.getRotationMat(), object.getTexture());
-		}
-		else if (object.getShape() == Shape::Sphere) {
-			drawSphereTexture(object.getScale().x / 2, object.getPos(), object.getRotationMat(), object.getTexture());
-			drawRectangleTexture(object.getPos(), reflectionsScale, glm::mat4(1.0f), reflectionsTexture);
-		}
-	}
-
-	glfwSwapBuffers(glfwwindow);
-
-	glfwPollEvents();
-}
-
-void Window::drawCircle(float radius, glm::vec2 pos, glm::vec4 color, BallType ballType) {
+void Window::drawCircle(float radius, glm::vec2 pos, glm::vec4 color, BallType ballType) const {
 	GLCALL(glBindVertexArray(rectvao));
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectvbo));
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
@@ -249,7 +231,7 @@ void Window::drawCircle(float radius, glm::vec2 pos, glm::vec4 color, BallType b
 	GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 }
 
-void Window::drawSphereTexture(float radius, glm::vec2 pos, glm::mat4 rotationMat, Texture* texture) {
+void Window::drawSphereTexture(float radius, glm::vec2 pos, glm::mat4 rotationMat, Texture* texture) const {
 	GLCALL(glBindVertexArray(rectvao));
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectvbo));
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
@@ -273,7 +255,7 @@ void Window::drawSphereTexture(float radius, glm::vec2 pos, glm::mat4 rotationMa
 	GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 }
 
-void Window::drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::vec4 color) {
+void Window::drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::vec4 color) const {
 	GLCALL(glBindVertexArray(rectvao));
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectvbo));
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
@@ -292,7 +274,7 @@ void Window::drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::
 	GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 }
 
-void Window::drawRectangleTexture(glm::vec2 pos, glm::vec2 scale, glm::mat4 rotationMat, Texture* texture) {
+void Window::drawRectangleTexture(glm::vec2 pos, glm::vec2 scale, glm::mat4 rotationMat, Texture* texture) const {
 	GLCALL(glBindVertexArray(rectTexturevao));
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectTexturevbo));
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
@@ -313,7 +295,7 @@ void Window::drawRectangleTexture(glm::vec2 pos, glm::vec2 scale, glm::mat4 rota
 	GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 }
 
-void Window::drawLine(glm::vec2 a, glm::vec2 b) {
+void Window::drawLine(glm::vec2 a, glm::vec2 b) const {
 	glm::vec2 lineVertices[2] = { a, b };
 
 	GLCALL(glBindVertexArray(linevao));
@@ -331,20 +313,20 @@ void Window::drawLine(glm::vec2 a, glm::vec2 b) {
 	GLCALL(glDrawArrays(GL_LINES, 0, 2));
 }
 
-void Window::drawText(float xStart, float yBaseline, Font font, FontSize fontSize, glm::vec4 color, std::string text) {
+void Window::drawText(float xStart, float yBaseline, Font font, FontSize fontSize, glm::vec4 color, std::string text) const {
 	GLCALL(glBindVertexArray(rectTexturevao));
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectTexturevbo));
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
 	characterShader->bind();
 
-	std::map<char, Character>* characters = notableCharacters;
+	const std::map<char, Character>* characters = notableCharacters;
 
 	if (font == Font::Monoton) {
 		characters = monotonCharacters;
 	}
 
 	for (char c : text) {
-		Character* character = &characters[fontSize].at(c);
+		const Character* character = &characters[fontSize].at(c);
 
 		character->getTexture()->bind();
 
@@ -374,27 +356,27 @@ void Window::drawText(float xStart, float yBaseline, Font font, FontSize fontSiz
 	}
 }
 
-bool Window::shouldClose() {
+bool Window::shouldClose() const {
 	return glfwWindowShouldClose(glfwwindow);
 }
 
-GLFWwindow* Window::getglfwwindow() {
+const GLFWwindow* Window::getglfwwindow() const {
 	return glfwwindow;
 }
 
-glm::vec2 Window::getResolution() {
+glm::vec2 Window::getResolution() const {
 	return resolution;
 }
 
-glm::vec2 Window::getWorldScale() {
+glm::vec2 Window::getWorldScale() const {
 	return worldScale;
 }
 
-void Window::GLClearErrors() {
+void Window::GLClearErrors() const {
 	while (glGetError() != GL_NO_ERROR);
 }
 
-bool Window::GLLogErrors() {
+bool Window::GLLogErrors() const {
 	bool noErrors = true;
 
 	while (GLenum error = glGetError()) {
