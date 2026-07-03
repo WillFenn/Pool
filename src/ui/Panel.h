@@ -16,6 +16,8 @@ public:
 	glm::vec2 getTextureScale() const;
 	const Texture* getTexture() const;
 	const std::vector<TextLabel>* getTextLabels() const;
+	void setTextLabelText(int textLabelIndex, std::string text);
+	void setTextLabelColor(int textLabelIndex, glm::vec4 color);
 	bool getActive() const;
 	void setActive(bool active);
 

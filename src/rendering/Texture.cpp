@@ -1,6 +1,8 @@
 #include <Texture.h>
 
 Texture::Texture(std::string filepath, bool isCharTexture, bool flipOnLoad) {
+	slot = 0;
+	
 	localBuffer = nullptr;
 	width = 0;
 	height = 0;
@@ -61,8 +63,13 @@ Texture::~Texture() {
 	GLCALL(glDeleteTextures(1, &textureID));
 }
 
-void Texture::bind(unsigned int slot = 0) {
+void Texture::bind(unsigned int slot) {
 	this->slot = slot;
+	GLCALL(glActiveTexture(GL_TEXTURE0 + slot));
+	GLCALL(glBindTexture(GL_TEXTURE_2D, textureID));
+}
+
+void Texture::bind() const {
 	GLCALL(glActiveTexture(GL_TEXTURE0 + slot));
 	GLCALL(glBindTexture(GL_TEXTURE_2D, textureID));
 }
@@ -73,6 +80,10 @@ void Texture::unbind() const {
 
 unsigned int Texture::getSlot() const {
 	return slot;
+}
+
+void Texture::setSlot(unsigned int slot) {
+	this->slot = slot;
 }
 
 void Texture::GLClearErrors() const {

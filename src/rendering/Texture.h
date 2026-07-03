@@ -16,8 +16,10 @@ public:
 	Texture(unsigned char* buffer, int width, int height, bool isCharTexture);
 	~Texture();
 	void bind(unsigned int slot = 0);
+	void bind() const;
 	void unbind() const;
 	unsigned int getSlot() const;
+	void setSlot(unsigned int slot);
 
 private:
 	void GLClearErrors() const;

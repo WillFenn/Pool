@@ -231,7 +231,7 @@ void Window::drawCircle(float radius, glm::vec2 pos, glm::vec4 color, BallType b
 	GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 }
 
-void Window::drawSphereTexture(float radius, glm::vec2 pos, glm::mat4 rotationMat, Texture* texture) const {
+void Window::drawSphereTexture(float radius, glm::vec2 pos, glm::mat4 rotationMat, const Texture* texture) const {
 	GLCALL(glBindVertexArray(rectvao));
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectvbo));
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
@@ -274,7 +274,7 @@ void Window::drawRectangle(glm::vec2 pos, glm::vec2 scale, float rotation, glm::
 	GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 }
 
-void Window::drawRectangleTexture(glm::vec2 pos, glm::vec2 scale, glm::mat4 rotationMat, Texture* texture) const {
+void Window::drawRectangleTexture(glm::vec2 pos, glm::vec2 scale, glm::mat4 rotationMat, const Texture* texture) const {
 	GLCALL(glBindVertexArray(rectTexturevao));
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, rectTexturevbo));
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, rectibo));
@@ -360,7 +360,7 @@ bool Window::shouldClose() const {
 	return glfwWindowShouldClose(glfwwindow);
 }
 
-const GLFWwindow* Window::getglfwwindow() const {
+GLFWwindow* Window::getglfwwindow() const {
 	return glfwwindow;
 }
 

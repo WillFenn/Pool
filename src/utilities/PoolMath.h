@@ -4,7 +4,6 @@
 #include <vec3.hpp>
 #include <mat4x4.hpp>
 #include <ext/matrix_transform.hpp>
-#include <Rotation.h>
 
 namespace PoolMath {
 	float projection(glm::vec2 a, glm::vec2 b);

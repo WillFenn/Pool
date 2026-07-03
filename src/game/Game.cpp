@@ -137,8 +137,8 @@ void Game::update(float deltaTime) {
 				currentPlayerIndex = (currentPlayerIndex + 1) % 2;
 
 				// update player panels to show current player
-				playerPanels[(currentPlayerIndex + 1) % 2].getTextLabels()->front().setColor(PoolColors::black());
-				playerPanels[currentPlayerIndex].getTextLabels()->front().setColor(PoolColors::white());
+				playerPanels[(currentPlayerIndex + 1) % 2].setTextLabelColor(0, PoolColors::black());
+				playerPanels[currentPlayerIndex].setTextLabelColor(0, PoolColors::white());
 			}
 
 			cueBallPocketed = false;
@@ -241,7 +241,7 @@ const Panel* Game::getFrameRatePanel() const {
 
 void Game::setCurrentFrameRate(int currentFrameRate) {
 	std::cout << "framerate: " + currentFrameRate << std::endl;
-	frameRatePanel.getTextLabels()->front().setText(std::string("framerate: ") + std::to_string(currentFrameRate));
+	frameRatePanel.setTextLabelText(0, std::string("framerate: ") + std::to_string(currentFrameRate));
 }
 
 bool Game::ballsAreMoving() const {
@@ -249,7 +249,7 @@ bool Game::ballsAreMoving() const {
 		return true;
 	}
 
-	for (Ball& ball : balls | std::ranges::views::filter([](Ball& ball) { return ball.getActive(); })) {
+	for (const Ball& ball : balls | std::ranges::views::filter([](const Ball& ball) { return ball.getActive(); })) {
 		if (glm::length(ball.getVelocity()) != 0.0f) {
 			return true;
 		}
@@ -310,7 +310,7 @@ std::optional<Line> Game::trajectory() const {
 	glm::vec2 collidingBallPos(std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
 	glm::vec2 closestPointToBall;
 
-	for (Ball& ball : balls | std::ranges::views::filter([](Ball& ball) { return ball.getActive(); })) {
+	for (const Ball& ball : balls | std::ranges::views::filter([](const Ball& ball) { return ball.getActive(); })) {
 		glm::vec2 closestPoint;
 		float pathBallDistance = PoolMath::pointLineSegmentDistance(ball.getPos(), cueBallPathStart, cueBallPathEnd, &closestPoint);
 		
@@ -448,7 +448,7 @@ void Game::checkPocketedBalls() {
 	}
 }
 
-bool Game::foul() {
+bool Game::foul() const {
 	if (cueBallPocketed) {
 		return true;
 	}
@@ -471,7 +471,7 @@ bool Game::foul() {
 bool Game::positionOutOfBounds() const {
 	glm::vec2 mouseWorldPos = input->getMouseWorldPos();
 
-	for (Ball& ball : balls | std::ranges::views::filter([](Ball& ball) { return ball.getActive(); })) {
+	for (const Ball& ball : balls | std::ranges::views::filter([](const Ball& ball) { return ball.getActive(); })) {
 		if (glm::distance(ball.getPos(), mouseWorldPos) < 1.0f) {
 			return true;
 		}
@@ -501,7 +501,7 @@ bool Game::detectBallCollision(glm::vec2 ball1Pos, glm::vec2 ball2Pos, glm::vec2
 }
 
 bool Game::allBallsPocketed(BallType ballType) const {
-	for (Ball& ball : balls | std::ranges::views::filter([](Ball& ball) { return ball.getActive(); })) {
+	for (const Ball& ball : balls | std::ranges::views::filter([](const Ball& ball) { return ball.getActive(); })) {
 		if (ball.getBallType() == ballType) {
 			return false;
 		}

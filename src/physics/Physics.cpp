@@ -138,8 +138,8 @@ bool Physics::detectBallCollision(Ball* ball1, Ball* ball2, glm::vec2* outCollis
 
 bool Physics::detectBallSideCollision(Side sides[], Ball* ball, glm::vec2* outCollisionNormal) const {
 	for (int i = 0; i < 18; i++) {
-		if ((PoolMath::pointLineSegmentDistance(ball->getPos(), sides[i].a, sides[i].b) <= 0.5f) && (glm::dot(ball->getVelocity(), sides[i].normal) < 0.0f)) {
-			*outCollisionNormal = sides[i].normal;
+		if ((PoolMath::pointLineSegmentDistance(ball->getPos(), sides[i].getA(), sides[i].getB()) <= 0.5f) && (glm::dot(ball->getVelocity(), sides[i].getNormal()) < 0.0f)) {
+			*outCollisionNormal = sides[i].getNormal();
 			
 			return true;
 		}
