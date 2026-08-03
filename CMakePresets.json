@@ -1,0 +1,13 @@
+{
+    "version": 4,
+    "configurePresets": [
+        {
+            "name": "pool",
+            "binaryDir": "${sourceDir}/build",
+            "installDir": "${sourceDir}/install",
+            "cacheVariables": {
+                "BUILD_SHARED_LIBS": "OFF"
+            }
+        }
+    ]
+}

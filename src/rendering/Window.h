@@ -1,6 +1,5 @@
 #pragma once
 
-#define GLEW_STATIC
 #define ASSERT(x) if (!(x)) __debugbreak()
 #define GLCALL(x) GLClearErrors();\
 	x;\
@@ -11,15 +10,15 @@
 #include <map>
 #include <ranges>
 #include <string>
-#include <glew.h>
-#include <glfw3.h>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include <vec2.hpp>
-#include <vec3.hpp>
-#include <mat4x4.hpp>
-#include <ext/matrix_clip_space.hpp>
-#include <ext/matrix_transform.hpp>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/ext/matrix_clip_space.hpp>
+#include <glm/ext/matrix_transform.hpp>
 #include <PoolColors.h>
 #include <PoolMath.h>	// delete
 #include <Character.h>

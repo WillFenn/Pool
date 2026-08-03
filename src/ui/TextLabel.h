@@ -2,8 +2,8 @@
 
 #include <string>
 #include <memory>
-#include <vec2.hpp>
-#include <vec4.hpp>
+#include <glm/vec2.hpp>
+#include <glm/vec4.hpp>
 #include <Font.h>
 #include <FontSize.h>
 #include <Texture.h>

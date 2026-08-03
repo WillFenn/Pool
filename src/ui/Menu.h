@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <vec2.hpp>
+#include <glm/vec2.hpp>
 #include <PoolColors.h>
 #include <Panel.h>
 #include <Input.h>

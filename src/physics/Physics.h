@@ -3,9 +3,9 @@
 #include <iostream>
 #include <vector>
 #include <ranges>
-#include <vec2.hpp>
-#include <vec3.hpp>
-#include <ext/matrix_transform.hpp>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include <glm/ext/matrix_transform.hpp>
 #include <PoolMath.h>
 #include <Side.h>
 #include <Ball.h>

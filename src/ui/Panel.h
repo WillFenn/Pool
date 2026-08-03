@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <vector>
-#include <vec2.hpp>
+#include <glm/vec2.hpp>
 #include <Texture.h>
 #include <TextLabel.h>
 

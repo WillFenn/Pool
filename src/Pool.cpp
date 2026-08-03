@@ -2,7 +2,6 @@
 #include <vector>
 #include <cstdlib>
 #include <ctime>
-#include <vec2.hpp>
 #include <PoolMath.h>
 #include <PoolColors.h>
 #include <Window.h>

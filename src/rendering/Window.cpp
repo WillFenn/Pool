@@ -155,10 +155,18 @@ Window::~Window() {
 	delete rectangleTextureShader;
 	delete lineShader;
 	delete characterShader;
-
 	delete reflectionsTexture;
 
-	glfwSetWindowShouldClose(glfwwindow, true);
+	GLCALL(glDeleteBuffers(1, &rectvbo));
+	GLCALL(glDeleteBuffers(1, &rectTexturevbo));
+	GLCALL(glDeleteBuffers(1, &rectibo));
+	GLCALL(glDeleteBuffers(1, &linevbo));
+
+	GLCALL(glDeleteVertexArrays, &rectvao);
+	GLCALL(glDeleteVertexArrays, &rectTexturevao);
+	GLCALL(glDeleteVertexArrays, &linevao);
+
+	glfwDestroyWindow(glfwwindow);
 
 	glfwTerminate();
 

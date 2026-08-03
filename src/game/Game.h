@@ -16,7 +16,7 @@
 #include <Side.h>
 #include <Cue.h>
 #include <Ball.h>
-#include <ext/matrix_transform.hpp>
+#include <glm/ext/matrix_transform.hpp>
 
 enum GameState { ShowStartMenu, PlayGame, ShowGameOver, Close };
 
